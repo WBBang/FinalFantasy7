@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "KSH/MBAIController.h"
 #include "KSH/MiddleBossCharacter.h"
+#include "KSH/MBAIController.h"
+
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
