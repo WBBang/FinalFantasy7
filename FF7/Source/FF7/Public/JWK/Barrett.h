@@ -44,12 +44,27 @@ public:
 	void OnAxisTurnYaw(float value);
 	void OnAxisLookupPitch(float value);
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* RifleMeshComp;
+
 	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* playerMeshComp;
 
-	int Damage;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABulletActor> bulletFactory;
 
+	int Damage;
+	float CurFireTime;
+	float MaxFireTime = 0.1;
+	bool IsFire;
+
+	UFUNCTION()
 	void StartAttack();
+	UFUNCTION()
+	void EndAttack();
+
+	void Fire();
 
 	void LineTrace();
 	bool bIsAttacking;

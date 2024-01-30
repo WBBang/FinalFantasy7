@@ -6,7 +6,8 @@
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Engine/SkeletalMesh.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "JWK/BulletActor.h"
 
 // Sets default values
 ABarrett::ABarrett()
@@ -21,11 +22,24 @@ ABarrett::ABarrett()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
 	cameraComp->SetupAttachment(springArmComp);
 
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/JWK/ParagonMurdock/Characters/Heroes/Murdock/Meshes/Murdock.Murdock'"));
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/JWK/Barrett_Mixamo/Barrett.Barrett'"));
 	if (tempMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);
+		GetMesh()->SetWorldScale3D(FVector(0.1f));
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
+	}
+
+	RifleMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMeshComp"));
+	RifleMeshComp->SetupAttachment(GetMesh());
+
+	ConstructorHelpers::FObjectFinder<UStaticMesh> tempRifleMesh(TEXT("/Script/Engine.StaticMesh'/Game/JWK/Rifle/Rifle.Rifle'"));
+	// RifleMeshComp 검색이 성공하면
+	if (tempRifleMesh.Succeeded())
+	{
+		RifleMeshComp->SetStaticMesh(tempRifleMesh.Object);
+		RifleMeshComp->SetRelativeLocation(FVector(0, 650, 1300));
+		RifleMeshComp->SetWorldScale3D(FVector(30, 50, 30));
 	}
 }
 
@@ -33,7 +47,7 @@ ABarrett::ABarrett()
 void ABarrett::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CurFireTime = MaxFireTime;
 }
 
 // Called every frame
@@ -41,6 +55,17 @@ void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Move();
+
+	if (IsFire)
+	{
+		CurFireTime += DeltaTime;
+		if (CurFireTime >= MaxFireTime)
+		{
+			Fire();
+			CurFireTime = 0;
+		}
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -56,6 +81,8 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis(TEXT("Look Up / Down Mouse"), this, &ABarrett::OnAxisLookupPitch);
 
 	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Pressed, this, &ABarrett::StartAttack);
+
+	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Released, this, &ABarrett::EndAttack);
 
 }
 
@@ -85,9 +112,26 @@ void ABarrett::OnAxisLookupPitch(float value)
 	AddControllerPitchInput(value);
 }
 
+
 void ABarrett::StartAttack()
 {
-	// 공격 애니메이션
+	IsFire = true;
+}
+
+void ABarrett::EndAttack()
+{
+	IsFire = false;
+	CurFireTime = MaxFireTime;
+}
+
+
+
+void ABarrett::Fire()
+{
+	// 총알 생성
+	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
+
 }
 
 void ABarrett::LineTrace()
