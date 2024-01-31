@@ -23,6 +23,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -31,7 +32,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
+
+
+private:
 	void Attack();
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
+	bool IsAttacking;
 
 protected:
 	void NotifyComboActionEnd();
@@ -48,4 +57,5 @@ protected:
 
 	// 전달받은 델리게이트를 보관하는 함수
 	FAICharacterAttackFinished OnAttackFinished;
+
 };
