@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "KSH//MBCharacterAIInterface.h"
 #include "MiddleBossCharacter.generated.h"
 
 UCLASS()
-class FF7_API AMiddleBossCharacter : public ACharacter
+class FF7_API AMiddleBossCharacter : public ACharacter, public IMBCharacterAIInterface
 {
 	GENERATED_BODY()
 
@@ -26,4 +27,23 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public: 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USkeletalMeshComponent* skeletalMesh;
+
+protected:
+	void NotifyComboActionEnd();
+
+// AI Section
+protected:
+	virtual float GetAIPatrolRadius() override;
+	virtual float GetAIDetectRange() override;
+	virtual float GetAIAttackRange() override;
+	virtual float GetAITurnSpeed() override;
+
+	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+	virtual void AttackByAI() override;
+
+	// 전달받은 델리게이트를 보관하는 함수
+	FAICharacterAttackFinished OnAttackFinished;
 };

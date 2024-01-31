@@ -18,7 +18,6 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 void AMiddleBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -33,5 +32,42 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+// 애니메이션 끝났을 때 호출
+void AMiddleBossCharacter::NotifyComboActionEnd()
+{
+	OnAttackFinished.ExecuteIfBound();
+}
+
+float AMiddleBossCharacter::GetAIPatrolRadius()
+{
+	return 800.0f;
+}
+
+float AMiddleBossCharacter::GetAIDetectRange()
+{
+	return 400.0f;
+}
+
+float AMiddleBossCharacter::GetAIAttackRange()
+{
+	return 100.0f;
+}
+
+float AMiddleBossCharacter::GetAITurnSpeed()
+{
+	return 0.0f;
+}
+
+void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
+{
+	OnAttackFinished = InOnAttackFinished;
+}
+
+void AMiddleBossCharacter::AttackByAI()
+{
+	// 공격
+	//ProcessComboCommand();
 }
 
