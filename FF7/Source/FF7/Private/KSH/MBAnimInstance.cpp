@@ -6,6 +6,12 @@
 UMBAnimInstance::UMBAnimInstance()
 {
 	CurrentPawnSpeed = 0.0f;
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack_Montage(TEXT("/ Script / Engine.AnimMontage'/Game/KSH/Animations/Attack/M_AttackMontage.M_AttackMontage'"));
+	if (Attack_Montage.Succeeded())
+	{
+		AttackMontage = Attack_Montage.Object;
+	}
 }
 
 void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -17,4 +23,17 @@ void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		CurrentPawnSpeed = Pawn->GetVelocity().Size();
 	}
+}
+
+void UMBAnimInstance::PlayAttackMontage()
+{
+	if (!Montage_IsPlaying(AttackMontage))
+	{
+		Montage_Play(AttackMontage, 1.0f);
+	}
+}
+
+void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
+{
+
 }

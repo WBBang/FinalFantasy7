@@ -31,6 +31,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
+	void Attack();
+
 protected:
 	void NotifyComboActionEnd();
 

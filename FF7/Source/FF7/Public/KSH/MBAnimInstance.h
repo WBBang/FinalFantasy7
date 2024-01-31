@@ -18,7 +18,15 @@ public:
 	UMBAnimInstance();
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	void PlayAttackMontage();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pawn, Meta=(AllowPrivateAccess = true))
 	float CurrentPawnSpeed;
+
+	UFUNCTION()
+	void AnimNotify_MBAttackStartNotify();
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
+	UAnimMontage* AttackMontage;
 };

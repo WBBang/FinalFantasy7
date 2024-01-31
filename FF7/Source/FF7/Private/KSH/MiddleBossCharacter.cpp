@@ -34,6 +34,12 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 }
 
+// 기본 공격
+void AMiddleBossCharacter::Attack()
+{
+	
+}
+
 // 애니메이션 끝났을 때 호출
 void AMiddleBossCharacter::NotifyComboActionEnd()
 {
