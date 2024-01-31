@@ -26,11 +26,14 @@ ABulletActor::ABulletActor()
 
 	// ÃÑ¾ËÀÇ Collision Set
 	sphereComp->SetCollisionProfileName(TEXT("Blockall"));
-	//meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision());
+	//meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 
 	// ÃÑ¾Ë Å©±â Set
 	meshComp->SetWorldScale3D(FVector(0.025f));
 	sphereComp->SetSphereRadius(1.25);
+
+
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +43,7 @@ void ABulletActor::BeginPlay()
 	movementComp->SetUpdatedComponent(sphereComp);
 
 	FTimerHandle timerHandle;
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([this]()->void {this->Destroy(); }), 5, false);
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([this]()->void {this->Destroy(); }), 1, false);
 }
 
 // Called every frame

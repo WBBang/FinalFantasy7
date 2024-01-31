@@ -31,15 +31,15 @@ ABarrett::ABarrett()
 	}
 
 	RifleMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMeshComp"));
-	RifleMeshComp->SetupAttachment(GetMesh());
+	RifleMeshComp->SetupAttachment(GetMesh(), TEXT("Rifle"));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempRifleMesh(TEXT("/Script/Engine.StaticMesh'/Game/JWK/Rifle/Rifle.Rifle'"));
 	// RifleMeshComp 검색이 성공하면
 	if (tempRifleMesh.Succeeded())
 	{
 		RifleMeshComp->SetStaticMesh(tempRifleMesh.Object);
-		RifleMeshComp->SetRelativeLocation(FVector(0, 650, 1300));
-		RifleMeshComp->SetWorldScale3D(FVector(30, 50, 30));
+		RifleMeshComp->SetRelativeLocationAndRotation(FVector(17.136384f, -319.395057f, 52.838305f), FRotator(-90,-180,2.422084f));
+		RifleMeshComp->SetWorldScale3D(FVector(20, 35, 20));
 	}
 }
 
