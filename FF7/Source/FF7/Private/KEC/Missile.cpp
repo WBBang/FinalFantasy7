@@ -6,6 +6,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Engine/SkeletalMesh.h"
 
+
 // Sets default values
 AMissile::AMissile()
 {
@@ -18,6 +19,9 @@ AMissile::AMissile()
 	SetRootComponent(capsuleComp);
 	meshComp->SetupAttachment(RootComponent);
 
+	missile = Cast<AMissile>(GetOwner());
+	
+
 
 }
 
@@ -27,47 +31,62 @@ void AMissile::BeginPlay()
 	Super::BeginPlay();
 	LaunchMissile();
 	
+	
+	
+	//딜레이 2초
+	
 }
 
 // Called every frame
 void AMissile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (isLaunched) 
+	{
+		Delay();
+	}
+	missile->AddMovement
 }
 
 void AMissile::LaunchMissile()
 {
-	// 미사일의 UpVector로 폭발 충격 주기
+	// 미사일 UpVector Impulse
 	FVector impulseDir = meshComp->GetUpVector() * impuslePos;
 	meshComp->AddImpulse(impulseDir);
-
-	//딜레이 2초
-	Delay(delayTime);
-	CruiseMissile();
+	isLaunched = true;
 }
 
 
 
 void AMissile::CruiseMissile()
 {
+	meshComp->SetEnableGravity(false);
+	meshComp->SetSimulatePhysics(false);
+	SetActorLocation(meshComp->GetComponentLocation());
 	//플레이어 가져오기
-	FVector playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	
 	//플레이어 방향으로 이동하기
 	FVector p0 = GetActorLocation();
 	FVector dir = playerPosition - p0;
 	dir.Normalize();
-	SetActorLocation(dir * missileSpeed * GetWorld()->GetDeltaSeconds());
+	targetPosition = dir * missileSpeed * GetWorld()->GetDeltaSeconds();
 }
 
-//딜레이 함수
-void AMissile::Delay(float value)
+void AMissile::Delay()
 {
-	FTimerHandle timerHandle;
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, 
-		FTimerDelegate::CreateLambda([&]()
-			{
-				GetWorld()->GetTimerManager().ClearTimer(timerHandle);
-			}), value, false);
+	UE_LOG(LogTemp, Log, TEXT("Hi"));
+	FTimerHandle MyTimer;
+	float Time = delayTime;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+		{
+			// 실행할 내용
+			CruiseMissile();
+			UE_LOG(LogTemp, Log, TEXT("Bye"));
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+			
+		}), Time, false);
 }
+
 

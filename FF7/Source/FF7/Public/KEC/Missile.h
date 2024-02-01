@@ -24,6 +24,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+
+	UPROPERTY(EditAnywhere)
+	class AMissile* missile;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* capsuleComp;
 
@@ -43,6 +47,17 @@ public:
 
 	void LaunchMissile();
 	void CruiseMissile();
-	void Delay(float value);
+	
+	void Delay();
 
+	UPROPERTY(EditAnywhere)
+	FVector playerPosition;
+
+	UPROPERTY(EditAnywhere)
+	FVector targetPosition;
+
+	UPROPERTY(EditAnywhere)
+	bool isLaunched;
+
+	
 };

@@ -26,6 +26,7 @@ AFinalBoss::AFinalBoss()
 void AFinalBoss::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	SpawnMissile();
 }
 
