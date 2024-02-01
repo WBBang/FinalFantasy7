@@ -54,6 +54,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABulletActor> bulletFactory;
 
+	// Auto Fire 
 	int Damage;
 	float CurFireTime;
 	float MaxFireTime = 0.1;
@@ -69,4 +70,16 @@ public:
 	void LineTrace();
 	bool bIsAttacking;
 
+
+	// Camera Lock On
+	UFUNCTION()
+	void LockOn();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsTargetLocked = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class AActor* HitActor;
+
+	
 };

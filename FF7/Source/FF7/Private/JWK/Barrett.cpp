@@ -8,6 +8,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "JWK/BulletActor.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ABarrett::ABarrett()
@@ -66,6 +69,11 @@ void ABarrett::Tick(float DeltaTime)
 		}
 	}
 	
+
+	if (HitActor)
+	{
+		APawn::GetController()->AController::SetControlRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),HitActor->GetActorLocation()));
+	}
 }
 
 // Called to bind functionality to input
@@ -84,6 +92,7 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Released, this, &ABarrett::EndAttack);
 
+	PlayerInputComponent->BindAction(TEXT("LockOn"), IE_Pressed, this, &ABarrett::LockOn);
 }
 
 void ABarrett::Move()
@@ -137,5 +146,59 @@ void ABarrett::Fire()
 void ABarrett::LineTrace()
 {
 	//적에게 대미지 적용
+}
+
+void ABarrett::LockOn()
+{
+	if (IsTargetLocked)
+	{
+		TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
+		TArray<AActor*> ignoreActors;
+		ignoreActors.Add(this);
+		FHitResult OutHit;
+
+		bool result = UKismetSystemLibrary::SphereTraceSingleForObjects
+		(
+			// UObject * WorldContextObject
+			GetWorld(),
+			// const FVector Start
+			GetActorLocation(),
+			// const FVector End
+			GetActorLocation() * cameraComp->GetForwardVector() * 1000,
+			// float Radius
+			1500.0f,
+			// const TArray<TEnumAsByte<EObjectTypeQuery>>& ObjectTypes
+			LockOnArea,
+			// bool bTraceComplex
+			false,
+			// const TArray<AActor*>& ActorsToIgnore
+			ignoreActors,
+			// EDrawDebugTrace::Type DrawDebugType, 
+			EDrawDebugTrace::ForOneFrame,
+			// FHitResult & OutHit
+			OutHit,
+			// bool bIgnoreSelf
+			true
+		);
+		OutHit.GetActor();
+
+		if (result)
+		{
+			IsTargetLocked = true;
+			UKismetSystemLibrary::PrintString(GetWorld(), FString(TEXT("TargetLocked")));
+			bool InputObject = UKismetSystemLibrary::IsValid(OutHit.GetActor());
+			if (InputObject)
+			{
+				HitActor = OutHit.GetActor();
+			}
+		}
+	}
+
+	else
+	{
+		// code
+		IsTargetLocked = false;
+		HitActor;
+	}
 }
 

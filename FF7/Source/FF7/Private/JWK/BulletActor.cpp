@@ -26,7 +26,7 @@ ABulletActor::ABulletActor()
 
 	// ÃÑ¾ËÀÇ Collision Set
 	sphereComp->SetCollisionProfileName(TEXT("Blockall"));
-	//meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 
 	// ÃÑ¾Ë Å©±â Set
