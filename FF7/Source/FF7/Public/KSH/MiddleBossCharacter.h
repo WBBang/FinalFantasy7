@@ -32,8 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
-
-
 private:
 	void Attack();
 	UFUNCTION()
@@ -41,9 +39,6 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
 	bool IsAttacking;
-
-protected:
-	void NotifyComboActionEnd();
 
 // AI Section
 protected:

@@ -25,6 +25,7 @@ void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
+// 공격 애니메이션
 void UMBAnimInstance::PlayAttackMontage()
 {
 	if (!Montage_IsPlaying(AttackMontage))
@@ -33,7 +34,8 @@ void UMBAnimInstance::PlayAttackMontage()
 	}
 }
 
+
 void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 {
-
+	// 공격 판정 추가
 }

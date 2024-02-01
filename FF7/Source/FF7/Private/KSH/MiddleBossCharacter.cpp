@@ -63,28 +63,29 @@ void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInt
 {
 	//UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
 	IsAttacking = false;
+
+	// 공격 판정 없애기
+
+	// BT에 끝난거 알려주기
 	OnAttackFinished.ExecuteIfBound();
 }
 
-// 애니메이션 끝났을 때 호출
-void AMiddleBossCharacter::NotifyComboActionEnd()
-{
-	OnAttackFinished.ExecuteIfBound();
-}
-
+// 랜덤 순찰 범위
 float AMiddleBossCharacter::GetAIPatrolRadius()
 {
 	return 800.0f;
 }
 
+// 플레이어 인지 범위
 float AMiddleBossCharacter::GetAIDetectRange()
 {
 	return 400.0f;
 }
 
+// 플레이어 공격 범위
 float AMiddleBossCharacter::GetAIAttackRange()
 {
-	return 100.0f;
+	return 300.0f;
 }
 
 float AMiddleBossCharacter::GetAITurnSpeed()
