@@ -45,7 +45,6 @@ void AMissile::Tick(float DeltaTime)
 	{
 		Delay();
 	}
-	missile->AddMovement
 }
 
 void AMissile::LaunchMissile()
