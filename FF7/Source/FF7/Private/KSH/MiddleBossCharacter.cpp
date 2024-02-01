@@ -70,6 +70,13 @@ void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInt
 	OnAttackFinished.ExecuteIfBound();
 }
 
+// 가드 성공 - 기열파
+void AMiddleBossCharacter::GuardSuccess()
+{
+	FVector  loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
+	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
+}
+
 // 랜덤 순찰 범위
 float AMiddleBossCharacter::GetAIPatrolRadius()
 {
@@ -103,4 +110,5 @@ void AMiddleBossCharacter::AttackByAI()
 	// 공격
 	Attack();
 }
+
 
