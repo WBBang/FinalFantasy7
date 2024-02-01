@@ -30,4 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* meshComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float impuslePos = 50000.0f;
+
+	void launchedMissile();
+
 };

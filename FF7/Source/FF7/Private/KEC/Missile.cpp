@@ -22,6 +22,7 @@ AMissile::AMissile()
 void AMissile::BeginPlay()
 {
 	Super::BeginPlay();
+	launchedMissile();
 	
 }
 
@@ -29,6 +30,15 @@ void AMissile::BeginPlay()
 void AMissile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AMissile::launchedMissile()
+{
+	// 미사일의 Upvector로 폭발 충격 주기
+	FVector impulseDir = meshComp->GetUpVector() * impuslePos;
+	meshComp->AddImpulse(impulseDir);
+
 
 }
 
