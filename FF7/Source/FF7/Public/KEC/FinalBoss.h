@@ -34,6 +34,7 @@ public:
 
 	void LaunchMissile();
 
-	TSubclassOf<class Amissile> missile;
-	class UWorld* World;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AMissile> missile;
+	
 };

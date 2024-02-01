@@ -20,14 +20,13 @@ AFinalBoss::AFinalBoss()
 	meshComp->SetupAttachment(RootComponent);
 	firePosition->SetupAttachment(RootComponent);
 	missile = AMissile::StaticClass();
-	World = GetWorld();
 }
 
 // Called when the game starts or when spawned
 void AFinalBoss::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	LaunchMissile();
 }
 
 // Called every frame
@@ -39,7 +38,7 @@ void AFinalBoss::Tick(float DeltaTime)
 
 void AFinalBoss::LaunchMissile()
 {
-	FVector launchLocation = firePosition->GetComponentLocation();
-	//AMissile* spawnedMissile = World->SpawnActor<AMissile>(missile, launchLocation);
+	FTransform launchLocation = firePosition->GetComponentTransform();
+	GetWorld()->SpawnActor<AMissile>(missile, launchLocation);
 }
 
