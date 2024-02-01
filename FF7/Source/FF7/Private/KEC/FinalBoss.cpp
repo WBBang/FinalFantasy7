@@ -26,7 +26,7 @@ AFinalBoss::AFinalBoss()
 void AFinalBoss::BeginPlay()
 {
 	Super::BeginPlay();
-	LaunchMissile();
+	SpawnMissile();
 }
 
 // Called every frame
@@ -36,7 +36,7 @@ void AFinalBoss::Tick(float DeltaTime)
 
 }
 
-void AFinalBoss::LaunchMissile()
+void AFinalBoss::SpawnMissile()
 {
 	FTransform launchLocation = firePosition->GetComponentTransform();
 	GetWorld()->SpawnActor<AMissile>(missile, launchLocation);

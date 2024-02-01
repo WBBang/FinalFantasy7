@@ -33,6 +33,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float impuslePos = 50000.0f;
 
-	void launchedMissile();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float missileSpeed = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float delayTime = 3.0f;
+
+	bool cruiseReady = false;
+
+	void LaunchMissile();
+	void CruiseMissile();
+	void Delay(float value);
 
 };

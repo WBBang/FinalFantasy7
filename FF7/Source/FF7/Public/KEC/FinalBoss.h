@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* firePosition;
 
-	void LaunchMissile();
+	void SpawnMissile();
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AMissile> missile;

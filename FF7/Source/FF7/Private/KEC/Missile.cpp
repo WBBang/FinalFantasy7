@@ -4,6 +4,7 @@
 #include "KEC/Missile.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/CapsuleComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Engine/SkeletalMesh.h"
 
 // Sets default values
 AMissile::AMissile()
@@ -13,8 +14,10 @@ AMissile::AMissile()
 	capsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("capsuleComp"));
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("meshComp"));
 
+
 	SetRootComponent(capsuleComp);
 	meshComp->SetupAttachment(RootComponent);
+
 
 }
 
@@ -22,7 +25,7 @@ AMissile::AMissile()
 void AMissile::BeginPlay()
 {
 	Super::BeginPlay();
-	launchedMissile();
+	LaunchMissile();
 	
 }
 
@@ -33,12 +36,38 @@ void AMissile::Tick(float DeltaTime)
 
 }
 
-void AMissile::launchedMissile()
+void AMissile::LaunchMissile()
 {
-	// 미사일의 Upvector로 폭발 충격 주기
+	// 미사일의 UpVector로 폭발 충격 주기
 	FVector impulseDir = meshComp->GetUpVector() * impuslePos;
 	meshComp->AddImpulse(impulseDir);
 
+	//딜레이 2초
+	Delay(delayTime);
+	CruiseMissile();
+}
 
+
+
+void AMissile::CruiseMissile()
+{
+	//플레이어 가져오기
+	FVector playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	//플레이어 방향으로 이동하기
+	FVector p0 = GetActorLocation();
+	FVector dir = playerPosition - p0;
+	dir.Normalize();
+	SetActorLocation(dir * missileSpeed * GetWorld()->GetDeltaSeconds());
+}
+
+//딜레이 함수
+void AMissile::Delay(float value)
+{
+	FTimerHandle timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, 
+		FTimerDelegate::CreateLambda([&]()
+			{
+				GetWorld()->GetTimerManager().ClearTimer(timerHandle);
+			}), value, false);
 }
 
