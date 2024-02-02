@@ -19,11 +19,33 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	// 플레이어
+	UPROPERTY()
+	class AActor* player;
+
+	// 현재 시간
+	float currentTime;
+
+	// 추격 시간
+	float chaseTime = 3;
+
+	// 사라지는 시간
+	float distroyTime = 5;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// 이동 속도
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float speed = 1000.0f;
+
 	// 따라오는 불덩이
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* ShockWaveFire;
+	class UParticleSystemComponent* ShockWaveFire;
+
+	// 충돌체
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USphereComponent* sphereComp;
 };

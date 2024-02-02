@@ -36,6 +36,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AGuardSuccessAOE> aoeActor;
 
+	// 지면 충격파 불덩이
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AShockWaveAOE> shockWaveActor;
+
 private:
 
 	// 플레이어
@@ -53,6 +57,9 @@ private:
 
 	// 기열파
 	void GuardSuccess();
+
+	// 지면 충격파
+	void ShockWave();
 
 
 // AI Section

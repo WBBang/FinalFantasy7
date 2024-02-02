@@ -25,15 +25,15 @@ public:
 
 	// 처음 장판 - 한번 터지고 사라짐
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* pFireFirst;
+	class UParticleSystemComponent* pFireFirst;
 
 	// 기둥 (불 파티클 4개) - 장판 사라지고 나서 등장 (플레이어 위로 보내는 공격)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* pFirePillar0;
+	class UParticleSystemComponent* pFirePillar0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* pFirePillar1;
+	class UParticleSystemComponent* pFirePillar1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* pFirePillar2;
+	class UParticleSystemComponent* pFirePillar2;
 
 	// 기둥 나오는 함수
 	void ActiveFirePillar();

@@ -40,6 +40,7 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 	pFirePillar2->SetRelativeScale3D(FVector(4));
 	pFirePillar2->SetRelativeLocation(FVector(0, 0, 1000));
 
+	// 불기둥 처음에는 안나오게
 	pFirePillar0->bAutoActivate = false;
 	pFirePillar1->bAutoActivate = false;
 	pFirePillar2->bAutoActivate = false;
@@ -62,13 +63,12 @@ void AGuardSuccessAOE::BeginPlay()
 	float Time = 0.5f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 		{
+			// 0.5초 뒤에 불기둥 생성
 			ActiveFirePillar();
 
 			// TimerHandle 초기화
 			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 		}), Time, false);
-
-	
 }
 
 // Called every frame
@@ -78,13 +78,9 @@ void AGuardSuccessAOE::Tick(float DeltaTime)
 
 }
 
-
-
 // 기둥 나오는 함수
 void AGuardSuccessAOE::ActiveFirePillar()
 {
-	UE_LOG(LogTemp, Log, TEXT("HI"));
-
 	pFirePillar0->Activate(true);
 	pFirePillar1->Activate(true);
 	pFirePillar2->Activate(true);
@@ -98,7 +94,6 @@ void AGuardSuccessAOE::OnEffectFinished(UParticleSystemComponent* PSystem)
 	float Time = 3.0f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 		{
-			UE_LOG(LogTemp, Log, TEXT("bye"));
 			Destroy();
 
 			// TimerHandle 초기화
