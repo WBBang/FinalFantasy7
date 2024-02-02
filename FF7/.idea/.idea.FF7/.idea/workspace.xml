@@ -12,7 +12,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_BossBullet.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_BossBullet.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FF7.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/FF7.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/BossBullet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/BossBullet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,6 +188,11 @@
       <workItem from="1706857025174" duration="2000000" />
       <workItem from="1706859128422" duration="6810000" />
       <workItem from="1706869825011" duration="624000" />
+      <workItem from="1706870529633" duration="1150000" />
+      <workItem from="1706871818071" duration="182000" />
+      <workItem from="1706872027703" duration="63000" />
+      <workItem from="1706875266418" duration="1528000" />
+      <workItem from="1706876944678" duration="1290000" />
     </task>
     <servers />
   </component>

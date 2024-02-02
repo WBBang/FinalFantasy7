@@ -35,14 +35,14 @@ AFinalBossCharacter::AFinalBossCharacter()
 void AFinalBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Fire();
 }
 
 // Called every frame
 void AFinalBossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Fire();
+	
 }
 
 // Called to bind functionality to input
@@ -55,26 +55,17 @@ void AFinalBossCharacter::Fire()
 {
 	FTransform leftGun = leftArrowComp->GetComponentTransform();
 	FTransform rightGun = rightArrowComp->GetComponentTransform();
+	
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, leftGun);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, rightGun);
 
-	while (fireCount > 1)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, leftGun);
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, rightGun);
-		UE_LOG(LogTemp,Warning,TEXT("Hello"));
 		
-		 switch (fireNum)
-		 {
-			UE_LOG(LogTemp,Warning,TEXT("Hello"));
-			case 1: GetWorld()->SpawnActor<ABossBullet>(bulletFactory, leftGun);
-			fireNum++;
-		 	fireCount--;
-		 	break;
 		
-			case 2: GetWorld()->SpawnActor<ABossBullet>(bulletFactory, rightGun);
-		 	fireNum--;
-		 	fireCount--;
-		 	break;
-		 }
-	}
-	fireCount = 5;
+	UE_LOG(LogTemp, Warning, TEXT("fuck"));
+	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, leftGun);
+	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, rightGun);
+	
 }
+		
+		
+

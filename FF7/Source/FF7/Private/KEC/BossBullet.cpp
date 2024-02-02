@@ -22,6 +22,6 @@ void ABossBullet::BeginPlay()
 void ABossBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * 30 * GetWorld()->DeltaTimeSeconds);
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * 1000 * GetWorld()->DeltaTimeSeconds);
 }
 
