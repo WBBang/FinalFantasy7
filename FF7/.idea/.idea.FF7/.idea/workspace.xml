@@ -11,15 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBoss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_Missile.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/Missile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/Missile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/West_Missile_AGM114.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/BossBullet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/BossBullet.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,6 +182,7 @@
       <workItem from="1706855428345" duration="803000" />
       <workItem from="1706857025174" duration="2000000" />
       <workItem from="1706859128422" duration="6810000" />
+      <workItem from="1706869825011" duration="624000" />
     </task>
     <servers />
   </component>
