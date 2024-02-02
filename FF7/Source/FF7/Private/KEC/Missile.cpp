@@ -30,11 +30,6 @@ void AMissile::BeginPlay()
 {
 	Super::BeginPlay();
 	LaunchMissile();
-	
-	
-	
-	//µô·¹ÀÌ 2ÃÊ
-	
 }
 
 // Called every frame
@@ -70,6 +65,7 @@ void AMissile::CruiseMissile()
 	FVector dir = playerPosition - p0;
 	dir.Normalize();
 	targetPosition = dir * missileSpeed * GetWorld()->GetDeltaSeconds();
+	SetActorLocation(targetPosition);
 }
 
 void AMissile::Delay()
