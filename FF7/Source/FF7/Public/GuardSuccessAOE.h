@@ -23,7 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	// 처음 장판 - 한번 터지고 사라짐
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystemComponent* pFireFirst;
@@ -35,8 +34,6 @@ public:
 	UParticleSystemComponent* pFirePillar1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UParticleSystemComponent* pFirePillar2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystemComponent* pFirePillar3;
 
 	// 기둥 나오는 함수
 	void ActiveFirePillar();

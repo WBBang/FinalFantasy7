@@ -32,22 +32,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
+	// 기열파 장판
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AGuardSuccessAOE> aoeActor;
+
 private:
 
 	// 플레이어
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	class AActor* player;
 
 	void Attack();
+
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
 	bool IsAttacking;
 
-	// 기열파 장판
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AGuardSuccessAOE> aoeActor;
 
 	// 기열파
 	void GuardSuccess();

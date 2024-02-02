@@ -73,6 +73,7 @@ void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInt
 // 가드 성공 - 기열파
 void AMiddleBossCharacter::GuardSuccess()
 {
+	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector  loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
 }
@@ -108,7 +109,9 @@ void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished&
 void AMiddleBossCharacter::AttackByAI()
 {
 	// 공격
-	Attack();
+	//Attack();
+
+	GuardSuccess();
 }
 
 

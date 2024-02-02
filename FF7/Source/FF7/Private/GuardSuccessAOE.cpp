@@ -17,35 +17,32 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 	// 첫 장판
 	pFireFirst = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFireFirst"));
 	SetRootComponent(pFireFirst);
-	pFireFirst->SetRelativeScale3D(FVector(4, 4, 4));
-	pFireFirst->SetRelativeLocation(FVector(0, 0, 0));
-	ConstructorHelpers::FObjectFinder<UParticleSystem>tempFireFirst(TEXT("/Script/Engine.ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
+	pFireFirst->SetRelativeScale3D(FVector(0.5));
+	ConstructorHelpers::FObjectFinder<UParticleSystem>tempFireFirst(TEXT("/Script/Engine.ParticleSystem'/Game/KSH/ParagonSteel/FX/Particles/Steel/Abilities/Ultimate/FX/P_Steel_Ultimate_Impact.P_Steel_Ultimate_Impact'"));
 	if (tempFireFirst.Succeeded())
 	{
 		pFireFirst->SetTemplate(tempFireFirst.Object);
 	}
 	
-	
 	// 불 기둥
 	pFirePillar0 = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFirePillar0"));
 	pFirePillar0->SetupAttachment(RootComponent);
-	pFirePillar0->SetRelativeScale3D(FVector(4, 4, 4));
+	pFirePillar0->SetRelativeScale3D(FVector(4));
 	pFirePillar0->SetRelativeLocation(FVector(0, 0, 0));
 
 	pFirePillar1 = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFirePillar1"));
 	pFirePillar1->SetupAttachment(RootComponent);
-	pFirePillar1->SetRelativeScale3D(FVector(4, 4, 4));
-	pFirePillar1->SetRelativeLocation(FVector(0, 0, 200));
+	pFirePillar1->SetRelativeScale3D(FVector(4));
+	pFirePillar1->SetRelativeLocation(FVector(0, 0, 500));
 
 	pFirePillar2 = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFirePillar2"));
 	pFirePillar2->SetupAttachment(RootComponent);
-	pFirePillar2->SetRelativeScale3D(FVector(4, 4, 4));
-	pFirePillar2->SetRelativeLocation(FVector(0, 0, 400));
+	pFirePillar2->SetRelativeScale3D(FVector(4));
+	pFirePillar2->SetRelativeLocation(FVector(0, 0, 1000));
 
-	pFirePillar3 = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFirePillar3"));
-	pFirePillar3->SetupAttachment(RootComponent);
-	pFirePillar3->SetRelativeScale3D(FVector(4, 4, 4));
-	pFirePillar3->SetRelativeLocation(FVector(0, 0, 600));
+	pFirePillar0->bAutoActivate = false;
+	pFirePillar1->bAutoActivate = false;
+	pFirePillar2->bAutoActivate = false;
 
 	ConstructorHelpers::FObjectFinder<UParticleSystem>tempFirePillar(TEXT("/Script/Engine.ParticleSystem'/Game/KSH/FX/Particles/Abilities/Ultimate/FX/P_Burning.P_Burning'"));
 	if (tempFirePillar.Succeeded())
@@ -53,14 +50,7 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 		pFirePillar0->SetTemplate(tempFirePillar.Object);
 		pFirePillar1->SetTemplate(tempFirePillar.Object);
 		pFirePillar2->SetTemplate(tempFirePillar.Object);
-		pFirePillar3->SetTemplate(tempFirePillar.Object);
-
-		pFirePillar0->bAutoActivate = false;
-		pFirePillar1->bAutoActivate = false;
-		pFirePillar2->bAutoActivate = false;
-		pFirePillar3->bAutoActivate = false;
 	}
-	
 }
 
 // Called when the game starts or when spawned
@@ -89,6 +79,7 @@ void AGuardSuccessAOE::Tick(float DeltaTime)
 }
 
 
+
 // 기둥 나오는 함수
 void AGuardSuccessAOE::ActiveFirePillar()
 {
@@ -97,7 +88,6 @@ void AGuardSuccessAOE::ActiveFirePillar()
 	pFirePillar0->Activate(true);
 	pFirePillar1->Activate(true);
 	pFirePillar2->Activate(true);
-	pFirePillar3->Activate(true);
 	//pFirePillar3->OnSystemFinished.AddDynamic(this, &AGuardSuccessAOE::OnEffectFinished);
 }
 
