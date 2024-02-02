@@ -78,8 +78,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsTargetLocked = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AActor* HitActor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
 	
 };

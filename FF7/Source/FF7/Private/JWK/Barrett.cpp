@@ -50,6 +50,7 @@ ABarrett::ABarrett()
 void ABarrett::BeginPlay()
 {
 	Super::BeginPlay();
+	IsTargetLocked = false;
 	CurFireTime = MaxFireTime;
 }
 
@@ -150,9 +151,10 @@ void ABarrett::LineTrace()
 
 void ABarrett::LockOn()
 {
-	if (IsTargetLocked)
+	UE_LOG(LogTemp, Log, TEXT("LockOn"));
+	if (!IsTargetLocked)
 	{
-		TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
+		UE_LOG(LogTemp, Log, TEXT("IsTargetLocked"));
 		TArray<AActor*> ignoreActors;
 		ignoreActors.Add(this);
 		FHitResult OutHit;
@@ -180,7 +182,7 @@ void ABarrett::LockOn()
 			// bool bIgnoreSelf
 			true
 		);
-		OutHit.GetActor();
+		//OutHit.GetActor();
 
 		if (result)
 		{
@@ -192,13 +194,18 @@ void ABarrett::LockOn()
 				HitActor = OutHit.GetActor();
 			}
 		}
+		else
+		{
+
+		}
 	}
 
 	else
 	{
+		UE_LOG(LogTemp, Log, TEXT("LockOff"));
 		// code
 		IsTargetLocked = false;
-		HitActor;
+		HitActor = nullptr;
 	}
 }
 
