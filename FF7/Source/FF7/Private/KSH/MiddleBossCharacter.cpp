@@ -3,6 +3,7 @@
 #include "KSH/MiddleBossCharacter.h"
 #include "KSH/MBAIController.h"
 #include "KSH/MBAnimInstance.h"
+#include "KSH/ShockWaveAOE.h"
 
 
 // Sets default values
@@ -73,8 +74,15 @@ void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInt
 // 가드 성공 - 기열파
 void AMiddleBossCharacter::GuardSuccess()
 {
-	FVector  loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
+	player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
+}
+
+void AMiddleBossCharacter::ShockWave()
+{
+	FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
+	GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, FRotator(0, 0, 0));
 }
 
 // 랜덤 순찰 범위
@@ -86,13 +94,13 @@ float AMiddleBossCharacter::GetAIPatrolRadius()
 // 플레이어 인지 범위
 float AMiddleBossCharacter::GetAIDetectRange()
 {
-	return 400.0f;
+	return 2000.0f;
 }
 
 // 플레이어 공격 범위
 float AMiddleBossCharacter::GetAIAttackRange()
 {
-	return 300.0f;
+	return 2000.0f;
 }
 
 float AMiddleBossCharacter::GetAITurnSpeed()
@@ -108,7 +116,9 @@ void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished&
 void AMiddleBossCharacter::AttackByAI()
 {
 	// 공격
-	Attack();
+	//Attack();
+
+	ShockWave();
 }
 
 
