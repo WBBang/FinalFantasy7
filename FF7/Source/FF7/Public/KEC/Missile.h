@@ -29,11 +29,8 @@ public:
 	class AMissile* missile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* capsuleComp;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* meshComp;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float impuslePos = 50000.0f;
 
@@ -42,22 +39,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float delayTime = 3.0f;
-
-	bool cruiseReady = false;
+	
 
 	void LaunchMissile();
-	void CruiseMissile();
 	
-	void Delay();
 
 	UPROPERTY(EditAnywhere)
 	FVector playerPosition;
 
 	UPROPERTY(EditAnywhere)
-	FVector targetPosition;
+	FRotator playerRotate;
 
 	UPROPERTY(EditAnywhere)
-	bool isLaunched;
-
-	
+	FVector targetDir;
+	  
 };

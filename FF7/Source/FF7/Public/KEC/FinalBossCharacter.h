@@ -33,16 +33,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* rightArrowComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* missieLaunchArrowComp;
+	
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* fireVFX;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf <class ABossBullet> bulletFactory;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf <class AMissile> missileFactory;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
 	
 	int32 fireNum = 1;
 	
 	void Fire();
+	void LauchMissile();
 };

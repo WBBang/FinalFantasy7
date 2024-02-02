@@ -3,8 +3,6 @@
 
 #include "KEC/Missile.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/CapsuleComponent.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Engine/SkeletalMesh.h"
 
 
 // Sets default values
@@ -12,17 +10,8 @@ AMissile::AMissile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	capsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("capsuleComp"));
+
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("meshComp"));
-
-
-	SetRootComponent(capsuleComp);
-	meshComp->SetupAttachment(RootComponent);
-
-	missile = Cast<AMissile>(GetOwner());
-	
-
-
 }
 
 // Called when the game starts or when spawned
@@ -36,47 +25,36 @@ void AMissile::BeginPlay()
 void AMissile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (isLaunched) 
-	{
-		Delay();
-	}
+	
 }
 
 void AMissile::LaunchMissile()
 {
 	// 미사일 UpVector Impulse
-	FVector impulseDir = meshComp->GetUpVector() * impuslePos;
+	FVector impulseDir = GetActorLocation().UpVector * impuslePos;
 	meshComp->AddImpulse(impulseDir);
-	isLaunched = true;
-}
 
 
-
-void AMissile::CruiseMissile()
-{
-	meshComp->SetEnableGravity(false);
-	meshComp->SetSimulatePhysics(false);
-	SetActorLocation(meshComp->GetComponentLocation());
-	//플레이어 가져오기
-	playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-	
-	//플레이어 방향으로 이동하기
-	FVector p0 = GetActorLocation();
-	FVector dir = playerPosition - p0;
-	dir.Normalize();
-	targetPosition = dir * missileSpeed * GetWorld()->GetDeltaSeconds();
-	SetActorLocation(targetPosition);
-}
-
-void AMissile::Delay()
-{
 	UE_LOG(LogTemp, Log, TEXT("Hi"));
 	FTimerHandle MyTimer;
 	float Time = delayTime;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 		{
-			// 실행할 내용
-			CruiseMissile();
+		//플레이어 정보 가져오기
+			playerPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+			playerRotate = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
+
+		//플레이어 방향으로 머리 돌리기
+
+
+			SetActorRotation(playerRotate);
+
+		//플레이어 방향으로 이동하기
+			FVector p0 = GetActorLocation();
+			FVector dir = playerPosition - p0;
+			dir.Normalize();
+			targetDir = dir * missileSpeed * GetWorld()->GetDeltaSeconds();
+			SetActorLocation(p0 + targetDir);
 			UE_LOG(LogTemp, Log, TEXT("Bye"));
 			// TimerHandle 초기화
 			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
