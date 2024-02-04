@@ -4,6 +4,7 @@
 #include "KSH/MBAIController.h"
 #include "KSH/MBAnimInstance.h"
 #include "KSH/ShockWaveAOE.h"
+#include "GuardSuccessAOE.h"
 
 
 // Sets default values
@@ -16,6 +17,7 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	IsAttacking = false;
+	IsGuarding = false;
 }
 
 // Called when the game starts or when spawned
@@ -60,12 +62,14 @@ void AMiddleBossCharacter::Attack()
 	IsAttacking = true;
 }
 
+// 기본 공격 애니메이션 끝
 void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	//UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
 	IsAttacking = false;
 
 	// 공격 판정 없애기
+
 
 	// BT에 끝난거 알려주기
 	OnAttackFinished.ExecuteIfBound();
@@ -83,6 +87,18 @@ void AMiddleBossCharacter::ShockWave()
 {
 	FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
 	GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, FRotator(0, 0, 0));
+}
+
+// 가드
+void AMiddleBossCharacter::Guard()
+{
+	if (IsGuarding) return;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayGuardMontage();
+	IsGuarding = true;
 }
 
 // 랜덤 순찰 범위
@@ -118,7 +134,7 @@ void AMiddleBossCharacter::AttackByAI()
 	// 공격
 	//Attack();
 
-	ShockWave();
+	Guard();
 }
 
 

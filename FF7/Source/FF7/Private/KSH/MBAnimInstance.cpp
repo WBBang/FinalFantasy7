@@ -8,10 +8,19 @@ UMBAnimInstance::UMBAnimInstance()
 	CurrentPawnSpeed = 0.0f;
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack_Montage(TEXT("/ Script / Engine.AnimMontage'/Game/KSH/Animations/Attack/M_AttackMontage.M_AttackMontage'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Guard_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/Guard/M_Guard_Montage.M_Guard_Montage'"));
+
+	
 	if (Attack_Montage.Succeeded())
 	{
 		AttackMontage = Attack_Montage.Object;
 	}
+
+	if (Guard_Montage.Succeeded())
+	{
+		GuardMontage = Guard_Montage.Object;
+	}
+
 }
 
 void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -31,6 +40,15 @@ void UMBAnimInstance::PlayAttackMontage()
 	if (!Montage_IsPlaying(AttackMontage))
 	{
 		Montage_Play(AttackMontage, 1.0f);
+	}
+}
+
+// 가드 애니메이션
+void UMBAnimInstance::PlayGuardMontage()
+{
+	if (!Montage_IsPlaying(GuardMontage))
+	{
+		Montage_Play(GuardMontage, 1.0f);
 	}
 }
 

@@ -18,7 +18,11 @@ public:
 	UMBAnimInstance();
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	// 공격 애니메이션 실행
 	void PlayAttackMontage();
+
+	// 가드 애니메이션 실행
+	void PlayGuardMontage();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pawn, Meta=(AllowPrivateAccess = true))
@@ -29,4 +33,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* GuardMontage;
 };

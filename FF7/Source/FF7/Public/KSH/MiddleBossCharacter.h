@@ -54,6 +54,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
 	bool IsAttacking;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
+	bool IsGuarding;
+
 
 	// 기열파
 	void GuardSuccess();
@@ -61,6 +64,8 @@ private:
 	// 지면 충격파
 	void ShockWave();
 
+	// 가드
+	void Guard();
 
 // AI Section
 protected:
