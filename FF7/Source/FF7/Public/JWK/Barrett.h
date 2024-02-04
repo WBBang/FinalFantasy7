@@ -44,6 +44,34 @@ public:
 	FVector direction;
 
 	void Move();
+	 
+
+	// 이동 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool W = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool A = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool S = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool D = false;
+
+	// 공격 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsFire;
+
+	// 락온 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Tab = false;
+
+	// 구르기 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool SpaceBar = false;
+
+	// 스프린트 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool LeftShift = false;
+
 
 	void OnAxisVertical(float value);
 
@@ -63,10 +91,10 @@ public:
 	TSubclassOf<class ABulletActor> bulletFactory;
 
 	// Auto Fire 
-	int Damage;
-	float CurFireTime;
+	int Damage = 0;
+	float CurFireTime = 0;
 	float MaxFireTime = 0.1;
-	bool IsFire;
+
 
 	UFUNCTION()
 	void StartAttack();
@@ -76,7 +104,7 @@ public:
 	void Fire();
 
 	void LineTrace();
-	bool bIsAttacking;
+	bool bIsAttacking = false;
 
 
 	// Camera Lock On
@@ -94,4 +122,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "CharacterState")
 	ECharacterState CharacterState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+    bool bIsLockOn = false;
 };
