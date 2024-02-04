@@ -40,7 +40,7 @@ void AMiddleBossCharacter::PostInitializeComponents()
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
 
-	AnimInstance->OnMontageEnded.AddDynamic(this, &AMiddleBossCharacter::OnAttackMontageEnded);
+	AnimInstance->OnMontageEnded.AddDynamic(this, &AMiddleBossCharacter::OnMontageEnded);
 }
 
 // Called to bind functionality to input
@@ -63,13 +63,28 @@ void AMiddleBossCharacter::Attack()
 }
 
 // 기본 공격 애니메이션 끝
-void AMiddleBossCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
-	IsAttacking = false;
+	// 평타 몽타주였다면
+	if (Montage->GetFName() == "M_AttackMontage")
+	{
+		UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
+		IsAttacking = false;
 
-	// 공격 판정 없애기
+		// 공격 판정 없애기
 
+	}
+
+	// 가드 몽타주였다면
+	else if (Montage->GetFName() == "M_Guard_Montage")
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Guard End"));
+		UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
+		IsGuarding = false;
+
+		// 가드 데미지 초기화
+
+	}
 
 	// BT에 끝난거 알려주기
 	OnAttackFinished.ExecuteIfBound();
