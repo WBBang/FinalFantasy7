@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "Barrett.generated.h"
 
+// 이동상태, 공격상태 애니메이션
+UENUM(BlueprintType)
+enum class ECharacterState : uint8
+{
+	Walking UMETA(DisplayName = "Walking"),
+	Aiming UMETA(DisplayName = "Aiming"),
+};
+
 UCLASS()
 class FF7_API ABarrett : public ACharacter
 {
@@ -78,10 +86,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsTargetLocked = false;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AActor* HitActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
-	
+
+
+	UPROPERTY(BlueprintReadOnly, Category = "CharacterState")
+	ECharacterState CharacterState;
 };

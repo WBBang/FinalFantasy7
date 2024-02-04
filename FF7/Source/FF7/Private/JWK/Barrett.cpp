@@ -69,12 +69,28 @@ void ABarrett::Tick(float DeltaTime)
 			CurFireTime = 0;
 		}
 	}
-	
 
 	if (HitActor)
 	{
-		APawn::GetController()->AController::SetControlRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),HitActor->GetActorLocation()));
+		/*APawn::GetController()->AController::SetControlRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),HitActor->GetActorLocation()));*/
+
+		if (APawn::GetController())
+		{
+			// HitActor이 유효한지 체크
+			if (HitActor->IsValidLowLevel())
+			{
+				// 현재 캐릭터의 위치에서 HitActor 쪽을 향하는 회전값 계산
+				FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), HitActor->GetActorLocation());
+
+				// 부드러운 에임 변경을 위해 보간 사용 (Lerp)
+				FRotator LerpedRotation = FMath::Lerp(APawn::GetController()->GetControlRotation(), TargetRotation, DeltaTime * 5);
+
+				// 캐릭터의 컨트롤러에 회전값 설정
+				APawn::GetController()->AController::SetControlRotation(LerpedRotation);
+			}
+		}
 	}
+
 }
 
 // Called to bind functionality to input
@@ -134,8 +150,6 @@ void ABarrett::EndAttack()
 	CurFireTime = MaxFireTime;
 }
 
-
-
 void ABarrett::Fire()
 {
 	// 총알 생성
@@ -166,9 +180,9 @@ void ABarrett::LockOn()
 			// const FVector Start
 			GetActorLocation(),
 			// const FVector End
-			GetActorLocation() * cameraComp->GetForwardVector() * 1000,
+			GetActorLocation() * cameraComp->GetForwardVector() * 100,
 			// float Radius
-			1500.0f,
+			10000.0f,
 			// const TArray<TEnumAsByte<EObjectTypeQuery>>& ObjectTypes
 			LockOnArea,
 			// bool bTraceComplex
@@ -176,7 +190,7 @@ void ABarrett::LockOn()
 			// const TArray<AActor*>& ActorsToIgnore
 			ignoreActors,
 			// EDrawDebugTrace::Type DrawDebugType, 
-			EDrawDebugTrace::ForOneFrame,
+			EDrawDebugTrace::ForDuration,
 			// FHitResult & OutHit
 			OutHit,
 			// bool bIgnoreSelf
