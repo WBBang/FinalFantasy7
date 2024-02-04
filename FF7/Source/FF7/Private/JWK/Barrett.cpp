@@ -180,9 +180,9 @@ void ABarrett::LockOn()
 			// const FVector Start
 			GetActorLocation(),
 			// const FVector End
-			GetActorLocation() * cameraComp->GetForwardVector() * 100,
+			GetActorLocation() * cameraComp->GetForwardVector() * 10,
 			// float Radius
-			10000.0f,
+			5000.0f,
 			// const TArray<TEnumAsByte<EObjectTypeQuery>>& ObjectTypes
 			LockOnArea,
 			// bool bTraceComplex

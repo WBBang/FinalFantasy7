@@ -21,7 +21,7 @@ ABulletActor::ABulletActor()
 
 	// 총알 이동속도, bounce Set
 	movementComp->InitialSpeed = 6000.f;
-	movementComp->MaxSpeed = 6000.f;
+	movementComp->MaxSpeed = 12000.f;
 	movementComp->bShouldBounce = false;
 
 	// 총알의 Collision Set
