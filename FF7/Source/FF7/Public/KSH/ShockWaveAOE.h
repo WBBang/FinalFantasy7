@@ -28,10 +28,10 @@ private:
 	float currentTime;
 
 	// 추격 시간
-	float chaseTime = 3;
+	float chaseTime = 2;
 
 	// 사라지는 시간
-	float distroyTime = 5;
+	float distroyTime = 3;
 
 public:	
 	// Called every frame

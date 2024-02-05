@@ -100,6 +100,12 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 
 	}
 
+	// 지면 충격파 몽타주였다면
+	else if (Montage->GetFName() == "M_ShockWaveMontage")
+	{
+		
+	}
+
 	// BT에 끝난거 알려주기
 	OnAttackFinished.ExecuteIfBound();
 }
@@ -114,8 +120,17 @@ void AMiddleBossCharacter::GuardSuccess()
 
 void AMiddleBossCharacter::ShockWave()
 {
+	if (IsShockWaving) return;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayShockWaveMontage();
+
 	FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
 	GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, FRotator(0, 0, 0));
+
+	IsShockWaving = true;
 }
 
 // 가드
@@ -169,12 +184,22 @@ void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished&
 	OnAttackFinished = InOnAttackFinished;
 }
 
+void AMiddleBossCharacter::SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished)
+{
+	OnShockWaveFinished = InOnShockWaveFinished;
+}
+
 void AMiddleBossCharacter::AttackByAI()
 {
 	// 공격
 	//Attack();
 
 	Guard();
+}
+
+void AMiddleBossCharacter::ShockWaveByAI()
+{
+	ShockWave();
 }
 
 // 스피드 변환 함수

@@ -14,6 +14,7 @@ class UMBCharacterAIInterface : public UInterface
 };
 
 DECLARE_DELEGATE(FAICharacterAttackFinished);
+DECLARE_DELEGATE(FAICharacterShockWaveFinished);
 
 class FF7_API IMBCharacterAIInterface
 {
@@ -28,7 +29,9 @@ public:
 	virtual float GetAITurnSpeed() = 0;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
+	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) = 0;
 	virtual void AttackByAI() = 0;
+	virtual void ShockWaveByAI() = 0;
 
 	virtual void SpeedChangeByAI(float Speed) = 0;
 };

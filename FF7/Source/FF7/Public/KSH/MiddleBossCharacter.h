@@ -70,6 +70,9 @@ private:
 	bool IsGuarding;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsShockWaving;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	float GuardingDamage;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
@@ -94,11 +97,13 @@ protected:
 	virtual float GetAITurnSpeed() override;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) override;
 	virtual void AttackByAI() override;
+	virtual void ShockWaveByAI() override;
 
 	virtual void SpeedChangeByAI(float Speed) override;
 
 	// 전달받은 델리게이트를 보관하는 함수
 	FAICharacterAttackFinished OnAttackFinished;
-
+	FAICharacterShockWaveFinished OnShockWaveFinished;
 };

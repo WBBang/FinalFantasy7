@@ -10,6 +10,8 @@ UMBAnimInstance::UMBAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack_Montage(TEXT("/ Script / Engine.AnimMontage'/Game/KSH/Animations/Attack/M_AttackMontage.M_AttackMontage'"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Guard_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/Guard/M_Guard_Montage.M_Guard_Montage'"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShockWave_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/ShockWave/M_ShockWaveMontage.M_ShockWaveMontage'"));
+
 	
 	if (Attack_Montage.Succeeded())
 	{
@@ -19,6 +21,11 @@ UMBAnimInstance::UMBAnimInstance()
 	if (Guard_Montage.Succeeded())
 	{
 		GuardMontage = Guard_Montage.Object;
+	}
+
+	if (ShockWave_Montage.Succeeded())
+	{
+		ShockWaveMontage = ShockWave_Montage.Object;
 	}
 
 }
@@ -52,6 +59,14 @@ void UMBAnimInstance::PlayGuardMontage()
 	}
 }
 
+// 지면 충격파 애니메이션
+void UMBAnimInstance::PlayShockWaveMontage()
+{
+	if (!Montage_IsPlaying(ShockWaveMontage))
+	{
+		Montage_Play(ShockWaveMontage, 1.0f);
+	}
+}
 
 void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 {
