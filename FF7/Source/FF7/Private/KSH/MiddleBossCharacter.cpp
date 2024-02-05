@@ -18,6 +18,7 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 
 	IsAttacking = false;
 	IsGuarding = false;
+	GuardingDamage = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +49,17 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+// 플레이어에게 공격 당한 경우
+void AMiddleBossCharacter::MiddleBossDamaged(float damage)
+{
+	// 가드 중이라면
+	if (true == IsGuarding)
+	{
+		// 피 줄어드는 대신 가드에 데미지 누적
+		GuardingDamage += damage;
+	}
 }
 
 // 기본 공격
@@ -113,6 +125,9 @@ void AMiddleBossCharacter::Guard()
 	if (nullptr == AnimInstance) return;
 
 	AnimInstance->PlayGuardMontage();
+
+	// 누적 데미지 초기화 후 증가 시키기 (증가 : 에서)
+	GuardingDamage = 0.0f;
 	IsGuarding = true;
 }
 
@@ -128,10 +143,18 @@ float AMiddleBossCharacter::GetAIDetectRange()
 	return 2000.0f;
 }
 
-// 플레이어 공격 범위
+// 플레이어 공격할 수 있는 범위
 float AMiddleBossCharacter::GetAIAttackRange()
 {
-	return 2000.0f;
+	canAttackRange = 1000.0f;
+	return canAttackRange;
+}
+
+// 플레이어에게 스킬쓸 수 있는 범위
+float AMiddleBossCharacter::GetAISkillRange()
+{
+	canSkillRange = 1500.0f;
+	return canSkillRange;
 }
 
 float AMiddleBossCharacter::GetAITurnSpeed()

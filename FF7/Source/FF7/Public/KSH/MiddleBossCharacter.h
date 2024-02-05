@@ -33,12 +33,24 @@ public:
 	USkeletalMeshComponent* skeletalMesh;
 
 	// 기열파 장판
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AGuardSuccessAOE> aoeActor;
 
 	// 지면 충격파 불덩이
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AShockWaveAOE> shockWaveActor;
+
+	// 공격 범위
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	float canAttackRange;
+
+	// 스킬 범위
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	float canSkillRange;
+
+	// 공격 당함
+	UFUNCTION()
+	void MiddleBossDamaged(float damage);
 
 private:
 
@@ -51,11 +63,14 @@ private:
 	UFUNCTION()
 	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta=(AllowPrivateAccess = true))
 	bool IsAttacking;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuarding;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	float GuardingDamage;
 
 
 	// 기열파
@@ -72,6 +87,7 @@ protected:
 	virtual float GetAIPatrolRadius() override;
 	virtual float GetAIDetectRange() override;
 	virtual float GetAIAttackRange() override;
+	virtual float GetAISkillRange() override;
 	virtual float GetAITurnSpeed() override;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;

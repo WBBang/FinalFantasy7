@@ -41,7 +41,4 @@ bool UBTDecorator_AttackInRange::CalculateRawConditionValue(UBehaviorTreeCompone
 	// 지금 거리가 들어오면 true 반환
 	bResult = (DistanceToTarget <= AttackRangeWithRadius);
 	return bResult;
-
-
-	return false;
 }

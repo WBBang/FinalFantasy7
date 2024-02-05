@@ -24,6 +24,7 @@ public:
 	virtual float GetAIPatrolRadius() = 0;
 	virtual float GetAIDetectRange() = 0;
 	virtual float GetAIAttackRange() = 0;
+	virtual float GetAISkillRange() = 0;
 	virtual float GetAITurnSpeed() = 0;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
