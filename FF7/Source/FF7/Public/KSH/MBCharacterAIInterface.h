@@ -29,4 +29,6 @@ public:
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
 	virtual void AttackByAI() = 0;
+
+	virtual void SpeedChangeByAI(float Speed) = 0;
 };

@@ -5,6 +5,7 @@
 #include "KSH/MBAnimInstance.h"
 #include "KSH/ShockWaveAOE.h"
 #include "GuardSuccessAOE.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -25,6 +26,7 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 void AMiddleBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	movementComp = GetCharacterMovement();
 }
 
 // Called every frame
@@ -175,4 +177,9 @@ void AMiddleBossCharacter::AttackByAI()
 	Guard();
 }
 
+// 스피드 변환 함수
+void AMiddleBossCharacter::SpeedChangeByAI(float Speed)
+{
+	movementComp->MaxWalkSpeed = Speed;
+}
 

@@ -72,6 +72,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	float GuardingDamage;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
+	class UCharacterMovementComponent* movementComp;
+
 
 	// 기열파
 	void GuardSuccess();
@@ -92,6 +95,8 @@ protected:
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 	virtual void AttackByAI() override;
+
+	virtual void SpeedChangeByAI(float Speed) override;
 
 	// 전달받은 델리게이트를 보관하는 함수
 	FAICharacterAttackFinished OnAttackFinished;
