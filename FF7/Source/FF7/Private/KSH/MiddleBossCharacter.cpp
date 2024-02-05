@@ -103,7 +103,9 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	// 지면 충격파 몽타주였다면
 	else if (Montage->GetFName() == "M_ShockWaveMontage")
 	{
-		
+		IsShockWaving = false;
+		OnShockWaveFinished.ExecuteIfBound();
+		return;
 	}
 
 	// BT에 끝난거 알려주기
@@ -118,6 +120,8 @@ void AMiddleBossCharacter::GuardSuccess()
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
 }
 
+
+// 지면 충격파
 void AMiddleBossCharacter::ShockWave()
 {
 	if (IsShockWaving) return;
