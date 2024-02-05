@@ -42,6 +42,8 @@ public:
 	
 
 	void LaunchMissile();
+	void CruiseMissile();
+	void setRotation();
 	
 
 	UPROPERTY(EditAnywhere)
