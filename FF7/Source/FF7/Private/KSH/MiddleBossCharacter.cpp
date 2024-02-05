@@ -109,6 +109,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	}
 
 	// BT에 끝난거 알려주기
+	// 나중에 몽타주별로 나눠야 함 (우선은 귀찮으니 하나로..ㅎ)
 	OnAttackFinished.ExecuteIfBound();
 }
 
