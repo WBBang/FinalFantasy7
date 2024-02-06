@@ -7,6 +7,8 @@
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "KSH/MBAI.h"
+#include "KSH/MiddleBossCharacter.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 AMBAIController::AMBAIController()
 {
@@ -25,10 +27,14 @@ AMBAIController::AMBAIController()
 
 void AMBAIController::RunAI()
 {
+	
+	//AMiddleBossCharacter* middleBoss = Cast< AMiddleBossCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AMiddleBossCharacter::StaticClass()));
 	UBlackboardComponent* BlackboardPtr = Blackboard.Get();
 	if (UseBlackboard(BBAsset, BlackboardPtr))
 	{
 		Blackboard->SetValueAsVector(BBKEY_HOMEPOS, GetPawn()->GetActorLocation());
+		//if (middleBoss)
+		//	Blackboard->SetValueAsObject(BBKEY_MIDDLEBOSS, middleBoss);
 		bool RunResult = RunBehaviorTree(BTAsset);
 		ensure(RunResult);
 	}

@@ -26,7 +26,10 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 void AMiddleBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	MiddleBossHP = MiddleBossMaxHP;
 	movementComp = GetCharacterMovement();
+
+
 }
 
 // Called every frame
@@ -53,7 +56,33 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 }
 
-// 플레이어에게 공격 당한 경우
+// 기본 스킬로 맞은 경우
+void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(float damage)
+{
+	// 보스한테 데미지 처리
+	MiddleBossDamaged(damage);
+}
+
+// 우와아왕빵으로 맞은 경우
+void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
+{
+	// 가드 상태가 아니라면
+	if (false == IsGuarding)
+	{
+		// 경직 상태
+		IsHitStuning = true;
+
+		// 경직 애니메이션 호출
+
+
+		// 경직 애니메이션 끝날 때 IsHitStuning = false 처리 하기
+	}
+
+	// 보스한테 데미지 처리
+	MiddleBossDamaged(damage);
+}
+
+// 플레이어에게 공격 당한 경우 (어떤 공격이든 항상 호출)
 void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 {
 	// 가드 중이라면
@@ -61,7 +90,52 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 	{
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
+
+		// 아래 if문을 decorator로 만들어버리기?
+		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했다면
+		if (GuardingDamage >= 2)
+		{
+			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
+			// 기열파 -> BT	로 할 수 있나
+			IsGuardSuccessing = true;
+		}
 	}
+
+	// 가드 중이 아니라면
+	else
+	{
+		// 데미지 받고
+		MiddleBossHP -= damage;
+
+		// 0이하라면
+		if (MiddleBossHP <= 0)
+		{
+			MiddleBossHP = 0;
+
+			// 중간보스 클리어 처리
+			
+		}
+
+		// 30% 확률로 
+		int randomNum = FMath::RandRange(0, 9);
+		if (randomNum < 3) // 0, 1, 2
+		{
+			Guard();
+		}
+	}
+}
+
+// 가드
+void AMiddleBossCharacter::Guard()
+{
+	if (IsGuarding) return;
+	GuardingDamage = 0.0f;
+	IsGuarding = true;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayGuardMontage();
 }
 
 // 기본 공격
@@ -76,7 +150,7 @@ void AMiddleBossCharacter::Attack()
 	IsAttacking = true;
 }
 
-// 기본 공격 애니메이션 끝
+// 애니메이션 끝
 void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	// 평타 몽타주였다면
@@ -94,10 +168,10 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Guard End"));
 		UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
+
+		// 가드 관련 변수 초기화
+		GuardingDamage = 0.0f;
 		IsGuarding = false;
-
-		// 가드 데미지 초기화
-
 	}
 
 	// 지면 충격파 몽타주였다면
@@ -106,6 +180,17 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		IsShockWaving = false;
 		OnShockWaveFinished.ExecuteIfBound();
 		return;
+	}
+
+	// 기열파 몽타주였다면
+	else if (Montage->GetFName() == "M_ShockWaveMontage")
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("GuardSuccess End"));
+
+		// 가드 관련 변수 초기화
+		GuardingDamage = 0.0f;
+		IsGuarding = false;
+		IsGuardSuccessing = false;
 	}
 
 	// BT에 끝난거 알려주기
@@ -138,20 +223,6 @@ void AMiddleBossCharacter::ShockWave()
 	IsShockWaving = true;
 }
 
-// 가드
-void AMiddleBossCharacter::Guard()
-{
-	if (IsGuarding) return;
-
-	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	AnimInstance->PlayGuardMontage();
-
-	// 누적 데미지 초기화 후 증가 시키기 (증가 : 에서)
-	GuardingDamage = 0.0f;
-	IsGuarding = true;
-}
 
 // 랜덤 순찰 범위
 float AMiddleBossCharacter::GetAIPatrolRadius()
@@ -197,9 +268,9 @@ void AMiddleBossCharacter::SetAIShockWaveDelegate(const FAICharacterShockWaveFin
 void AMiddleBossCharacter::AttackByAI()
 {
 	// 공격
-	//Attack();
+	Attack();
 
-	Guard();
+	//Guard();
 }
 
 void AMiddleBossCharacter::ShockWaveByAI()
