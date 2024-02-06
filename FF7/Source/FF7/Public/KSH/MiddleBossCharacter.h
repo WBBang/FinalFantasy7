@@ -79,10 +79,13 @@ private:
 	bool IsGuarding;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsGuardSuccessing;
+	bool IsGuardSuccess;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsShockWaving;
+
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	//bool IsGuardSuccessing;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	float GuardingDamage;
@@ -122,10 +125,14 @@ protected:
 	virtual float GetAISkillRange() override;
 	virtual float GetAITurnSpeed() override;
 
+	virtual bool GetAIGuardingSuccess() override;
+	virtual bool GetAIGuarding() override;
+
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) override;
 	virtual void AttackByAI() override;
 	virtual void ShockWaveByAI() override;
+	virtual void GuardSuccessByAI() override;
 
 	virtual void SpeedChangeByAI(float Speed) override;
 

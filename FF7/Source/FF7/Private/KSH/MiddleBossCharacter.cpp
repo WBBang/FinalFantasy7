@@ -6,6 +6,7 @@
 #include "KSH/ShockWaveAOE.h"
 #include "GuardSuccessAOE.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
+#include <BehaviorTree/BehaviorTreeComponent.h>
 
 
 // Sets default values
@@ -28,8 +29,6 @@ void AMiddleBossCharacter::BeginPlay()
 	Super::BeginPlay();
 	MiddleBossHP = MiddleBossMaxHP;
 	movementComp = GetCharacterMovement();
-
-
 }
 
 // Called every frame
@@ -91,13 +90,13 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
-		// 아래 if문을 decorator로 만들어버리기?
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했다면
 		if (GuardingDamage >= 2)
 		{
 			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
-			// 기열파 -> BT	로 할 수 있나
-			IsGuardSuccessing = true;
+
+			// 가드 성공
+			IsGuardSuccess = true;
 		}
 	}
 
@@ -117,11 +116,11 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		}
 
 		// 30% 확률로 
-		int randomNum = FMath::RandRange(0, 9);
-		if (randomNum < 3) // 0, 1, 2
-		{
+		//int randomNum = FMath::RandRange(0, 9);
+		//if (randomNum < 3) // 0, 1, 2
+		//{
 			Guard();
-		}
+		//}
 	}
 }
 
@@ -131,6 +130,7 @@ void AMiddleBossCharacter::Guard()
 	if (IsGuarding) return;
 	GuardingDamage = 0.0f;
 	IsGuarding = true;
+	IsGuardSuccess = false;
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
@@ -190,7 +190,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0.0f;
 		IsGuarding = false;
-		IsGuardSuccessing = false;
+		IsGuardSuccess = false;
 	}
 
 	// BT에 끝난거 알려주기
@@ -223,7 +223,6 @@ void AMiddleBossCharacter::ShockWave()
 	IsShockWaving = true;
 }
 
-
 // 랜덤 순찰 범위
 float AMiddleBossCharacter::GetAIPatrolRadius()
 {
@@ -255,6 +254,16 @@ float AMiddleBossCharacter::GetAITurnSpeed()
 	return 0.0f;
 }
 
+bool AMiddleBossCharacter::GetAIGuardingSuccess()
+{
+	return IsGuardSuccess;
+}
+
+bool AMiddleBossCharacter::GetAIGuarding()
+{
+	return IsGuarding;
+}
+
 void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
 {
 	OnAttackFinished = InOnAttackFinished;
@@ -269,14 +278,19 @@ void AMiddleBossCharacter::AttackByAI()
 {
 	// 공격
 	Attack();
-
-	//Guard();
 }
 
 void AMiddleBossCharacter::ShockWaveByAI()
 {
 	ShockWave();
 }
+
+void AMiddleBossCharacter::GuardSuccessByAI()
+{
+	GuardSuccess();
+}
+
+
 
 // 스피드 변환 함수
 void AMiddleBossCharacter::SpeedChangeByAI(float Speed)

@@ -27,11 +27,13 @@ public:
 	virtual float GetAIAttackRange() = 0;
 	virtual float GetAISkillRange() = 0;
 	virtual float GetAITurnSpeed() = 0;
+	virtual bool GetAIGuardingSuccess() = 0;
+	virtual bool GetAIGuarding() = 0;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
 	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) = 0;
 	virtual void AttackByAI() = 0;
 	virtual void ShockWaveByAI() = 0;
-
+	virtual void GuardSuccessByAI() = 0;
 	virtual void SpeedChangeByAI(float Speed) = 0;
 };
