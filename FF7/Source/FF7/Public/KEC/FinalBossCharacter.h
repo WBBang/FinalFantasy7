@@ -47,9 +47,19 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float playerLength;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float jumpSpeed = 300;
 	
+	bool bIsJumpAttack = true;
+	bool isDetected = true;
 	int32 fireNum = 1;
 	
 	void Fire();
 	void LauchMissile();
+	void JumpAttack();
+	void AttackLength();
 };

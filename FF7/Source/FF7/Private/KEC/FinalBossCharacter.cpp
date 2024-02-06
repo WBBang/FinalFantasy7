@@ -23,7 +23,6 @@ AFinalBossCharacter::AFinalBossCharacter()
 	leftArrowComp->SetupAttachment(RootComponent);
 	rightArrowComp->SetupAttachment(RootComponent);
 	missieLaunchArrowComp->SetupAttachment(RootComponent);
-	
 
 
 	//보스캐릭터 SkeletalMesh
@@ -34,13 +33,15 @@ AFinalBossCharacter::AFinalBossCharacter()
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	}
+
 }
 
 // Called when the game starts or when spawned
 void AFinalBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Fire();
+	
+	//Fire();
 	LauchMissile();
 }
 
@@ -48,7 +49,14 @@ void AFinalBossCharacter::BeginPlay()
 void AFinalBossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AttackLength();
+	if(isDetected)
+	{
+		JumpAttack();
+	}
 	
+	
+		
 }
 
 // Called to bind functionality to input
@@ -61,13 +69,10 @@ void AFinalBossCharacter::Fire()
 {
 	FTransform leftGun = leftArrowComp->GetComponentTransform();
 	FTransform rightGun = rightArrowComp->GetComponentTransform();
-	
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, leftGun);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, rightGun);
-
-		
-		
-	UE_LOG(LogTemp, Warning, TEXT("fuck"));
+	
 	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, leftGun);
 	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, rightGun);
 }
@@ -78,5 +83,27 @@ void AFinalBossCharacter::LauchMissile()
 	GetWorld()->SpawnActor<AMissile>(missileFactory, launchPos);
 }
 
+void AFinalBossCharacter::JumpAttack()
+{
+	FVector player = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+	FVector target = player - GetActorLocation();
+	target.Normalize();
 
+	if(bIsJumpAttack)
+	{
+		SetActorLocation(GetActorLocation() + target * jumpSpeed * GetWorld()->DeltaTimeSeconds , false);
+	}
+	
+		bIsJumpAttack = false;
 
+		
+}
+
+void AFinalBossCharacter::AttackLength()
+{
+	playerLength = GetDistanceTo(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if(playerLength < 1000)
+	{
+		isDetected = true;
+	}
+}

@@ -29,21 +29,27 @@ public:
 	class AMissile* missile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UStaticMeshComponent* meshComp;
+	class USkeletalMeshComponent* skeletalMeshComp;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* capsuleComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UNiagaraComponent* MissileNiagara;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float impuslePos = 50000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float missileSpeed = 300.0f;
+	float missileSpeed = 500.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float delayTime = 3.0f;
+	float delayTime = 1.5f;
 	
 
 	void LaunchMissile();
 	void CruiseMissile();
-	void setRotation();
+	void SetRotation();
 	
 
 	UPROPERTY(EditAnywhere)
@@ -54,5 +60,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FVector targetDir;
-	  
+
+	UPROPERTY(EditAnywhere)
+	bool isRotating;
 };
