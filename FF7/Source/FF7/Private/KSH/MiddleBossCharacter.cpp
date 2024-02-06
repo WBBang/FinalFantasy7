@@ -224,7 +224,6 @@ void AMiddleBossCharacter::GuardSuccess()
 	IsGuardSuccessing = true;
 }
 
-
 // 지면 충격파
 void AMiddleBossCharacter::ShockWave()
 {
@@ -307,8 +306,6 @@ void AMiddleBossCharacter::GuardSuccessByAI()
 {
 	GuardSuccess();
 }
-
-
 
 // 스피드 변환 함수
 void AMiddleBossCharacter::SpeedChangeByAI(float Speed)
