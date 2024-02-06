@@ -27,6 +27,9 @@ public:
 	// 지면 충격파 애니메이션 실행
 	void PlayShockWaveMontage();
 
+	// 기열파 애니메이션 실행
+	void PlayGuardSuccessMontage();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pawn, Meta=(AllowPrivateAccess = true))
 	float CurrentPawnSpeed;
@@ -42,4 +45,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* ShockWaveMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* GuardSuccessMontage;
 };

@@ -60,6 +60,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MiddleBossDamaged(float damage);
 
+	// 가드 아예 끝나는거 BTTask에서 하게
+	UFUNCTION(BlueprintCallable)
+	void SetIsGuarding(bool isGuarding);
+
 	
 private:
 
@@ -78,14 +82,16 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuarding;
 
+	// 가드 성공했는지 판단하는 변수(BT Decorator용)
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuardSuccess;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsShockWaving;
 
-	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	//bool IsGuardSuccessing;
+	// 기열파 실행중인지 판단하는 변수
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsGuardSuccessing;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	float GuardingDamage;

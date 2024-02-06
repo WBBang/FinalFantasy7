@@ -11,7 +11,7 @@ UMBAnimInstance::UMBAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Guard_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/Guard/M_Guard_Montage.M_Guard_Montage'"));
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShockWave_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/ShockWave/M_ShockWaveMontage.M_ShockWaveMontage'"));
-
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> GuardSuccess_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/GuardSuccess/M_GuardSuccessMontage.M_GuardSuccessMontage'"));
 	
 	if (Attack_Montage.Succeeded())
 	{
@@ -26,6 +26,11 @@ UMBAnimInstance::UMBAnimInstance()
 	if (ShockWave_Montage.Succeeded())
 	{
 		ShockWaveMontage = ShockWave_Montage.Object;
+	}
+
+	if (GuardSuccess_Montage.Succeeded())
+	{
+		GuardSuccessMontage = GuardSuccess_Montage.Object;
 	}
 
 }
@@ -65,6 +70,15 @@ void UMBAnimInstance::PlayShockWaveMontage()
 	if (!Montage_IsPlaying(ShockWaveMontage))
 	{
 		Montage_Play(ShockWaveMontage, 1.0f);
+	}
+}
+
+// 기열파 애니메이션
+void UMBAnimInstance::PlayGuardSuccessMontage()
+{
+	if (!Montage_IsPlaying(GuardSuccessMontage))
+	{
+		Montage_Play(GuardSuccessMontage, 1.0f);
 	}
 }
 

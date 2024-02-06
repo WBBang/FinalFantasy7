@@ -90,8 +90,9 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
-		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했다면
-		if (GuardingDamage >= 2)
+		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
+		// 기열파 실행중이 아니라면
+		if (GuardingDamage >= 2 && !IsGuardSuccess)
 		{
 			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 
@@ -116,12 +117,17 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		}
 
 		// 30% 확률로 
-		//int randomNum = FMath::RandRange(0, 9);
-		//if (randomNum < 3) // 0, 1, 2
-		//{
+		int randomNum = FMath::RandRange(0, 9);
+		if (randomNum < 3) // 0, 1, 2
+		{
 			Guard();
-		//}
+		}
 	}
+}
+
+void AMiddleBossCharacter::SetIsGuarding(bool isGuarding)
+{
+	IsGuarding = isGuarding;
 }
 
 // 가드
@@ -171,7 +177,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0.0f;
-		IsGuarding = false;
+		//IsGuarding = false;
 	}
 
 	// 지면 충격파 몽타주였다면
@@ -183,9 +189,12 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	}
 
 	// 기열파 몽타주였다면
-	else if (Montage->GetFName() == "M_ShockWaveMontage")
+	else if (Montage->GetFName() == "M_GuardSuccessMontage")
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("GuardSuccess End"));
+		// 애니메이션 관련 변수 초기화
+		IsGuardSuccessing = false;
+
+		UE_LOG(LogTemp, Log, TEXT("GuardSuccess End"));
 
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0.0f;
@@ -201,9 +210,18 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 // 가드 성공 - 기열파
 void AMiddleBossCharacter::GuardSuccess()
 {
+	if (IsGuardSuccessing) return;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayGuardSuccessMontage();
+
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
+
+	IsGuardSuccessing = true;
 }
 
 
