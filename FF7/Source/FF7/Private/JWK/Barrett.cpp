@@ -11,6 +11,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
+#include "JWK/Bullet_Energy.h"
 
 // Sets default values
 ABarrett::ABarrett()
@@ -52,6 +53,11 @@ void ABarrett::BeginPlay()
 	Super::BeginPlay();
 	IsTargetLocked = false;
 	CurFireTime = MaxFireTime;
+	if (IsSkill)
+	{
+		EnergyFire();
+		IsSkill = false;
+	}
 }
 
 // Called every frame
@@ -69,6 +75,7 @@ void ABarrett::Tick(float DeltaTime)
 			CurFireTime = 0;
 		}
 	}
+	
 
 	if (HitActor)
 	{
@@ -93,7 +100,7 @@ void ABarrett::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
+// 플레이어 키 입력
 void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -110,6 +117,8 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Released, this, &ABarrett::EndAttack);
 
 	PlayerInputComponent->BindAction(TEXT("LockOn"), IE_Pressed, this, &ABarrett::LockOn);
+
+	PlayerInputComponent->BindAction(TEXT("Skill"), IE_Pressed, this, &ABarrett::EnergyFire);
 }
 
 void ABarrett::Move()
@@ -152,9 +161,23 @@ void ABarrett::EndAttack()
 
 void ABarrett::Fire()
 {
+	
 	// 총알 생성
 	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
+
+}
+
+void ABarrett::EnergyFire()
+{
+	IsSkill = true;
+
+	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+	GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
+	ABullet_Energy* BulletEnergyInstance = NewObject<ABullet_Energy>();
+
+	// 새로운 초기 속도 설정
+	BulletEnergyInstance->SetInitialSpeed(500.f);
 
 }
 

@@ -32,6 +32,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
+	UFUNCTION(BlueprintCallable)
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
@@ -41,8 +42,10 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UCameraComponent* cameraComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector direction;
 
+	UFUNCTION(BlueprintCallable)
 	void Move();
 	 
 
@@ -60,6 +63,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsFire;
 
+	// 스킬 키 Bool
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsSkill;
+
 	// 락온 키 Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Tab = false;
@@ -72,9 +79,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool LeftShift = false;
 
-
+	UFUNCTION(BlueprintCallable)
 	void OnAxisVertical(float value);
 
+	UFUNCTION(BlueprintCallable)
 	void OnAxisHorizontal(float value);
 
 	void OnAxisTurnYaw(float value);
@@ -89,6 +97,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABulletActor> bulletFactory;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABullet_Energy> energyFactory;
 
 	// Auto Fire 
 	int Damage = 0;
@@ -102,6 +113,7 @@ public:
 	void EndAttack();
 
 	void Fire();
+	void EnergyFire();
 
 	void LineTrace();
 	bool bIsAttacking = false;
