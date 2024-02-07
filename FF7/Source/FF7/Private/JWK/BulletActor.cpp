@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/BulletActor.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
+#include "KSH/MiddleBossCharacter.h"
 
 // Sets default values
 ABulletActor::ABulletActor()
@@ -19,17 +20,18 @@ ABulletActor::ABulletActor()
 
 	movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("movementComp"));
 
-	// ÃÑ¾Ë ÀÌµ¿¼Óµµ, bounce Set
+	// ì´ì•Œ ì´ë™ì†ë„, bounce Set
 	movementComp->InitialSpeed = 6000.f;
 	movementComp->MaxSpeed = 12000.f;
 	movementComp->bShouldBounce = false;
 
-	// ÃÑ¾ËÀÇ Collision Set
-	sphereComp->SetCollisionProfileName(TEXT("Blockall"));
-	meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// ì´ì•Œì˜ Collision Set
+	sphereComp->SetGenerateOverlapEvents(true);
+	sphereComp->SetCollisionProfileName(TEXT("PlayerAttack"));
+	//meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 
-	// ÃÑ¾Ë Å©±â Set
+	// ì´ì•Œ í¬ê¸° Set
 	meshComp->SetWorldScale3D(FVector(0.025f));
 	sphereComp->SetSphereRadius(1.25);
 
@@ -51,5 +53,14 @@ void ABulletActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABulletActor::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
+	if ( nullptr != middleBoss )
+	{
+		middleBoss->MiddleBossDamagedByBasicBullet(3);
+	}
 }
 

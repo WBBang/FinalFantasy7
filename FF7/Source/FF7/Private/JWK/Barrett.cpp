@@ -119,6 +119,8 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("LockOn"), IE_Pressed, this, &ABarrett::LockOn);
 
 	PlayerInputComponent->BindAction(TEXT("Skill"), IE_Pressed, this, &ABarrett::EnergyFire);
+
+	PlayerInputComponent->BindAction(TEXT("Roll"), IE_Pressed, this, &ABarrett::OnActionRoll);
 }
 
 void ABarrett::Move()
@@ -172,13 +174,25 @@ void ABarrett::EnergyFire()
 {
 	IsSkill = true;
 
-	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
-	GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
-	ABullet_Energy* BulletEnergyInstance = NewObject<ABullet_Energy>();
+	ABullet_Energy* BulletEnergySpeed = NewObject<ABullet_Energy>();
+	FTimerHandle MyTimer;
+	float Time =1.5f;
 
-	// 새로운 초기 속도 설정
-	BulletEnergyInstance->SetInitialSpeed(500.f);
-
+	double Seconds = FPlatformTime::Seconds();
+	int64 curMilSec = static_cast<int64>(Seconds * 1000);
+	if (curMilSec - milliseconds > 5000) // 5초 쿨타임
+	{
+		milliseconds = curMilSec;
+		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+			{
+				UE_LOG(LogTemp, Log, TEXT("bye"));
+				// 실행할 내용
+				FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+				GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+			}), Time, false);
+	}
 }
 
 void ABarrett::LineTrace()
@@ -243,6 +257,20 @@ void ABarrett::LockOn()
 		// code
 		IsTargetLocked = false;
 		HitActor = nullptr;
+	}
+}
+
+void ABarrett::OnActionRoll()
+{
+	double Seconds = FPlatformTime::Seconds();
+	int64 curMilSec = static_cast<int64>(Seconds * 1000);
+
+	// 만약 현재시간과 기억하고있던 시간의 차이가 800ms 를 초과한다면 Montage 를 재생하고싶다.
+
+	if (curMilSec - milliseconds > 800)
+	{
+		milliseconds = curMilSec;
+		this->PlayAnimMontage(rollMontage);
 	}
 }
 

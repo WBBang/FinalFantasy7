@@ -2,4 +2,6 @@
 
 
 #include "JWK/Barrett_AnimInstance.h"
+#include "JWK/Barrett.h"
+
 

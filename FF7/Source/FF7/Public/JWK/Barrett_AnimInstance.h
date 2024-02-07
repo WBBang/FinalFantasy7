@@ -13,5 +13,4 @@ UCLASS()
 class FF7_API UBarrett_AnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
 };

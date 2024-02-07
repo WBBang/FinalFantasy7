@@ -137,4 +137,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
     bool bIsLockOn = false;
+
+
+	void OnActionRoll();
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* rollMontage;
+
+	int64 milliseconds;
 };

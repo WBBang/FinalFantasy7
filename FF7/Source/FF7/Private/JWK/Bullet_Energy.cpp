@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/Bullet_Energy.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
+#include "KSH/MiddleBossCharacter.h"
 
 // Sets default values
 ABullet_Energy::ABullet_Energy()
@@ -20,19 +21,20 @@ ABullet_Energy::ABullet_Energy()
 
 	movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("movementComp"));
 
-	// ÃÑ¾Ë ÀÌµ¿¼Óµµ, bounce Set
-	movementComp->InitialSpeed = 3000.f;
-	movementComp->MaxSpeed = 0;
+	// ì´ì•Œ ì´ë™ì†ë„, bounce Set
+	movementComp->InitialSpeed = 500.f;
+	movementComp->MaxSpeed = 500.0f;
 	movementComp->bShouldBounce = false;
 
-	// ÃÑ¾ËÀÇ Collision Set
-	sphereComp->SetCollisionProfileName(TEXT("Blockall"));
-	meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// ì´ì•Œì˜ Collision Set
+	sphereComp->SetGenerateOverlapEvents(true);
+	sphereComp->SetCollisionProfileName(TEXT("PlayerAttack"));
+	//meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 
-	// ÃÑ¾Ë Å©±â Set
-	meshComp->SetWorldScale3D(FVector(0.025f));
-	sphereComp->SetSphereRadius(1.25);
+	// ì´ì•Œ í¬ê¸° Set
+	meshComp->SetWorldScale3D(FVector(0.2f));
+	sphereComp->SetSphereRadius(1);
 }
 
 // Called when the game starts or when spawned
@@ -42,18 +44,22 @@ void ABullet_Energy::BeginPlay()
 	movementComp->SetUpdatedComponent(sphereComp);
 
 	FTimerHandle timerHandle;
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([this]()->void {this->Destroy(); }), 1, false);
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([this]()->void {this->Destroy(); }), 2, false);
 }
 
 // Called every frame
 void ABullet_Energy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void ABullet_Energy::SetInitialSpeed(float NewSpeed)
+void ABullet_Energy::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	movementComp->InitialSpeed = NewSpeed;
+	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
+	if ( nullptr != middleBoss )
+	{
+		middleBoss->MiddleBossDamagedBySkillBullet(3);
+	}
 }
+
 
