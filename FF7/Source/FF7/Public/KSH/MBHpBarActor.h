@@ -28,5 +28,5 @@ public:
 
 
 	UFUNCTION()
-	void UpdateLocation(FVector Location);
+	void UpdateLocation(FVector Location, FRotator Rotator);
 };

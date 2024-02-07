@@ -48,14 +48,19 @@ void AMiddleBossCharacter::BeginPlay()
 	GuardingDamage = 0;
 
 	FVector loc = dummyCubeMesh->GetComponentLocation();
-	auto hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, loc, FRotator(0, 0, 0));
+	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, loc, FRotator(0, 0, 0));
 }
 
 // Called every frame
 void AMiddleBossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if ( nullptr != hpBarUI )
+	{
+		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation() - dummyCubeMesh->GetComponentLocation()).Rotator();
+		hpBarUI->UpdateLocation(dummyCubeMesh->GetComponentLocation(), LookAtRotation);
+	}
 }
 
 // 델리게이트가 발생할 때까지 몽타주 재생 명령 내리지 못하게

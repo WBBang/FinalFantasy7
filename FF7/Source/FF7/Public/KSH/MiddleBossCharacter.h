@@ -36,8 +36,12 @@ public:
 	class UStaticMeshComponent* dummyCubeMesh;
 
 	// HP Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HPBar)
 	TSubclassOf<class AMBHpBarActor> hpBar;
+
+	// HP Bar 레퍼런스 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = HPBar)
+	class AMBHpBarActor* hpBarUI;
 
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)

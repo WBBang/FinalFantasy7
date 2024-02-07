@@ -37,8 +37,9 @@ void AMBHpBarActor::Tick(float DeltaTime)
 
 }
 
-void AMBHpBarActor::UpdateLocation(FVector Location)
+void AMBHpBarActor::UpdateLocation(FVector Location, FRotator Rotator)
 {
-	this->SetActorLocation(Location);
+	///this->SetActorLocation(Location);
+	this->SetActorLocationAndRotation(Location, Rotator);
 }
 
