@@ -42,7 +42,7 @@ void AFinalBossCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	//Fire();
-	LauchMissile();
+	//LauchMissile();
 }
 
 // Called every frame
