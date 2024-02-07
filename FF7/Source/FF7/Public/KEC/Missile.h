@@ -28,20 +28,29 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AMissile* missile;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USkeletalMeshComponent* skeletalMeshComp;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* capsuleComponent;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// class USkeletalMeshComponent* skeletalMeshComp;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// class UCapsuleComponent* capsuleComponent;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// class UNiagaraComponent* MissileNiagara;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UNiagaraComponent* MissileNiagara;
+	class USphereComponent* sphereComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* meshComp;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UParticleSystem* explosionParticle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float impuslePos = 50000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float missileSpeed = 500.0f;
+	float missileSpeed = 5000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float delayTime = 1.5f;
@@ -49,8 +58,8 @@ public:
 
 	void LaunchMissile();
 	void CruiseMissile();
-	void SetRotation();
-	
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	UPROPERTY(EditAnywhere)
 	FVector playerPosition;
@@ -62,5 +71,5 @@ public:
 	FVector targetDir;
 
 	UPROPERTY(EditAnywhere)
-	bool isRotating;
+	bool dirSet;
 };
