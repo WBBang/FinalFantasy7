@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KSH/BTService_GuardingSuccess.h"
@@ -40,10 +40,14 @@ void UBTService_GuardingSuccess::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 	{
 		return;
 	}
-
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsGuardSuccess")); // ê²Œìž„ í™”ë©´
 	bool IsGuardSuccessing = AIPawn->GetAIGuardingSuccess();
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(BBKEY_ISGUARDSUCCESS, IsGuardSuccessing);
-	if(IsGuardSuccessing)
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsGuardSuccess")); // °ÔÀÓ È­¸é
-	else GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("NotSuccess")); // °ÔÀÓ È­¸é
+	if ( IsGuardSuccessing ) {
+		UE_LOG(LogTemp, Warning, TEXT("IsGuardSuccess"));
+	}
+		
+	else 
+		UE_LOG(LogTemp, Warning, TEXT("NotSuccess")); 
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("NotSuccess")); // ê²Œìž„ í™”ë©´
 }
