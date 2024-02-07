@@ -35,5 +35,5 @@ EBTNodeResult::Type UBTTask_Guard::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	AIPawn->SetAIAttackDelegate(OnAttackFinished);
 	AIPawn->GuardByAI();
 
-	return EBTNodeResult::Type();
+	return EBTNodeResult::InProgress;
 }
