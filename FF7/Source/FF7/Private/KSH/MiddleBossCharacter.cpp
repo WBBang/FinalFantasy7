@@ -35,7 +35,7 @@ void AMiddleBossCharacter::BeginPlay()
 	IsAttacking = false;
 	//IsGuarding = false;
 	IsGuardDeco = false;
-	GuardingDamage = 0.0f;
+	GuardingDamage = 0;
 }
 
 // Called every frame
@@ -65,14 +65,14 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 }
 
 // 기본 스킬로 맞은 경우
-void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(float damage)
+void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(int32 damage)
 {
 	// 보스한테 데미지 처리
 	MiddleBossDamaged(damage);
 }
 
 // 우와아왕빵으로 맞은 경우
-void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
+void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 {
 	// 가드 상태가 아니라면
 	if (false == IsGuardDeco)
@@ -91,7 +91,7 @@ void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
 }
 
 // 플레이어에게 공격 당한 경우 (어떤 공격이든 항상 호출)
-void AMiddleBossCharacter::MiddleBossDamaged(float damage)
+void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 {
 	// 가드 중이라면
 	if (true == IsGuardDeco)
@@ -127,8 +127,8 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		}
 
 		// 30% 확률로 
-		//int randomNum = FMath::RandRange(0, 9);
-		//if (randomNum < 3) // 0, 1, 2
+		int randomNum = FMath::RandRange(0, 9);
+		if (randomNum < 3) // 0, 1, 2
 		{
 			IsGuardDeco = true;
 			//Guard();
@@ -161,7 +161,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
 
 		// 가드 관련 변수 초기화
-		GuardingDamage = 0.0f;
+		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
 
@@ -186,7 +186,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		UE_LOG(LogTemp, Log, TEXT("GuardSuccess End"));
 
 		// 가드 관련 변수 초기화
-		GuardingDamage = 0.0f;
+		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
 		IsGuardSuccessing = false;
@@ -206,7 +206,7 @@ void AMiddleBossCharacter::Guard()
 {
 	if ( IsGuarding ) return;
 	if ( !IsGuardDeco ) return;
-	GuardingDamage = 0.0f;
+	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
 

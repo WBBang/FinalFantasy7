@@ -48,17 +48,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	float canSkillRange;
 
+	//int32 GetHP;
+
 	// 플레이어에게 기본 공격으로 맞은 경우
 	UFUNCTION()
-	void MiddleBossDamagedByBasicBullet(float damage);
+	void MiddleBossDamagedByBasicBullet(int32 damage);
 	
 	// 플레이어에게 스킬 공격으로 맞은 경우
 	UFUNCTION()
-	void MiddleBossDamagedBySkillBullet(float damage);
+	void MiddleBossDamagedBySkillBullet(int32 damage);
 	
 	// 공격 당함
 	UFUNCTION(BlueprintCallable)
-	void MiddleBossDamaged(float damage);
+	void MiddleBossDamaged(int32 damage);
 
 	// 가드 아예 끝나는거 BTTask에서 하게
 	UFUNCTION(BlueprintCallable)
@@ -99,14 +101,14 @@ private:
 
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	float GuardingDamage;
+	int32 GuardingDamage;
 
 	// 경직중인지 판단
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
 	bool IsHitStuning;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
-	float CounterDamage = 30.0f;
+	int32 CounterDamage = 30;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
 	class UCharacterMovementComponent* movementComp;
@@ -123,10 +125,10 @@ private:
 
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	float MiddleBossHP;
+	int32 MiddleBossHP;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	float MiddleBossMaxHP = 500.0f;
+	int32 MiddleBossMaxHP = 500.0f;
 
 // AI Section
 protected:
