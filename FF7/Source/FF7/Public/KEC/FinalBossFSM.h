@@ -45,9 +45,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AFinalBossCharacter* me;
 
-	float attackLength = 300;
+	FVector rushStartVector;
+	float attackLength = 500;
+	float detectRange = 2000;
 	float currentTime;
 	float normalAttackCooldown = 2;
+	float rushSpeed = 3000;
+	float rushingTime = 1;
 	
 
 	void TickIdle();
