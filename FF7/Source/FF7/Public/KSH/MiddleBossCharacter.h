@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -32,42 +32,42 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
-	// ±â¿­ÆÄ ÀåÆÇ
+	// ê¸°ì—´íŒŒ ì¥íŒ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AGuardSuccessAOE> aoeActor;
 
-	// Áö¸é Ãæ°İÆÄ ºÒµ¢ÀÌ
+	// ì§€ë©´ ì¶©ê²©íŒŒ ë¶ˆë©ì´
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AShockWaveAOE> shockWaveActor;
 
-	// °ø°İ ¹üÀ§
+	// ê³µê²© ë²”ìœ„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	float canAttackRange;
 
-	// ½ºÅ³ ¹üÀ§
+	// ìŠ¤í‚¬ ë²”ìœ„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	float canSkillRange;
 
-	// ÇÃ·¹ÀÌ¾î¿¡°Ô ±âº» °ø°İÀ¸·Î ¸ÂÀº °æ¿ì
+	// í”Œë ˆì´ì–´ì—ê²Œ ê¸°ë³¸ ê³µê²©ìœ¼ë¡œ ë§ì€ ê²½ìš°
 	UFUNCTION()
 	void MiddleBossDamagedByBasicBullet(float damage);
 	
-	// ÇÃ·¹ÀÌ¾î¿¡°Ô ½ºÅ³ °ø°İÀ¸·Î ¸ÂÀº °æ¿ì
+	// í”Œë ˆì´ì–´ì—ê²Œ ìŠ¤í‚¬ ê³µê²©ìœ¼ë¡œ ë§ì€ ê²½ìš°
 	UFUNCTION()
 	void MiddleBossDamagedBySkillBullet(float damage);
 	
-	// °ø°İ ´çÇÔ
+	// ê³µê²© ë‹¹í•¨
 	UFUNCTION(BlueprintCallable)
 	void MiddleBossDamaged(float damage);
 
-	// °¡µå ¾Æ¿¹ ³¡³ª´Â°Å BTTask¿¡¼­ ÇÏ°Ô
+	// ê°€ë“œ ì•„ì˜ˆ ëë‚˜ëŠ”ê±° BTTaskì—ì„œ í•˜ê²Œ
 	UFUNCTION(BlueprintCallable)
 	void SetIsGuarding(bool isGuarding);
 
 	
 private:
 
-	// ÇÃ·¹ÀÌ¾î
+	// í”Œë ˆì´ì–´
 	UPROPERTY()
 	class AActor* player;
 
@@ -79,24 +79,29 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta=(AllowPrivateAccess = true))
 	bool IsAttacking;
 
+	// ê°€ë“œ í™•ë¥  í„°ì¡ŒëŠ”ì§€ íŒë‹¨í•˜ëŠ” ë³€ìˆ˜(BT Decoratorìš©)
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsGuardDeco;
+
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuarding;
 
-	// °¡µå ¼º°øÇß´ÂÁö ÆÇ´ÜÇÏ´Â º¯¼ö(BT Decorator¿ë)
+	// ê°€ë“œ ì„±ê³µí–ˆëŠ”ì§€ íŒë‹¨í•˜ëŠ” ë³€ìˆ˜(BT Decoratorìš©)
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsGuardSuccess;
+	bool IsGuardSuccessDeco;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsShockWaving;
-
-	// ±â¿­ÆÄ ½ÇÇàÁßÀÎÁö ÆÇ´ÜÇÏ´Â º¯¼ö
+	// ê¸°ì—´íŒŒ ì‹¤í–‰ì¤‘ì¸ì§€ íŒë‹¨í•˜ëŠ” ë³€ìˆ˜
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuardSuccessing;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsShockWaving;
+
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	float GuardingDamage;
 
-	// °æÁ÷ÁßÀÎÁö ÆÇ´Ü
+	// ê²½ì§ì¤‘ì¸ì§€ íŒë‹¨
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
 	bool IsHitStuning;
 
@@ -107,13 +112,13 @@ private:
 	class UCharacterMovementComponent* movementComp;
 
 
-	// ±â¿­ÆÄ
+	// ê¸°ì—´íŒŒ
 	void GuardSuccess();
 
-	// Áö¸é Ãæ°İÆÄ
+	// ì§€ë©´ ì¶©ê²©íŒŒ
 	void ShockWave();
 
-	// °¡µå
+	// ê°€ë“œ
 	void Guard();
 
 
@@ -138,11 +143,12 @@ protected:
 	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) override;
 	virtual void AttackByAI() override;
 	virtual void ShockWaveByAI() override;
+	virtual void GuardByAI() override;
 	virtual void GuardSuccessByAI() override;
 
 	virtual void SpeedChangeByAI(float Speed) override;
 
-	// Àü´Ş¹ŞÀº µ¨¸®°ÔÀÌÆ®¸¦ º¸°üÇÏ´Â ÇÔ¼ö
+	// ì „ë‹¬ë°›ì€ ë¸ë¦¬ê²Œì´íŠ¸ë¥¼ ë³´ê´€í•˜ëŠ” í•¨ìˆ˜
 	FAICharacterAttackFinished OnAttackFinished;
 	FAICharacterShockWaveFinished OnShockWaveFinished;
 };

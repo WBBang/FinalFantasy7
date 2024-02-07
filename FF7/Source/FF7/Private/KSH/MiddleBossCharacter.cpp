@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "KSH/MiddleBossCharacter.h"
 #include "KSH/MBAIController.h"
@@ -18,9 +18,11 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	AIControllerClass = AMBAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	IsAttacking = false;
-	IsGuarding = false;
-	GuardingDamage = 0.0f;
+	// íšŒì „ ìì—°ìŠ¤ëŸ½ê²Œ ì„¤ì •
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 480.0f, 0.0f);
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +31,11 @@ void AMiddleBossCharacter::BeginPlay()
 	Super::BeginPlay();
 	MiddleBossHP = MiddleBossMaxHP;
 	movementComp = GetCharacterMovement();
+
+	IsAttacking = false;
+	//IsGuarding = false;
+	IsGuardDeco = false;
+	GuardingDamage = 0.0f;
 }
 
 // Called every frame
@@ -38,7 +45,7 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 
 }
 
-// µ¨¸®°ÔÀÌÆ®°¡ ¹ß»ıÇÒ ¶§±îÁö ¸ùÅ¸ÁÖ Àç»ı ¸í·É ³»¸®Áö ¸øÇÏ°Ô
+// ë¸ë¦¬ê²Œì´íŠ¸ê°€ ë°œìƒí•  ë•Œê¹Œì§€ ëª½íƒ€ì£¼ ì¬ìƒ ëª…ë ¹ ë‚´ë¦¬ì§€ ëª»í•˜ê²Œ
 void AMiddleBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -48,6 +55,8 @@ void AMiddleBossCharacter::PostInitializeComponents()
 	AnimInstance->OnMontageEnded.AddDynamic(this, &AMiddleBossCharacter::OnMontageEnded);
 }
 
+
+
 // Called to bind functionality to input
 void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -55,132 +64,112 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 }
 
-// ±âº» ½ºÅ³·Î ¸ÂÀº °æ¿ì
+// ê¸°ë³¸ ìŠ¤í‚¬ë¡œ ë§ì€ ê²½ìš°
 void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(float damage)
 {
-	// º¸½ºÇÑÅ× µ¥¹ÌÁö Ã³¸®
+	// ë³´ìŠ¤í•œí…Œ ë°ë¯¸ì§€ ì²˜ë¦¬
 	MiddleBossDamaged(damage);
 }
 
-// ¿ì¿Í¾Æ¿Õ»§À¸·Î ¸ÂÀº °æ¿ì
+// ìš°ì™€ì•„ì™•ë¹µìœ¼ë¡œ ë§ì€ ê²½ìš°
 void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
 {
-	// °¡µå »óÅÂ°¡ ¾Æ´Ï¶ó¸é
-	if (false == IsGuarding)
+	// ê°€ë“œ ìƒíƒœê°€ ì•„ë‹ˆë¼ë©´
+	if (false == IsGuardDeco)
 	{
-		// °æÁ÷ »óÅÂ
+		// ê²½ì§ ìƒíƒœ
 		IsHitStuning = true;
 
-		// °æÁ÷ ¾Ö´Ï¸ŞÀÌ¼Ç È£Ãâ
+		// ê²½ì§ ì• ë‹ˆë©”ì´ì…˜ í˜¸ì¶œ
 
 
-		// °æÁ÷ ¾Ö´Ï¸ŞÀÌ¼Ç ³¡³¯ ¶§ IsHitStuning = false Ã³¸® ÇÏ±â
+		// ê²½ì§ ì• ë‹ˆë©”ì´ì…˜ ëë‚  ë•Œ IsHitStuning = false ì²˜ë¦¬ í•˜ê¸°
 	}
 
-	// º¸½ºÇÑÅ× µ¥¹ÌÁö Ã³¸®
+	// ë³´ìŠ¤í•œí…Œ ë°ë¯¸ì§€ ì²˜ë¦¬
 	MiddleBossDamaged(damage);
 }
 
-// ÇÃ·¹ÀÌ¾î¿¡°Ô °ø°İ ´çÇÑ °æ¿ì (¾î¶² °ø°İÀÌµç Ç×»ó È£Ãâ)
+// í”Œë ˆì´ì–´ì—ê²Œ ê³µê²© ë‹¹í•œ ê²½ìš° (ì–´ë–¤ ê³µê²©ì´ë“  í•­ìƒ í˜¸ì¶œ)
 void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 {
-	// °¡µå ÁßÀÌ¶ó¸é
-	if (true == IsGuarding)
+	// ê°€ë“œ ì¤‘ì´ë¼ë©´
+	if (true == IsGuardDeco)
 	{
-		// ÇÇ ÁÙ¾îµå´Â ´ë½Å °¡µå¿¡ µ¥¹ÌÁö ´©Àû
+		// í”¼ ì¤„ì–´ë“œëŠ” ëŒ€ì‹  ê°€ë“œì— ë°ë¯¸ì§€ ëˆ„ì 
 		GuardingDamage += damage;
 
-		// °¡µå µ¥¹ÌÁö°¡ Ä«¿îÅÍ °¡´É µ¥¹ÌÁö(CounterDamage)±îÁö µµ´ŞÇß°í
-		// ±â¿­ÆÄ ½ÇÇàÁßÀÌ ¾Æ´Ï¶ó¸é
-		if (GuardingDamage >= 2 && !IsGuardSuccess)
+		// ê°€ë“œ ë°ë¯¸ì§€ê°€ ì¹´ìš´í„° ê°€ëŠ¥ ë°ë¯¸ì§€(CounterDamage)ê¹Œì§€ ë„ë‹¬í–ˆê³ 
+		// ê¸°ì—´íŒŒ ì• ë‹ˆë©”ì´ì…˜ì´ ì‹¤í–‰ì¤‘ì´ ì•„ë‹ˆë¼ë©´
+		if (!IsGuardSuccessDeco && GuardingDamage >= 2)
 		{
 			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 
-			// °¡µå ¼º°ø
-			IsGuardSuccess = true;
+			// ê°€ë“œ ì„±ê³µ
+			// IsGuardSuccess = true;
+			IsGuardSuccessDeco = true;
 		}
 	}
 
-	// °¡µå ÁßÀÌ ¾Æ´Ï¶ó¸é
+	// ê°€ë“œ ì¤‘ì´ ì•„ë‹ˆë¼ë©´
 	else
 	{
-		// µ¥¹ÌÁö ¹Ş°í
+		// ë°ë¯¸ì§€ ë°›ê³ 
 		MiddleBossHP -= damage;
 
-		// 0ÀÌÇÏ¶ó¸é
+		// 0ì´í•˜ë¼ë©´
 		if (MiddleBossHP <= 0)
 		{
 			MiddleBossHP = 0;
 
-			// Áß°£º¸½º Å¬¸®¾î Ã³¸®
+			// ì¤‘ê°„ë³´ìŠ¤ í´ë¦¬ì–´ ì²˜ë¦¬
 			
 		}
 
-		// 30% È®·ü·Î 
-		int randomNum = FMath::RandRange(0, 9);
-		if (randomNum < 3) // 0, 1, 2
+		// 30% í™•ë¥ ë¡œ 
+		//int randomNum = FMath::RandRange(0, 9);
+		//if (randomNum < 3) // 0, 1, 2
 		{
-			Guard();
+			IsGuardDeco = true;
+			//Guard();
 		}
 	}
 }
 
 void AMiddleBossCharacter::SetIsGuarding(bool isGuarding)
 {
-	IsGuarding = isGuarding;
+	IsGuardDeco = isGuarding;
 }
 
-// °¡µå
-void AMiddleBossCharacter::Guard()
-{
-	if (IsGuarding) return;
-	GuardingDamage = 0.0f;
-	IsGuarding = true;
-	IsGuardSuccess = false;
-
-	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	AnimInstance->PlayGuardMontage();
-}
-
-// ±âº» °ø°İ
-void AMiddleBossCharacter::Attack()
-{
-	if (IsAttacking) return;
-
-	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	AnimInstance->PlayAttackMontage();
-	IsAttacking = true;
-}
-
-// ¾Ö´Ï¸ŞÀÌ¼Ç ³¡
+// ì• ë‹ˆë©”ì´ì…˜ ë
 void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	// ÆòÅ¸ ¸ùÅ¸ÁÖ¿´´Ù¸é
+	// í‰íƒ€ ëª½íƒ€ì£¼ì˜€ë‹¤ë©´
 	if (Montage->GetFName() == "M_AttackMontage")
 	{
 		UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
 		IsAttacking = false;
 
-		// °ø°İ ÆÇÁ¤ ¾ø¾Ö±â
+		// ê³µê²© íŒì • ì—†ì• ê¸°
 
 	}
 
-	// °¡µå ¸ùÅ¸ÁÖ¿´´Ù¸é
+	// ê°€ë“œ ëª½íƒ€ì£¼ì˜€ë‹¤ë©´
 	else if (Montage->GetFName() == "M_Guard_Montage")
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Guard End"));
 		UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
 
-		// °¡µå °ü·Ã º¯¼ö ÃÊ±âÈ­
+		// ê°€ë“œ ê´€ë ¨ ë³€ìˆ˜ ì´ˆê¸°í™”
 		GuardingDamage = 0.0f;
-		//IsGuarding = false;
+		IsGuarding = false;
+		IsGuardDeco = false;
+
+		OnAttackFinished.ExecuteIfBound();
+		return;
 	}
 
-	// Áö¸é Ãæ°İÆÄ ¸ùÅ¸ÁÖ¿´´Ù¸é
+	// ì§€ë©´ ì¶©ê²©íŒŒ ëª½íƒ€ì£¼ì˜€ë‹¤ë©´
 	else if (Montage->GetFName() == "M_ShockWaveMontage")
 	{
 		IsShockWaving = false;
@@ -188,29 +177,62 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		return;
 	}
 
-	// ±â¿­ÆÄ ¸ùÅ¸ÁÖ¿´´Ù¸é
+	// ê¸°ì—´íŒŒ ëª½íƒ€ì£¼ì˜€ë‹¤ë©´
 	else if (Montage->GetFName() == "M_GuardSuccessMontage")
 	{
-		// ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã º¯¼ö ÃÊ±âÈ­
+		// ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨ ë³€ìˆ˜ ì´ˆê¸°í™”
 		IsGuardSuccessing = false;
 
 		UE_LOG(LogTemp, Log, TEXT("GuardSuccess End"));
 
-		// °¡µå °ü·Ã º¯¼ö ÃÊ±âÈ­
+		// ê°€ë“œ ê´€ë ¨ ë³€ìˆ˜ ì´ˆê¸°í™”
 		GuardingDamage = 0.0f;
 		IsGuarding = false;
-		IsGuardSuccess = false;
+		IsGuardDeco = false;
+		IsGuardSuccessing = false;
+		IsGuardSuccessDeco = false;
+
+		OnAttackFinished.ExecuteIfBound();
+		return;
 	}
 
-	// BT¿¡ ³¡³­°Å ¾Ë·ÁÁÖ±â
-	// ³ªÁß¿¡ ¸ùÅ¸ÁÖº°·Î ³ª´²¾ß ÇÔ (¿ì¼±Àº ±ÍÂúÀ¸´Ï ÇÏ³ª·Î..¤¾)
+	// BTì— ëë‚œê±° ì•Œë ¤ì£¼ê¸°
+	// ë‚˜ì¤‘ì— ëª½íƒ€ì£¼ë³„ë¡œ ë‚˜ëˆ ì•¼ í•¨ (ìš°ì„ ì€ ê·€ì°®ìœ¼ë‹ˆ í•˜ë‚˜ë¡œ..ã…)
 	OnAttackFinished.ExecuteIfBound();
 }
 
-// °¡µå ¼º°ø - ±â¿­ÆÄ
+// ê°€ë“œ
+void AMiddleBossCharacter::Guard()
+{
+	if ( IsGuarding ) return;
+	if ( !IsGuardDeco ) return;
+	GuardingDamage = 0.0f;
+	IsGuarding = true;
+	IsGuardSuccessDeco = false;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if ( nullptr == AnimInstance ) return;
+
+	AnimInstance->PlayGuardMontage();
+}
+
+// ê¸°ë³¸ ê³µê²©
+void AMiddleBossCharacter::Attack()
+{
+	if ( IsAttacking ) return;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if ( nullptr == AnimInstance ) return;
+
+	AnimInstance->PlayAttackMontage();
+	IsAttacking = true;
+}
+
+// ê°€ë“œ ì„±ê³µ - ê¸°ì—´íŒŒ
 void AMiddleBossCharacter::GuardSuccess()
 {
 	if (IsGuardSuccessing) return;
+	if ( !IsGuardSuccessDeco ) return;
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
@@ -222,9 +244,10 @@ void AMiddleBossCharacter::GuardSuccess()
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
 
 	IsGuardSuccessing = true;
+	IsGuardSuccessDeco = false;
 }
 
-// Áö¸é Ãæ°İÆÄ
+// ì§€ë©´ ì¶©ê²©íŒŒ
 void AMiddleBossCharacter::ShockWave()
 {
 	if (IsShockWaving) return;
@@ -240,26 +263,26 @@ void AMiddleBossCharacter::ShockWave()
 	IsShockWaving = true;
 }
 
-// ·£´ı ¼øÂû ¹üÀ§
+// ëœë¤ ìˆœì°° ë²”ìœ„
 float AMiddleBossCharacter::GetAIPatrolRadius()
 {
 	return 800.0f;
 }
 
-// ÇÃ·¹ÀÌ¾î ÀÎÁö ¹üÀ§
+// í”Œë ˆì´ì–´ ì¸ì§€ ë²”ìœ„
 float AMiddleBossCharacter::GetAIDetectRange()
 {
 	return 2000.0f;
 }
 
-// ÇÃ·¹ÀÌ¾î °ø°İÇÒ ¼ö ÀÖ´Â ¹üÀ§
+// í”Œë ˆì´ì–´ ê³µê²©í•  ìˆ˜ ìˆëŠ” ë²”ìœ„
 float AMiddleBossCharacter::GetAIAttackRange()
 {
 	canAttackRange = 1000.0f;
 	return canAttackRange;
 }
 
-// ÇÃ·¹ÀÌ¾î¿¡°Ô ½ºÅ³¾µ ¼ö ÀÖ´Â ¹üÀ§
+// í”Œë ˆì´ì–´ì—ê²Œ ìŠ¤í‚¬ì“¸ ìˆ˜ ìˆëŠ” ë²”ìœ„
 float AMiddleBossCharacter::GetAISkillRange()
 {
 	canSkillRange = 1500.0f;
@@ -273,12 +296,12 @@ float AMiddleBossCharacter::GetAITurnSpeed()
 
 bool AMiddleBossCharacter::GetAIGuardingSuccess()
 {
-	return IsGuardSuccess;
+	return IsGuardSuccessDeco;
 }
 
 bool AMiddleBossCharacter::GetAIGuarding()
 {
-	return IsGuarding;
+	return IsGuardDeco;
 }
 
 void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
@@ -293,7 +316,7 @@ void AMiddleBossCharacter::SetAIShockWaveDelegate(const FAICharacterShockWaveFin
 
 void AMiddleBossCharacter::AttackByAI()
 {
-	// °ø°İ
+	// ê³µê²©
 	Attack();
 }
 
@@ -302,12 +325,17 @@ void AMiddleBossCharacter::ShockWaveByAI()
 	ShockWave();
 }
 
+void AMiddleBossCharacter::GuardByAI()
+{
+	Guard();
+}
+
 void AMiddleBossCharacter::GuardSuccessByAI()
 {
 	GuardSuccess();
 }
 
-// ½ºÇÇµå º¯È¯ ÇÔ¼ö
+// ìŠ¤í”¼ë“œ ë³€í™˜ í•¨ìˆ˜
 void AMiddleBossCharacter::SpeedChangeByAI(float Speed)
 {
 	movementComp->MaxWalkSpeed = Speed;
