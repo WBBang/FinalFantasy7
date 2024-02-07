@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -34,6 +34,7 @@ public:
 	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) = 0;
 	virtual void AttackByAI() = 0;
 	virtual void ShockWaveByAI() = 0;
+	virtual void GuardByAI() = 0;
 	virtual void GuardSuccessByAI() = 0;
 	virtual void SpeedChangeByAI(float Speed) = 0;
 };

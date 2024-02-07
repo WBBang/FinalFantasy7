@@ -33,7 +33,8 @@ void AMiddleBossCharacter::BeginPlay()
 	movementComp = GetCharacterMovement();
 
 	IsAttacking = false;
-	IsGuarding = false;
+	//IsGuarding = false;
+	IsGuardDeco = false;
 	GuardingDamage = 0.0f;
 }
 
@@ -74,7 +75,7 @@ void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(float damage)
 void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
 {
 	// 가드 상태가 아니라면
-	if (false == IsGuarding)
+	if (false == IsGuardDeco)
 	{
 		// 경직 상태
 		IsHitStuning = true;
@@ -93,19 +94,20 @@ void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(float damage)
 void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 {
 	// 가드 중이라면
-	if (true == IsGuarding)
+	if (true == IsGuardDeco)
 	{
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
-		// 기열파 실행중이 아니라면
-		if (GuardingDamage >= 2 && !IsGuardSuccess)
+		// 기열파 애니메이션이 실행중이 아니라면
+		if (!IsGuardSuccessDeco && GuardingDamage >= 2)
 		{
 			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 
 			// 가드 성공
-			IsGuardSuccess = true;
+			// IsGuardSuccess = true;
+			IsGuardSuccessDeco = true;
 		}
 	}
 
@@ -128,40 +130,15 @@ void AMiddleBossCharacter::MiddleBossDamaged(float damage)
 		//int randomNum = FMath::RandRange(0, 9);
 		//if (randomNum < 3) // 0, 1, 2
 		{
-			Guard();
+			IsGuardDeco = true;
+			//Guard();
 		}
 	}
 }
 
 void AMiddleBossCharacter::SetIsGuarding(bool isGuarding)
 {
-	IsGuarding = isGuarding;
-}
-
-// 가드
-void AMiddleBossCharacter::Guard()
-{
-	if (IsGuarding) return;
-	GuardingDamage = 0.0f;
-	IsGuarding = true;
-	IsGuardSuccess = false;
-
-	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	AnimInstance->PlayGuardMontage();
-}
-
-// 기본 공격
-void AMiddleBossCharacter::Attack()
-{
-	if (IsAttacking) return;
-
-	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
-
-	AnimInstance->PlayAttackMontage();
-	IsAttacking = true;
+	IsGuardDeco = isGuarding;
 }
 
 // 애니메이션 끝
@@ -185,7 +162,11 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0.0f;
-		//IsGuarding = false; <- Wait까지 끝나거나 기열파 끝났을 때 처리했음
+		IsGuarding = false;
+		IsGuardDeco = false;
+
+		OnAttackFinished.ExecuteIfBound();
+		return;
 	}
 
 	// 지면 충격파 몽타주였다면
@@ -207,7 +188,12 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0.0f;
 		IsGuarding = false;
-		IsGuardSuccess = false;
+		IsGuardDeco = false;
+		IsGuardSuccessing = false;
+		IsGuardSuccessDeco = false;
+
+		OnAttackFinished.ExecuteIfBound();
+		return;
 	}
 
 	// BT에 끝난거 알려주기
@@ -215,10 +201,38 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	OnAttackFinished.ExecuteIfBound();
 }
 
+// 가드
+void AMiddleBossCharacter::Guard()
+{
+	if ( IsGuarding ) return;
+	if ( !IsGuardDeco ) return;
+	GuardingDamage = 0.0f;
+	IsGuarding = true;
+	IsGuardSuccessDeco = false;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if ( nullptr == AnimInstance ) return;
+
+	AnimInstance->PlayGuardMontage();
+}
+
+// 기본 공격
+void AMiddleBossCharacter::Attack()
+{
+	if ( IsAttacking ) return;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if ( nullptr == AnimInstance ) return;
+
+	AnimInstance->PlayAttackMontage();
+	IsAttacking = true;
+}
+
 // 가드 성공 - 기열파
 void AMiddleBossCharacter::GuardSuccess()
 {
 	if (IsGuardSuccessing) return;
+	if ( !IsGuardSuccessDeco ) return;
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
@@ -230,6 +244,7 @@ void AMiddleBossCharacter::GuardSuccess()
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
 
 	IsGuardSuccessing = true;
+	IsGuardSuccessDeco = false;
 }
 
 // 지면 충격파
@@ -281,12 +296,12 @@ float AMiddleBossCharacter::GetAITurnSpeed()
 
 bool AMiddleBossCharacter::GetAIGuardingSuccess()
 {
-	return IsGuardSuccess;
+	return IsGuardSuccessDeco;
 }
 
 bool AMiddleBossCharacter::GetAIGuarding()
 {
-	return IsGuarding;
+	return IsGuardDeco;
 }
 
 void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
@@ -308,6 +323,11 @@ void AMiddleBossCharacter::AttackByAI()
 void AMiddleBossCharacter::ShockWaveByAI()
 {
 	ShockWave();
+}
+
+void AMiddleBossCharacter::GuardByAI()
+{
+	Guard();
 }
 
 void AMiddleBossCharacter::GuardSuccessByAI()
