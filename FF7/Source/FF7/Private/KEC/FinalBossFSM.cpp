@@ -50,7 +50,7 @@ void UFinalBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 void UFinalBossFSM::TickIdle()
 {
 	target = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if(me->playerLength < 1000)
+	if(me->playerLength < detectRange)
 		SetState(EFinalBossState::MOVE);
 	
 }
@@ -60,18 +60,22 @@ void UFinalBossFSM::TickMove()
 	FVector dir = target->GetActorLocation() - me->GetActorLocation();
 	me->AddMovementInput(dir.GetSafeNormal());
 	float length = target->GetDistanceTo(me);
-	UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
+	
 	if(length < attackLength)
 	 	SetState(EFinalBossState::NORMALATTACK);
+	else if (length > detectRange)
+	{
+		rushStartVector = me->GetActorLocation();
+	 	SetState(EFinalBossState::RUSH);
+	}
+	
 }
 
 void UFinalBossFSM::TickNormalAttack()
 {
 	float length = target->GetDistanceTo(me);
 	currentTime += GetWorld()->GetDeltaSeconds();
-	if(currentTime > normalAttackCooldown)
-	{
-		currentTime = 0;
+	
 		if(length > attackLength)
 		{
 			SetState(EFinalBossState::MOVE);
@@ -81,10 +85,10 @@ void UFinalBossFSM::TickNormalAttack()
 		{
 			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
-	}
-		
-	
 }
+		
+
+
 
 void UFinalBossFSM::TickFireMissile()
 {
@@ -98,14 +102,40 @@ void UFinalBossFSM::TickLaunchBomb()
 
 void UFinalBossFSM::TickRush()
 {
+	float dist = (me->GetActorLocation() - rushStartVector).Size();
+	if(dist < 3000)
+	{
+		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * rushSpeed * GetWorld()->DeltaTimeSeconds);
+	}
+	FTimerHandle MyTimer;
+	float Time = 1.25f;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+	   {
+		
+		SetState(EFinalBossState :: GROGGY);
+
+		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+	   }), Time, false);
 }
 
 void UFinalBossFSM::TickGroggy()
 {
+	FTimerHandle MyTimer;
+	float Time = 5.0f;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+	   {
+		  UE_LOG(LogTemp, Log, TEXT("bye"));
+		  // 실행할 내용
+
+	SetState(EFinalBossState :: MOVE);
+		  // TimerHandle 초기화
+		  GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+	   }), Time, false);
 }
 
 void UFinalBossFSM::TickDead()
 {
+	
 }
 
 void UFinalBossFSM::SetState(EFinalBossState next)

@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Barrett.generated.h"
 
-// ÀÌµ¿»óÅÂ, °ø°İ»óÅÂ ¾Ö´Ï¸ŞÀÌ¼Ç
+// ì´ë™ìƒíƒœ, ê³µê²©ìƒíƒœ ì• ë‹ˆë©”ì´ì…˜
 UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {
@@ -49,7 +49,7 @@ public:
 	void Move();
 	 
 
-	// ÀÌµ¿ Å° Bool
+	// ì´ë™ í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool W = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -59,23 +59,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool D = false;
 
-	// °ø°İ Å° Bool
+	// ê³µê²© í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsFire;
 
-	// ½ºÅ³ Å° Bool
+	// ìŠ¤í‚¬ í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsSkill;
 
-	// ¶ô¿Â Å° Bool
+	// ë½ì˜¨ í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Tab = false;
 
-	// ±¸¸£±â Å° Bool
+	// êµ¬ë¥´ê¸° í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool SpaceBar = false;
 
-	// ½ºÇÁ¸°Æ® Å° Bool
+	// ìŠ¤í”„ë¦°íŠ¸ í‚¤ Bool
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool LeftShift = false;
 
