@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GuardSuccessAOE.h"
@@ -14,7 +14,7 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// √π ¿Â∆«
+	// Ï≤´ Ïû•Ìåê
 	pFireFirst = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFireFirst"));
 	SetRootComponent(pFireFirst);
 	pFireFirst->SetRelativeScale3D(FVector(0.5));
@@ -24,7 +24,7 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 		pFireFirst->SetTemplate(tempFireFirst.Object);
 	}
 	
-	// ∫“ ±‚µ’
+	// Î∂à Í∏∞Îë•
 	pFirePillar0 = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFirePillar0"));
 	pFirePillar0->SetupAttachment(RootComponent);
 	pFirePillar0->SetRelativeScale3D(FVector(4));
@@ -40,7 +40,7 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 	pFirePillar2->SetRelativeScale3D(FVector(4));
 	pFirePillar2->SetRelativeLocation(FVector(0, 0, 1000));
 
-	// ∫“±‚µ’ √≥¿Ωø°¥¬ æ»≥™ø¿∞‘
+	// Î∂àÍ∏∞Îë• Ï≤òÏùåÏóêÎäî ÏïàÎÇòÏò§Í≤å
 	pFirePillar0->bAutoActivate = false;
 	pFirePillar1->bAutoActivate = false;
 	pFirePillar2->bAutoActivate = false;
@@ -63,10 +63,10 @@ void AGuardSuccessAOE::BeginPlay()
 	float Time = 0.5f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 		{
-			// 0.5√  µ⁄ø° ∫“±‚µ’ ª˝º∫
+			// Time Îí§Ïóê Î∂àÍ∏∞Îë• ÏÉùÏÑ±
 			ActiveFirePillar();
 
-			// TimerHandle √ ±‚»≠
+			// TimerHandle Ï¥àÍ∏∞Ìôî
 			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 		}), Time, false);
 }
@@ -75,10 +75,9 @@ void AGuardSuccessAOE::BeginPlay()
 void AGuardSuccessAOE::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// ±‚µ’ ≥™ø¿¥¬ «‘ºˆ
+// Í∏∞Îë• ÎÇòÏò§Îäî Ìï®Ïàò
 void AGuardSuccessAOE::ActiveFirePillar()
 {
 	pFirePillar0->Activate(true);
@@ -89,14 +88,14 @@ void AGuardSuccessAOE::ActiveFirePillar()
 
 void AGuardSuccessAOE::OnEffectFinished(UParticleSystemComponent* PSystem)
 {
-	// ∏∂¡ˆ∏∑ ±‚µ’ ¿Ã∆Â∆Æ ≥°≥™∏È ¿Â∆« 3√  µ⁄ø° ªÁ∂Û¡ˆ¥¬ «‘ºˆ
+	// ÎßàÏßÄÎßâ Í∏∞Îë• Ïù¥ÌéôÌä∏ ÎÅùÎÇòÎ©¥ Ïû•Ìåê 3Ï¥à Îí§Ïóê ÏÇ¨ÎùºÏßÄÎäî Ìï®Ïàò
 	FTimerHandle MyTimer;
 	float Time = 3.0f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 		{
 			Destroy();
 
-			// TimerHandle √ ±‚»≠
+			// TimerHandle Ï¥àÍ∏∞Ìôî
 			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 		}), Time, false);
 }

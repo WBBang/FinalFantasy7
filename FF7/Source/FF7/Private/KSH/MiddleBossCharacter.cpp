@@ -57,6 +57,14 @@ void AMiddleBossCharacter::BeginPlay()
 void AMiddleBossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// 테스트용 디버그 구 생성
+	// AttackRange이하면 공격 가능
+	DrawDebugSphere(GetWorld(), GetActorLocation(), GetAIAttackRange(), 16, FColor::Blue, false, 0.1f);
+
+	// SkillRange 이상이면 기열파나 뛰어오기
+	DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
+
 	if ( nullptr != hpBarUI )
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
@@ -259,8 +267,23 @@ void AMiddleBossCharacter::GuardSuccess()
 
 	AnimInstance->PlayGuardSuccessMontage();
 
-	FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
-	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
+
+	FTimerHandle MyTimer;
+	float Time = 0.35f;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
+		{
+			UE_LOG(LogTemp, Log, TEXT("bye"));
+			// 카메라 흔들기
+			if ( nullptr == CSShockWave )return;
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSShockWave, 1.0f);
+
+			FRotator rot = FRotationMatrix::MakeFromX(player->GetActorLocation() - GetActorLocation()).Rotator();
+			FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
+			GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, rot);
+
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+		}), Time, false);
 
 	IsGuardSuccessing = true;
 	IsGuardSuccessDeco = false;
@@ -311,14 +334,14 @@ float AMiddleBossCharacter::GetAIDetectRange()
 // 플레이어 공격할 수 있는 범위
 float AMiddleBossCharacter::GetAIAttackRange()
 {
-	canAttackRange = 1000.0f;
+	canAttackRange = 300.0f;
 	return canAttackRange;
 }
 
 // 플레이어에게 스킬쓸 수 있는 범위
 float AMiddleBossCharacter::GetAISkillRange()
 {
-	canSkillRange = 1500.0f;
+	canSkillRange = 1000.0f;
 	return canSkillRange;
 }
 
