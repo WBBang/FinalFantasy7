@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/Barrett.h"
@@ -12,6 +12,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include "JWK/Bullet_Energy.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ABarrett::ABarrett()
@@ -38,7 +39,7 @@ ABarrett::ABarrett()
 	RifleMeshComp->SetupAttachment(GetMesh(), TEXT("Rifle"));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempRifleMesh(TEXT("/Script/Engine.StaticMesh'/Game/JWK/Rifle/Rifle.Rifle'"));
-	// RifleMeshComp °Ë»öÀÌ ¼º°øÇÏ¸é
+	// RifleMeshComp ê²€ìƒ‰ì´ ì„±ê³µí•˜ë©´
 	if (tempRifleMesh.Succeeded())
 	{
 		RifleMeshComp->SetStaticMesh(tempRifleMesh.Object);
@@ -83,16 +84,16 @@ void ABarrett::Tick(float DeltaTime)
 
 		if (APawn::GetController())
 		{
-			// HitActorÀÌ À¯È¿ÇÑÁö Ã¼Å©
+			// HitActorì´ ìœ íš¨í•œì§€ ì²´í¬
 			if (HitActor->IsValidLowLevel())
 			{
-				// ÇöÀç Ä³¸¯ÅÍÀÇ À§Ä¡¿¡¼­ HitActor ÂÊÀ» ÇâÇÏ´Â È¸Àü°ª °è»ê
+				// í˜„ì¬ ìºë¦­í„°ì˜ ìœ„ì¹˜ì—ì„œ HitActor ìª½ì„ í–¥í•˜ëŠ” íšŒì „ê°’ ê³„ì‚°
 				FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), HitActor->GetActorLocation());
 
-				// ºÎµå·¯¿î ¿¡ÀÓ º¯°æÀ» À§ÇØ º¸°£ »ç¿ë (Lerp)
+				// ë¶€ë“œëŸ¬ìš´ ì—ì„ ë³€ê²½ì„ ìœ„í•´ ë³´ê°„ ì‚¬ìš© (Lerp)
 				FRotator LerpedRotation = FMath::Lerp(APawn::GetController()->GetControlRotation(), TargetRotation, DeltaTime * 5);
 
-				// Ä³¸¯ÅÍÀÇ ÄÁÆ®·Ñ·¯¿¡ È¸Àü°ª ¼³Á¤
+				// ìºë¦­í„°ì˜ ì»¨íŠ¸ë¡¤ëŸ¬ì— íšŒì „ê°’ ì„¤ì •
 				APawn::GetController()->AController::SetControlRotation(LerpedRotation);
 			}
 		}
@@ -100,7 +101,7 @@ void ABarrett::Tick(float DeltaTime)
 
 }
 
-// ÇÃ·¹ÀÌ¾î Å° ÀÔ·Â
+// í”Œë ˆì´ì–´ í‚¤ ì…ë ¥
 void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -164,32 +165,33 @@ void ABarrett::EndAttack()
 void ABarrett::Fire()
 {
 	
-	// ÃÑ¾Ë »ı¼º
+	// ì´ì•Œ ìƒì„±
 	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
-
 }
 
 void ABarrett::EnergyFire()
 {
 	IsSkill = true;
-
-	ABullet_Energy* BulletEnergySpeed = NewObject<ABullet_Energy>();
 	FTimerHandle MyTimer;
-	float Time =1.5f;
+	float Time =2;
+	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+
+	// Sparkle Emitter ì´êµ¬ ìœ„ì¹˜ì— Spawn
+	UParticleSystemComponent* SpawnedEmitter = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
 
 	double Seconds = FPlatformTime::Seconds();
 	int64 curMilSec = static_cast<int64>(Seconds * 1000);
-	if (curMilSec - milliseconds > 5000) // 5ÃÊ ÄğÅ¸ÀÓ
+	if (curMilSec - milliseconds > 5000) // 5ì´ˆ ì¿¨íƒ€ì„
 	{
 		milliseconds = curMilSec;
 		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 			{
 				UE_LOG(LogTemp, Log, TEXT("bye"));
-				// ½ÇÇàÇÒ ³»¿ë
+				// ì‹¤í–‰í•  ë‚´ìš©
 				FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 				GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
-				// TimerHandle ÃÊ±âÈ­
+				// TimerHandle ì´ˆê¸°í™”
 				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 			}), Time, false);
 	}
@@ -197,7 +199,7 @@ void ABarrett::EnergyFire()
 
 void ABarrett::LineTrace()
 {
-	//Àû¿¡°Ô ´ë¹ÌÁö Àû¿ë
+	//ì ì—ê²Œ ëŒ€ë¯¸ì§€ ì ìš©
 }
 
 void ABarrett::LockOn()
@@ -265,7 +267,7 @@ void ABarrett::OnActionRoll()
 	double Seconds = FPlatformTime::Seconds();
 	int64 curMilSec = static_cast<int64>(Seconds * 1000);
 
-	// ¸¸¾à ÇöÀç½Ã°£°ú ±â¾ïÇÏ°íÀÖ´ø ½Ã°£ÀÇ Â÷ÀÌ°¡ 800ms ¸¦ ÃÊ°úÇÑ´Ù¸é Montage ¸¦ Àç»ıÇÏ°í½Í´Ù.
+	// ë§Œì•½ í˜„ì¬ì‹œê°„ê³¼ ê¸°ì–µí•˜ê³ ìˆë˜ ì‹œê°„ì˜ ì°¨ì´ê°€ 800ms ë¥¼ ì´ˆê³¼í•œë‹¤ë©´ Montage ë¥¼ ì¬ìƒí•˜ê³ ì‹¶ë‹¤.
 
 	if (curMilSec - milliseconds > 800)
 	{

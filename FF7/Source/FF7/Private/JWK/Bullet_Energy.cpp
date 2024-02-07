@@ -22,8 +22,8 @@ ABullet_Energy::ABullet_Energy()
 	movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("movementComp"));
 
 	// 총알 이동속도, bounce Set
-	movementComp->InitialSpeed = 500.f;
-	movementComp->MaxSpeed = 500.0f;
+	movementComp->InitialSpeed = 2500.0f;
+	movementComp->MaxSpeed = 2500.0f;
 	movementComp->bShouldBounce = false;
 
 	// 총알의 Collision Set
