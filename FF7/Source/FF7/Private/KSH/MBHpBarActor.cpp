@@ -13,6 +13,7 @@ AMBHpBarActor::AMBHpBarActor()
 
 	MBHpBarUI = CreateDefaultSubobject<UWidgetComponent>("MBHpBarUI");
 	MBHpBarUI->SetupAttachment(RootComponent);
+
 	//ConstructorHelpers::FClassFinder<UUserWidget> HpUI(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/KSH/Blueprints/WBP_PlayerHP.WBP_PlayerHP'_C"));
 	/*if ( HpUI.Succeeded() )
 	{
@@ -42,4 +43,3 @@ void AMBHpBarActor::UpdateLocation(FVector Location, FRotator Rotator)
 	///this->SetActorLocation(Location);
 	this->SetActorLocationAndRotation(Location, Rotator);
 }
-

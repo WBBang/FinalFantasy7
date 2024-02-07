@@ -43,6 +43,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = HPBar)
 	class AMBHpBarActor* hpBarUI;
 
+
+	// Guard Bar
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = guardBar)
+	TSubclassOf<class AMBGuardBarActor> guardBar;
+
+	// Guard Bar 레퍼런스 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guardBar)
+	class AMBGuardBarActor* guardBarUI;
+
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AGuardSuccessAOE> aoeActor;
@@ -113,15 +122,15 @@ private:
 	bool IsShockWaving;
 
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	int32 GuardingDamage;
 
-	// 경직중인지 판단
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
-	bool IsHitStuning;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	int32 CounterDamage = 3;
+
+	// 경직중인지 판단
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsHitStuning;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
 	class UCharacterMovementComponent* movementComp;
@@ -140,7 +149,7 @@ private:
 	int32 MiddleBossHP;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	int32 MiddleBossMaxHP = 10.0f;
+	int32 MiddleBossMaxHP = 10;
 
 // AI Section
 protected:

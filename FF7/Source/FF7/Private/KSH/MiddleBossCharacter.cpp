@@ -9,6 +9,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "KSH/MBHpBarActor.h"
+#include "KSH/MBGuardBarActor.h"
 
 
 // Sets default values
@@ -48,9 +49,13 @@ void AMiddleBossCharacter::BeginPlay()
 	GuardingDamage = 0;
 
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
-
 	FVector loc = dummyCubeMesh->GetComponentLocation();
-	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, loc, FRotator(0, 0, 0));
+	FVector locHP = FVector(loc.X, loc.Y, loc.Z+20);
+	FVector locGuard = FVector(loc.X, loc.Y, loc.Z+80);
+	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, locHP, FRotator(0, 0, 0));
+	guardBarUI = GetWorld()->SpawnActor<AMBGuardBarActor>(guardBar, locGuard, FRotator(0, 0, 0));
+
+	guardBarUI->SetActorHiddenInGame(true);
 }
 
 // Called every frame
@@ -65,11 +70,17 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 	// SkillRange 이상이면 기열파나 뛰어오기
 	DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
 
-	if ( nullptr != hpBarUI )
+	if ( nullptr != hpBarUI && nullptr != guardBarUI)
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
+		FVector loc = dummyCubeMesh->GetComponentLocation();
+		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
+		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 80);
+
 		FRotator LookAtRotation = FRotationMatrix::MakeFromX(GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation() - dummyCubeMesh->GetComponentLocation()).Rotator();
-		hpBarUI->UpdateLocation(dummyCubeMesh->GetComponentLocation(), LookAtRotation);
+		hpBarUI->UpdateLocation(locHP, LookAtRotation);
+		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
+
 	}
 }
 
@@ -192,6 +203,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
+		guardBarUI->SetActorHiddenInGame(true);
 
 		OnAttackFinished.ExecuteIfBound();
 		return;
@@ -217,6 +229,9 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
+
+		guardBarUI->SetActorHiddenInGame(true);
+
 		IsGuardSuccessing = false;
 		IsGuardSuccessDeco = false;
 
@@ -234,6 +249,7 @@ void AMiddleBossCharacter::Guard()
 {
 	if ( IsGuarding ) return;
 	if ( !IsGuardDeco ) return;
+	guardBarUI->SetActorHiddenInGame(false);
 	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
