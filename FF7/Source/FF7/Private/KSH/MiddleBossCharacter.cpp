@@ -47,6 +47,8 @@ void AMiddleBossCharacter::BeginPlay()
 	IsGuardDeco = false;
 	GuardingDamage = 0;
 
+	player = GetWorld()->GetFirstPlayerController()->GetPawn();
+
 	FVector loc = dummyCubeMesh->GetComponentLocation();
 	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, loc, FRotator(0, 0, 0));
 }
@@ -119,7 +121,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
 		// 기열파 애니메이션이 실행중이 아니라면
-		if (!IsGuardSuccessDeco && GuardingDamage >= 2)
+		if (!IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
 		{
 			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 
@@ -257,7 +259,6 @@ void AMiddleBossCharacter::GuardSuccess()
 
 	AnimInstance->PlayGuardSuccessMontage();
 
-	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
 	GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, FRotator(0, 0, 0));
 
@@ -275,8 +276,22 @@ void AMiddleBossCharacter::ShockWave()
 
 	AnimInstance->PlayShockWaveMontage();
 
-	FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
-	GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, FRotator(0, 0, 0));
+	FTimerHandle MyTimer;
+	float Time = 0.35f;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
+		{
+			UE_LOG(LogTemp, Log, TEXT("bye"));
+			// 카메라 흔들기
+			if ( nullptr == CSShockWave )return;
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSShockWave, 1.0f);
+
+			FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
+			FRotator rot = FRotationMatrix::MakeFromX(player->GetActorLocation() - GetActorLocation()).Rotator();
+			GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, rot);
+
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+		}), Time, false);
 
 	IsShockWaving = true;
 }

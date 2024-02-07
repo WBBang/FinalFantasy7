@@ -26,7 +26,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* MBHpBarUI;
 
-
 	UFUNCTION()
 	void UpdateLocation(FVector Location, FRotator Rotator);
 };

@@ -75,6 +75,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsGuarding(bool isGuarding);
 
+	// Camera Shake - 지면 충격파
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<UCameraShakeBase> CSShockWave;
+
 	
 private:
 
@@ -117,11 +121,10 @@ private:
 	bool IsHitStuning;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attacked, Meta = (AllowPrivateAccess = true))
-	int32 CounterDamage = 30;
+	int32 CounterDamage = 3;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
 	class UCharacterMovementComponent* movementComp;
-
 
 	// 기열파
 	void GuardSuccess();
@@ -137,7 +140,7 @@ private:
 	int32 MiddleBossHP;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	int32 MiddleBossMaxHP = 500.0f;
+	int32 MiddleBossMaxHP = 10.0f;
 
 // AI Section
 protected:

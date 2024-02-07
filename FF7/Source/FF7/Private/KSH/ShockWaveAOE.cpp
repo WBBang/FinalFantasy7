@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KSH/ShockWaveAOE.h"
@@ -12,11 +12,13 @@ AShockWaveAOE::AShockWaveAOE()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Ãæµ¹Ã¼
+	// ì¶©ëŒì²´
 	sphereComp = CreateDefaultSubobject<USphereComponent> ( "sphereComp" );
 	SetRootComponent(sphereComp);
+	sphereComp->SetGenerateOverlapEvents(true);
+	sphereComp->SetCollisionProfileName(TEXT("EnemyAttack"));
 
-	// ºÒµ¢ÀÌ
+	// ë¶ˆë©ì´
 	ShockWaveFire = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ShockWaveFire"));
 	ShockWaveFire->SetupAttachment(RootComponent);
 	ShockWaveFire->SetRelativeScale3D(FVector(1));
@@ -32,7 +34,7 @@ void AShockWaveAOE::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ÇÃ·¹ÀÌ¾î ÀúÀå
+	// í”Œë ˆì´ì–´ ì €ì¥
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
@@ -41,7 +43,7 @@ void AShockWaveAOE::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// ÇÃ·¹ÀÌ¾î¸¦ chaseTimeµ¿¾È ÂÑ´Ù°¡ chaseTime°¡ Áö³ª¸é ±×³É Á÷Áø
+	// í”Œë ˆì´ì–´ë¥¼ chaseTimeë™ì•ˆ ì«“ë‹¤ê°€ chaseTimeê°€ ì§€ë‚˜ë©´ ê·¸ëƒ¥ ì§ì§„
 	currentTime += DeltaTime;
 
 	FVector P0 = GetActorLocation();
@@ -54,7 +56,7 @@ void AShockWaveAOE::Tick(float DeltaTime)
 	SetActorLocation(P0 + (dir.GetSafeNormal() * speed * DeltaTime));
 
 
-	// distroyTime ÀÌ»óÀÌ¸é »ç¶óÁö±â
+	// distroyTime ì´ìƒì´ë©´ ì‚¬ë¼ì§€ê¸°
 	if (currentTime > distroyTime)
 	{
 		Destroy();
@@ -62,5 +64,5 @@ void AShockWaveAOE::Tick(float DeltaTime)
 	
 }
 
-// ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ÇÏ¸é µ¥¹ÌÁö ÁÖ°í »ç¶óÁö±â
+// í”Œë ˆì´ì–´ì™€ ì¶©ëŒí•˜ë©´ ë°ë¯¸ì§€ ì£¼ê³  ì‚¬ë¼ì§€ê¸°
 
