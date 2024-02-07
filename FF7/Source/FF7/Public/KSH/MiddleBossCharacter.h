@@ -32,6 +32,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* skeletalMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* dummyCubeMesh;
+
+	// HP Bar
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<class AMBHpBarActor> hpBar;
+
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	TSubclassOf<class AGuardSuccessAOE> aoeActor;
@@ -47,8 +54,6 @@ public:
 	// 스킬 범위
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	float canSkillRange;
-
-	//int32 GetHP;
 
 	// 플레이어에게 기본 공격으로 맞은 경우
 	UFUNCTION()

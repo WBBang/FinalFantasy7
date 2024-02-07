@@ -6,7 +6,9 @@
 #include "KSH/ShockWaveAOE.h"
 #include "GuardSuccessAOE.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
-#include <BehaviorTree/BehaviorTreeComponent.h>
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "KSH/MBHpBarActor.h"
 
 
 // Sets default values
@@ -23,6 +25,14 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 480.0f, 0.0f);
+
+	// HP UI 뜰 위치
+	dummyCubeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("dummyCubeMesh"));
+	dummyCubeMesh->SetupAttachment(RootComponent);
+	dummyCubeMesh->SetRelativeLocation(FVector(10.0f, 0, 120.0f));
+	dummyCubeMesh->SetRelativeScale3D(FVector(0.2f));
+	dummyCubeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	dummyCubeMesh->bHiddenInGame = true;
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +46,9 @@ void AMiddleBossCharacter::BeginPlay()
 	//IsGuarding = false;
 	IsGuardDeco = false;
 	GuardingDamage = 0;
+
+	FVector loc = dummyCubeMesh->GetComponentLocation();
+	auto hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, loc, FRotator(0, 0, 0));
 }
 
 // Called every frame
