@@ -38,6 +38,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* fireVFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UFinalBossFSM* bossFsm;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf <class ABossBullet> bulletFactory;
@@ -62,4 +65,5 @@ public:
 	void LauchMissile();
 	void JumpAttack();
 	void AttackLength();
+	
 };

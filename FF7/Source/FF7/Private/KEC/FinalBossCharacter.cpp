@@ -4,8 +4,10 @@
 #include "KEC/FinalBossCharacter.h"
 #include "Components/ArrowComponent.h"
 #include "KEC/BossBullet.h"
+#include "KEC/FinalBossFSM.h"
 #include "KEC/Missile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AFinalBossCharacter::AFinalBossCharacter()
@@ -17,12 +19,15 @@ AFinalBossCharacter::AFinalBossCharacter()
 	leftArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("leftArrowComp"));
 	rightArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("rightArrowComp"));
 
-	//미사일 발사 위치
+	//폭탄 발사 위치
 	missieLaunchArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("launchMissileArrowComp"));
 
 	leftArrowComp->SetupAttachment(RootComponent);
 	rightArrowComp->SetupAttachment(RootComponent);
 	missieLaunchArrowComp->SetupAttachment(RootComponent);
+
+	//FSM컴포넌트
+	bossFsm = CreateDefaultSubobject<UFinalBossFSM>(TEXT("bossFsm"));
 
 
 	//보스캐릭터 SkeletalMesh
