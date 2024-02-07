@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTask_TurnToTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 	FVector LookVector = Target->GetActorLocation() - MBCharacter->GetActorLocation();
 	LookVector.Z = 0.0f;
 	FRotator TargetRot = FRotationMatrix::MakeFromX(LookVector).Rotator();
-	MBCharacter->SetActorRotation(FMath::RInterpTo(MBCharacter->GetActorRotation(), TargetRot, GetWorld()->GetDeltaSeconds(), 2.0f));
+	MBCharacter->SetActorRotation(FMath::RInterpTo(MBCharacter->GetActorRotation(), TargetRot, GetWorld()->GetDeltaSeconds(), 5.0f));
 
 	return EBTNodeResult::Succeeded;
 }
