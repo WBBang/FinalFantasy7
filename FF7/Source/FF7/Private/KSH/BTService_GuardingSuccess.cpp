@@ -43,11 +43,13 @@ void UBTService_GuardingSuccess::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsGuardSuccess")); // 게임 화면
 	bool IsGuardSuccessing = AIPawn->GetAIGuardingSuccess();
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(BBKEY_ISGUARDSUCCESS, IsGuardSuccessing);
+	/*
 	if ( IsGuardSuccessing ) {
 		UE_LOG(LogTemp, Warning, TEXT("IsGuardSuccess"));
 	}
 		
 	else 
-		UE_LOG(LogTemp, Warning, TEXT("NotSuccess")); 
+		UE_LOG(LogTemp, Warning, TEXT("NotSuccess"));
+	*/
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("NotSuccess")); // 게임 화면
 }

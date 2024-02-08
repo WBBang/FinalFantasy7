@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -20,32 +20,32 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	// ÇÃ·¹ÀÌ¾î
+	// í”Œë ˆì´ì–´
 	UPROPERTY()
 	class AActor* player;
 
-	// ÇöÀç ½Ã°£
+	// í˜„ì¬ ì‹œê°„
 	float currentTime;
 
-	// Ãß°İ ½Ã°£
+	// ì¶”ê²© ì‹œê°„
 	float chaseTime = 2;
 
-	// »ç¶óÁö´Â ½Ã°£
+	// ì‚¬ë¼ì§€ëŠ” ì‹œê°„
 	float distroyTime = 3;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// ÀÌµ¿ ¼Óµµ
+	// ì´ë™ ì†ë„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float speed = 1000.0f;
+	float speed = 1500.0f;
 
-	// µû¶ó¿À´Â ºÒµ¢ÀÌ
+	// ë”°ë¼ì˜¤ëŠ” ë¶ˆë©ì´
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UParticleSystemComponent* ShockWaveFire;
 
-	// Ãæµ¹Ã¼
+	// ì¶©ëŒì²´
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USphereComponent* sphereComp;
 };

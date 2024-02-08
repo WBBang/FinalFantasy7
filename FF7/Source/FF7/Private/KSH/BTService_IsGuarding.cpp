@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KSH/BTService_IsGuarding.h"
@@ -43,7 +43,9 @@ void UBTService_IsGuarding::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 
 	bool IsGuarding = AIPawn->GetAIGuarding();
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(BBKEY_ISGUARDING, IsGuarding);
-	if (IsGuarding)
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsGuarding")); // °ÔÀÓ È­¸é
-	else GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsNotGuarding")); // °ÔÀÓ È­¸é
+	
+	/*if ( IsGuarding )
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsGuarding")); // ê²Œìž„ í™”ë©´
+	else GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("IsNotGuarding")); // ê²Œìž„ í™”ë©´
+	*/
 }

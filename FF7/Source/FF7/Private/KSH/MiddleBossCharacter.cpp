@@ -65,10 +65,10 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 
 	// 테스트용 디버그 구 생성
 	// AttackRange이하면 공격 가능
-	DrawDebugSphere(GetWorld(), GetActorLocation(), GetAIAttackRange(), 16, FColor::Blue, false, 0.1f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), GetAIAttackRange(), 16, FColor::Blue, false, 0.1f);
 
 	// SkillRange 이상이면 기열파나 뛰어오기
-	DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
 
 	if ( nullptr != hpBarUI && nullptr != guardBarUI)
 	{
@@ -167,7 +167,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 
 		// 30% 확률로 
 		int randomNum = FMath::RandRange(0, 9);
-		if (randomNum < 3) // 0, 1, 2
+		//if (randomNum < 3) // 0, 1, 2
 		{
 			IsGuardDeco = true;
 			//Guard();
@@ -197,7 +197,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	else if (Montage->GetFName() == "M_Guard_Montage")
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Guard End"));
-		UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
+		//UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
 
 		// 가드 관련 변수 초기화
 		GuardingDamage = 0;
