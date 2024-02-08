@@ -21,7 +21,7 @@ ABarrett::ABarrett()
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("springArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
-	springArmComp->SetWorldLocation(FVector(0, 70, 90));
+	springArmComp->SetWorldLocation(FVector(0, 70, 135));
 	springArmComp->bUsePawnControlRotation = true;
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
@@ -199,7 +199,7 @@ void ABarrett::EnergyFire()
 
 void ABarrett::LineTrace()
 {
-	//적에게 대미지 적용
+	// 적에게 대미지 적용
 }
 
 void ABarrett::LockOn()
@@ -249,7 +249,7 @@ void ABarrett::LockOn()
 		}
 		else
 		{
-
+			UKismetSystemLibrary::PrintString(GetWorld(), FString(TEXT("TargetUnLockced")));
 		}
 	}
 
