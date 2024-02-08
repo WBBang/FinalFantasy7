@@ -23,6 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+	//////////////////////// 컴포넌트 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BBB)
 	class USphereComponent* sphereComp;
 
@@ -32,12 +34,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BBB)
 	class UProjectileMovementComponent* movementComp;
 
-	//총알의 이동속도 Casting 용
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector Velocity;
 
+	//////////////////////// 총알 ////////////////////////
 	FORCEINLINE void AutoDestroy() { this->Destroy(); }
-
 	UFUNCTION()
 	void OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

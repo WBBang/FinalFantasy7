@@ -36,11 +36,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
+	//////////////////////// 컴포넌트 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USpringArmComponent* springArmComp;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UCameraComponent* cameraComp;
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector direction;
@@ -49,7 +52,7 @@ public:
 	void Move();
 	 
 
-	// 이동 키 Bool
+	//////////////////////// 이동 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool W = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -58,93 +61,84 @@ public:
 	bool S = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool D = false;
+	
 
-	// 공격 키 Bool
+	//////////////////////// 공격 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsFire;
+	bool IsFire = false;
+	
 
-	// 스킬 키 Bool
+	//////////////////////// 스킬 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsSkill;
+	
 
-	// 락온 키 Bool
+	////////////////////////// 락온 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Tab = false;
 
-	// 구르기 키 Bool
+
+	////////////////////////// 구르기 //////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool SpaceBar = false;
+	void OnActionRoll();
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* rollMontage;
+	int64 milliseconds;
 
-	// 스프린트 키 Bool
+
+	////////////////////////// 스프린트 //////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool LeftShift = false;
 
+
+	////////////////////////// Player 시점 //////////////////////////
 	UFUNCTION(BlueprintCallable)
 	void OnAxisVertical(float value);
-
 	UFUNCTION(BlueprintCallable)
 	void OnAxisHorizontal(float value);
-
 	void OnAxisTurnYaw(float value);
 	void OnAxisLookupPitch(float value);
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* RifleMeshComp;
-
 	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* playerMeshComp;
-
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABulletActor> bulletFactory;
-	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABullet_Energy> energyFactory;
 
-	// Auto Fire 
+
+	////////////////////////// 공격 //////////////////////////
 	int Damage = 0;
 	float CurFireTime = 0;
 	float MaxFireTime = 0.1;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool autofire = true;
 	UFUNCTION()
 	void StartAttack();
 	UFUNCTION()
 	void EndAttack();
-
+	UFUNCTION(BlueprintCallable)
+	void IsAutoAttack(bool isAttacking);
 	void Fire();
 	void EnergyFire();
-
-	void LineTrace();
 	bool bIsAttacking = false;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite) // 우와앙빵 파티클
+	class UParticleSystem* sparkle;
 
 
-	// Camera Lock On
+	//////////////////////// 카메라 락온 ////////////////////////
 	UFUNCTION()
 	void LockOn();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsTargetLocked = false;
-
 	class AActor* HitActor;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
-
-
 	UPROPERTY(BlueprintReadOnly, Category = "CharacterState")
 	ECharacterState CharacterState;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
     bool bIsLockOn = false;
 
-
-	void OnActionRoll();
-	UPROPERTY(EditAnywhere)
-	class UAnimMontage* rollMontage;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	class UParticleSystem* sparkle;
-
-	int64 milliseconds;
 };

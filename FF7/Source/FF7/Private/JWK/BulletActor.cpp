@@ -7,7 +7,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 #include "KSH/MiddleBossCharacter.h"
 
-// Sets default values
+
 ABulletActor::ABulletActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -38,7 +38,7 @@ ABulletActor::ABulletActor()
 
 }
 
-// Called when the game starts or when spawned
+
 void ABulletActor::BeginPlay()
 {
 	Super::BeginPlay();

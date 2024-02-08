@@ -151,9 +151,13 @@ void ABarrett::OnAxisLookupPitch(float value)
 }
 
 
+// bool autofire = true;
 void ABarrett::StartAttack()
 {
-	IsFire = true;
+	if ( autofire )
+	{
+		IsFire = true;
+	}
 }
 
 void ABarrett::EndAttack()
@@ -162,9 +166,15 @@ void ABarrett::EndAttack()
 	CurFireTime = MaxFireTime;
 }
 
+void ABarrett::IsAutoAttack(bool isAttacking)
+{
+	autofire = isAttacking;
+	IsFire = isAttacking;
+}
+
 void ABarrett::Fire()
 {
-	
+
 	// 총알 생성
 	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
@@ -197,11 +207,9 @@ void ABarrett::EnergyFire()
 	}
 }
 
-void ABarrett::LineTrace()
-{
-	// 적에게 대미지 적용
-}
 
+
+////////////////////////// 락온 ////////////////////////
 void ABarrett::LockOn()
 {
 	UE_LOG(LogTemp, Log, TEXT("LockOn"));
@@ -237,7 +245,7 @@ void ABarrett::LockOn()
 		);
 		//OutHit.GetActor();
 
-		if (result)
+		if (result)  // 만약 맞은 타겟이 있다면
 		{
 			IsTargetLocked = true;
 			UKismetSystemLibrary::PrintString(GetWorld(), FString(TEXT("TargetLocked")));
