@@ -11,21 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Candle_Fire.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Dandelion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Leaves.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Smoke.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Snow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Paticle_wind_settings.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Candle_Fire_Particle.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Dandelion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Leaves.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Smoke.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Snow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Wind_Update_Info.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Wind_Update_Info.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Maps/Level_ParticlesOverview.umap" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Meshes/SM_Leaf.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Meshes/SM_Skybox.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/JWK/BluePrint/BP_BulletActor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/JWK/BluePrint/BP_BulletActor.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/JWK/BluePrint/BP_Bullet_Energy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/JWK/BluePrint/BP_Bullet_Energy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_Bomb.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_Bomb.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KSH/Blueprints/BP_MiddleBossCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KSH/Blueprints/BP_MiddleBossCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,6 +208,7 @@
       <workItem from="1707298437814" duration="8071000" />
       <workItem from="1707353567306" duration="3949000" />
       <workItem from="1707357892921" duration="275000" />
+      <workItem from="1707359120792" duration="671000" />
     </task>
     <servers />
   </component>
