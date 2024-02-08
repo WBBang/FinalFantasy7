@@ -10,6 +10,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "KSH/MBHpBarActor.h"
 #include "KSH/MBGuardBarActor.h"
+#include "KEC/LevelTransitionPortal.h"
 
 
 // Sets default values
@@ -94,13 +95,21 @@ void AMiddleBossCharacter::PostInitializeComponents()
 	AnimInstance->OnMontageEnded.AddDynamic(this, &AMiddleBossCharacter::OnMontageEnded);
 }
 
-
-
 // Called to bind functionality to input
 void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+// 중간보스 게임 클리어
+void AMiddleBossCharacter::MBGameClear()
+{
+	FVector t = FVector(-130.0f, 670.0f, 80.0f);
+
+	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
+
+	this->Destroy();
 }
 
 // 기본 스킬로 맞은 경우
@@ -162,7 +171,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 			MiddleBossHP = 0;
 
 			// 중간보스 클리어 처리
-			
+			//MBGameClear();
 		}
 
 		// 30% 확률로 

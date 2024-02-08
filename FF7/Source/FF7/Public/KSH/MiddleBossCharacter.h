@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = HPBar)
 	class AMBHpBarActor* hpBarUI;
 
+	// 게임 클리어 때 부를 액터 공장
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
+	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;
 
 	// Guard Bar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = guardBar)
@@ -143,6 +146,9 @@ private:
 
 	// 가드
 	void Guard();
+
+	// 게임 클리어
+	void MBGameClear();
 
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
