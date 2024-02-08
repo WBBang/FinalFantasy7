@@ -11,14 +11,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Attack_Right_CtrlRigSample.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Attack_Right_CtrlRigSample.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Run.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Run.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/BossAnim/ABP_FinalBoss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/BossAnim/ABP_FinalBoss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/JWK/Barrett.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/JWK/Barrett.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Candle_Fire.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Dandelion.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Leaves.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Smoke.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Particle_Snow.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/BP_Paticle_wind_settings.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Candle_Fire_Particle.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Dandelion.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Leaves.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Smoke.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Particles/P_Snow.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Wind_Update_Info.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Blueprints/Components/Wind_Update_Info.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Maps/Level_ParticlesOverview.umap" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Meshes/SM_Leaf.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/Particles_Wind_Control_System/Meshes/SM_Skybox.uasset" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,6 +213,8 @@
       <workItem from="1707282244856" duration="4835000" />
       <workItem from="1707288832027" duration="8881000" />
       <workItem from="1707298437814" duration="8071000" />
+      <workItem from="1707353567306" duration="3949000" />
+      <workItem from="1707357892921" duration="275000" />
     </task>
     <servers />
   </component>
