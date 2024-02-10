@@ -13,6 +13,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include "JWK/Bullet_Energy.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Camera/PlayerCameraManager.h"
 
 // Sets default values
 ABarrett::ABarrett()
@@ -46,6 +47,24 @@ ABarrett::ABarrett()
 		RifleMeshComp->SetRelativeLocationAndRotation(FVector(17.136384f, -319.395057f, 52.838305f), FRotator(-90,-180,2.422084f));
 		RifleMeshComp->SetWorldScale3D(FVector(20, 35, 20));
 	}
+
+
+
+	/////////////////////////// 애니메이션 /////////////////////////
+
+	///* 기본공격 */
+	//static ConstructorHelpers::FObjectFinder<UAnimMontage> BasicAttackRef(TEXT("/Script/Engine.AnimMontage'/Game/JWK/Animation/Montage/Attack/MT_BasicAttack.MT_BasicAttack'"));
+	//if ( BasicAttackRef.Object )
+	//{
+	//	BasicAttackMontage = BasicAttackRef.Object;
+	//}
+
+	///* 우와앙 빵 */
+	//static ConstructorHelpers::FObjectFinder<UAnimMontage> SkillAttackRef(TEXT("/Script/Engine.AnimMontage'/Game/JWK/Animation/Montage/Attack/MT_WangBBang.MT_WangBBang'"));
+	//if ( SkillAttackRef.Object )
+	//{
+	//	SkillAttackMontage = SkillAttackRef.Object;
+	//}
 }
 
 // Called when the game starts or when spawned
@@ -54,11 +73,7 @@ void ABarrett::BeginPlay()
 	Super::BeginPlay();
 	IsTargetLocked = false;
 	CurFireTime = MaxFireTime;
-	if (IsSkill)
-	{
-		EnergyFire();
-		IsSkill = false;
-	}
+	
 }
 
 // Called every frame
@@ -66,6 +81,12 @@ void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Move();
+
+	if ( IsSkill )
+	{
+		EnergyFire();
+		IsSkill = false;
+	}
 
 	if (IsFire)
 	{
@@ -76,8 +97,7 @@ void ABarrett::Tick(float DeltaTime)
 			CurFireTime = 0;
 		}
 	}
-	
-
+	// 락온 타겟이 있다면
 	if (HitActor)
 	{
 		/*APawn::GetController()->AController::SetControlRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),HitActor->GetActorLocation()));*/
@@ -85,7 +105,7 @@ void ABarrett::Tick(float DeltaTime)
 		if (APawn::GetController())
 		{
 			// HitActor이 유효한지 체크
-			if (HitActor->IsValidLowLevel())
+			if ( HitActor->IsValidLowLevel() )
 			{
 				// 현재 캐릭터의 위치에서 HitActor 쪽을 향하는 회전값 계산
 				FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), HitActor->GetActorLocation());
@@ -154,56 +174,94 @@ void ABarrett::OnAxisLookupPitch(float value)
 // bool autofire = true;
 void ABarrett::StartAttack()
 {
-	if ( autofire )
-	{
 		IsFire = true;
-	}
 }
 
 void ABarrett::EndAttack()
 {
 	IsFire = false;
 	CurFireTime = MaxFireTime;
+	StopAnimMontage();
 }
 
-void ABarrett::IsAutoAttack(bool isAttacking)
-{
-	autofire = isAttacking;
-	IsFire = isAttacking;
-}
+//void ABarrett::IsAutoAttack(bool isAttacking)
+//{
+//	autofire = isAttacking;
+//	IsFire = isAttacking;
+//	if ( IsFire )
+//	{
+//		this->PlayAnimMontage(BasicAttackMontage);
+//	}
+//	else
+//	{
+//		StopAnimMontage();
+//	}
+//}
 
+///////////////////////// 기본공격 /////////////////////////
 void ABarrett::Fire()
 {
-
 	// 총알 생성
 	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
-}
-
-void ABarrett::EnergyFire()
-{
-	IsSkill = true;
-	FTimerHandle MyTimer;
-	float Time =2;
-	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
-
-	// Sparkle Emitter 총구 위치에 Spawn
-	UParticleSystemComponent* SpawnedEmitter = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
 
 	double Seconds = FPlatformTime::Seconds();
-	int64 curMilSec = static_cast<int64>(Seconds * 1000);
-	if (curMilSec - milliseconds > 5000) // 5초 쿨타임
+
+	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
+
+	FTimerHandle BasicTimer;
+
+	float BasicTime = 2;                                                       // 딜레이 타임
+
+	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));    // 소환 위치
+	if ( curMilSec - milliseconds > 3000 )                                     // 3초 쿨타임
 	{
 		milliseconds = curMilSec;
-		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+		GetWorld()->GetTimerManager().SetTimer(BasicTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
-				UE_LOG(LogTemp, Log, TEXT("bye"));
 				// 실행할 내용
+				UParticleSystemComponent* SpawnBasic = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), boom, s);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
+			}), BasicTime, false);
+	}
+}
+
+
+///////////////////////// 스킬공격 /////////////////////////
+void ABarrett::EnergyFire()
+{
+	
+	double Seconds = FPlatformTime::Seconds();
+	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
+	IsSkill = true;
+	FTimerHandle SkillTimer;
+	float SkillTime =2;                                                       // 딜레이 타임
+
+	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));   // 소환 위치
+	if ( curMilSec - milliseconds > 5000 )
+	{
+		// Sparkle Emitter 총구 위치에 Spawn
+		UParticleSystemComponent* SpawnedEnergy = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
+
+		milliseconds = curMilSec;
+
+		// 스킬공격 몽타주 재생
+		this->PlayAnimMontage(SkillAttackMontage);
+
+		// 딜레이 2 초
+		GetWorld()->GetTimerManager().SetTimer(SkillTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// 실행할 내용
+
 				FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 				GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
+
 				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
-			}), Time, false);
+				GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
+			}), SkillTime, false);
+
 	}
 }
 
@@ -269,6 +327,13 @@ void ABarrett::LockOn()
 		HitActor = nullptr;
 	}
 }
+
+//void ABarrett::PlayMontage(UAnimMontage* NewMontage)
+//{
+//	UAnimInstance* Animinstance = GetMesh()->GetAnimInstance();
+//	Animinstance->StopAllMontages(0.0f);
+//	Animinstance->Montage_Play(NewMontage);
+//}
 
 void ABarrett::OnActionRoll()
 {

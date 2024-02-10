@@ -63,14 +63,10 @@ public:
 	bool D = false;
 	
 
-	//////////////////////// 공격 ////////////////////////
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsFire = false;
-	
-
 	//////////////////////// 스킬 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsSkill;
+	bool IsSkill = false;
+
 	
 
 	////////////////////////// 락온 ////////////////////////
@@ -82,8 +78,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool SpaceBar = false;
 	void OnActionRoll();
-	UPROPERTY(EditAnywhere)
-	class UAnimMontage* rollMontage;
 	int64 milliseconds;
 
 
@@ -110,22 +104,34 @@ public:
 
 
 	////////////////////////// 공격 //////////////////////////
-	int Damage = 0;
-	float CurFireTime = 0;
-	float MaxFireTime = 0.1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool autofire = true;
-	UFUNCTION()
+	/*UFUNCTION(BlueprintCallable)
+	void IsAutoAttack(bool isAttacking);*/
+	UFUNCTION(BlueprintCallable)
 	void StartAttack();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void EndAttack();
 	UFUNCTION(BlueprintCallable)
-	void IsAutoAttack(bool isAttacking);
 	void Fire();
+	UFUNCTION(BlueprintCallable)
 	void EnergyFire();
-	bool bIsAttacking = false;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite) // 우와앙빵 파티클
-	class UParticleSystem* sparkle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool autofire = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsFire = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsAttacking = true;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
+	class UParticleSystem* sparkle;            // 우와앙빵 파티클
+	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
+	class UParticleSystem* boom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Damage = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurFireTime = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxFireTime = 0.1;
 
 
 	//////////////////////// 카메라 락온 ////////////////////////
@@ -133,12 +139,23 @@ public:
 	void LockOn();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsTargetLocked = false;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class AActor* HitActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TEnumAsByte<EObjectTypeQuery>> LockOnArea;
 	UPROPERTY(BlueprintReadOnly, Category = "CharacterState")
 	ECharacterState CharacterState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
-    bool bIsLockOn = false;
+	bool bIsLockOn = false;
 
+
+	//////////////////////// 몽타주 ////////////////////////
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* rollMontage;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* BasicAttackMontage;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* SkillAttackMontage;
+
+	/*void PlayMontage(UAnimMontage* NewMontage);*/
 };

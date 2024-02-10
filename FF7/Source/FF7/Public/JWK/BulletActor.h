@@ -25,11 +25,11 @@ public:
 
 
 	//////////////////////// 컴포넌트 ////////////////////////
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AAA)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
 	class USphereComponent* sphereComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AAA)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
 	class UStaticMeshComponent* meshComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AAA)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA")
 	class UProjectileMovementComponent* movementComp;
 
 
