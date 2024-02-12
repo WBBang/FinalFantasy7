@@ -22,7 +22,7 @@ ABarrett::ABarrett()
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("springArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
-	springArmComp->SetWorldLocation(FVector(0, 20, 100));
+	springArmComp->SetWorldLocation(FVector(0, 40, 120));
 	springArmComp->bUsePawnControlRotation = true;
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
