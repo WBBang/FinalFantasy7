@@ -104,8 +104,8 @@ public:
 
 
 	////////////////////////// 공격 //////////////////////////
-	/*UFUNCTION(BlueprintCallable)
-	void IsAutoAttack(bool isAttacking);*/
+	UFUNCTION(BlueprintCallable)
+	void IsAutoAttack(bool isAttacking);
 	UFUNCTION(BlueprintCallable)
 	void StartAttack();
 	UFUNCTION(BlueprintCallable)
@@ -125,6 +125,9 @@ public:
 	class UParticleSystem* sparkle;            // 우와앙빵 파티클
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
 	class UParticleSystem* boom;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
+	class UParticleSystem* basicAttackEnd;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Damage = 0;
@@ -132,6 +135,8 @@ public:
 	float CurFireTime = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxFireTime = 0.1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackEndTime = 0;
 
 
 	//////////////////////// 카메라 락온 ////////////////////////

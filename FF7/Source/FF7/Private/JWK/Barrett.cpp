@@ -22,7 +22,7 @@ ABarrett::ABarrett()
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("springArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
-	springArmComp->SetWorldLocation(FVector(0, 70, 135));
+	springArmComp->SetWorldLocation(FVector(0, 20, 100));
 	springArmComp->bUsePawnControlRotation = true;
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
@@ -90,11 +90,30 @@ void ABarrett::Tick(float DeltaTime)
 
 	if (IsFire)
 	{
-		CurFireTime += DeltaTime;
-		if (CurFireTime >= MaxFireTime)
+		CurFireTime += DeltaTime;                                                  // auto Fire 타이머
+		AttackEndTime += DeltaTime;                                                // IsFire 타이머
+
+		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));    // 소환 위치
+
+		if ( CurFireTime >= MaxFireTime )
 		{
 			Fire();
+			// 기본공격 파티클 생성
+			UParticleSystemComponent* SpawnBasic = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), boom, s);
+
 			CurFireTime = 0;
+
+			// 기본공격 길이가 3초가 되면
+			if ( AttackEndTime >= 3 )
+			{
+				this->PlayAnimMontage(BasicAttackMontage);
+
+				// 기본공격끝 파티클 생성
+				UParticleSystemComponent* SpawnBasicEnd = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), basicAttackEnd, s);
+
+				// 기본공격 길이 초기화
+				AttackEndTime = 0;
+			}
 		}
 	}
 	// 락온 타겟이 있다면
@@ -174,7 +193,10 @@ void ABarrett::OnAxisLookupPitch(float value)
 // bool autofire = true;
 void ABarrett::StartAttack()
 {
+	if ( autofire )
+	{
 		IsFire = true;
+	}
 }
 
 void ABarrett::EndAttack()
@@ -184,19 +206,19 @@ void ABarrett::EndAttack()
 	StopAnimMontage();
 }
 
-//void ABarrett::IsAutoAttack(bool isAttacking)
-//{
-//	autofire = isAttacking;
-//	IsFire = isAttacking;
-//	if ( IsFire )
-//	{
-//		this->PlayAnimMontage(BasicAttackMontage);
-//	}
-//	else
-//	{
-//		StopAnimMontage();
-//	}
-//}
+void ABarrett::IsAutoAttack(bool isAttacking)
+{
+	autofire = isAttacking;
+	IsFire = isAttacking;
+	/*if ( IsFire )
+	{
+		this->PlayAnimMontage(BasicAttackMontage);
+	}
+	else
+	{
+		StopAnimMontage();
+	}*/
+}
 
 ///////////////////////// 기본공격 /////////////////////////
 void ABarrett::Fire()
@@ -206,26 +228,26 @@ void ABarrett::Fire()
 
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
 
-	double Seconds = FPlatformTime::Seconds();
+	//double Seconds = FPlatformTime::Seconds();
 
-	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
+	//int64 curMilSec = static_cast<int64>( Seconds * 1000 );
 
-	FTimerHandle BasicTimer;
+	//FTimerHandle BasicTimer;
 
-	float BasicTime = 2;                                                       // 딜레이 타임
+	//float BasicTime = 2;                                                       // 딜레이 타임
 
-	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));    // 소환 위치
-	if ( curMilSec - milliseconds > 3000 )                                     // 3초 쿨타임
-	{
-		milliseconds = curMilSec;
-		GetWorld()->GetTimerManager().SetTimer(BasicTimer, FTimerDelegate::CreateLambda([ & ] ()
-			{
-				// 실행할 내용
-				UParticleSystemComponent* SpawnBasic = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), boom, s);
-				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
-			}), BasicTime, false);
-	}
+	//
+	//if ( curMilSec - milliseconds > 3000 )                                     // 3초 쿨타임
+	//{
+	//	milliseconds = curMilSec;
+	//	GetWorld()->GetTimerManager().SetTimer(BasicTimer, FTimerDelegate::CreateLambda([ & ] ()
+	//		{
+	//			// 실행할 내용
+	//			
+	//			// TimerHandle 초기화
+	//			GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
+	//		}), BasicTime, false);
+	//}
 }
 
 
