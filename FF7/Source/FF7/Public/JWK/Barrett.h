@@ -70,6 +70,22 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShakeBase> WangBBang;
 
+
+	////////////////////////// 기본 공격 //////////////////////////
+	UFUNCTION(BlueprintCallable)
+	void IsAutoAttack(bool isAttacking);
+	UFUNCTION(BlueprintCallable)
+	void StartAttack();
+	UFUNCTION(BlueprintCallable)
+	void EndAttack();
+	UFUNCTION(BlueprintCallable)
+	void Fire();
+	UFUNCTION(BlueprintCallable)
+	void EnergyFire();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> Basic;
+
+
 	////////////////////////// 락온 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Tab = false;
@@ -104,25 +120,16 @@ public:
 	TSubclassOf<class ABullet_Energy> energyFactory;
 
 
-	////////////////////////// 공격 //////////////////////////
-	UFUNCTION(BlueprintCallable)
-	void IsAutoAttack(bool isAttacking);
-	UFUNCTION(BlueprintCallable)
-	void StartAttack();
-	UFUNCTION(BlueprintCallable)
-	void EndAttack();
-	UFUNCTION(BlueprintCallable)
-	void Fire();
-	UFUNCTION(BlueprintCallable)
-	void EnergyFire();
-
-
 	////////////////////////// 공격 당함 //////////////////////////
 	UPROPERTY(EditAnywhere)
-	int32 BarretHP = 100;
+	int32 BarrettMaxHP = 100;
+	UPROPERTY(EditAnywhere)
+	int32 BarrettHP = BarrettMaxHP;
 	
 	UFUNCTION(BlueprintCallable)
 	void BarrettDamaged(int32 damage);
+	UFUNCTION(BlueprintCallable)
+	void BarrettDamagedKnockBack(int32 damage);
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -171,6 +178,13 @@ public:
 	class UAnimMontage* BasicAttackMontage;
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* SkillAttackMontage;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* DieMontage;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* KnockBackMontage;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* StandUpMontage;
 
 	/*void PlayMontage(UAnimMontage* NewMontage);*/
 };
