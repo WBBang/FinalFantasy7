@@ -8,6 +8,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "../../../../../../../Source/Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/BoxComponent.h"
+#include "JWK/Barrett.h"
 
 // Sets default values
 AGuardSuccessAOE::AGuardSuccessAOE()
@@ -84,6 +85,34 @@ void AGuardSuccessAOE::BeginPlay()
 void AGuardSuccessAOE::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+// 플레이어가 맞았다면 하늘로 띄우고 데미지 주기
+void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	// 충돌한 대상이 플레이어 캐릭터라면
+	if ( OtherActor->IsA<ABarrett>() )
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
+		// 하늘로 띄우기
+		ABarrett* player = Cast<ABarrett>(OtherActor);
+		player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z+100));
+		player->SetActorEnableCollision(false);
+		// 하늘로 3초뒤에 내리기
+		FTimerHandle MyTimer;
+		float Time = 3.0f;
+		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 100));
+				player->SetActorEnableCollision(true);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+			}), Time, false);
+
+		// 플레이어 데미지 처리하고 넘어지는 함수, 호출
+
+		
+	}
 }
 
 // 기둥 나오는 함수

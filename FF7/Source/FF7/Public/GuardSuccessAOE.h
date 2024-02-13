@@ -23,6 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// 충돌 처리
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
 	// 충돌체
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent*boxComp;
