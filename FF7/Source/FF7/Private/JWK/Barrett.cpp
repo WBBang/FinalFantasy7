@@ -101,6 +101,7 @@ void ABarrett::Tick(float DeltaTime)
 			// 기본공격 파티클 생성
 			UParticleSystemComponent* SpawnBasic = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), boom, s);
 
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(Basic, 0.5f);
 			CurFireTime = 0;
 
 			// 기본공격 길이가 3초가 되면
@@ -213,7 +214,6 @@ void ABarrett::Fire()
 	//	GetWorld()->GetTimerManager().SetTimer(BasicTimer, FTimerDelegate::CreateLambda([ & ] ()
 	//		{
 	//			// 실행할 내용
-	//			
 	//			// TimerHandle 초기화
 	//			GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
 	//		}), BasicTime, false);
@@ -295,12 +295,38 @@ void ABarrett::EnergyFire()
 ///////////////////////// 공격 당함 /////////////////////////
 void ABarrett::BarrettDamaged(int32 damage)
 {
-	BarretHP -= damage;
-	if ( BarretHP <= 0 )
+	BarrettHP -= damage;
+	if ( BarrettHP <= 0 )
 	{
-		BarretHP = 0;
+		BarrettHP = 0;
+		this->PlayAnimMontage(DieMontage);
 	}
 }
+
+///////////////////////// 넉백 공격 당함 /////////////////////////
+void ABarrett::BarrettDamagedKnockBack(int32 damage)
+{
+	FTimerHandle KnockBackTimer;
+	float KnockBackTime = 2;                                                       // 딜레이 타임
+
+	BarrettHP -= damage;
+	if ( BarrettHP <= 0 )
+	{
+		BarrettHP = 0;
+		this->PlayAnimMontage(DieMontage);
+	}
+
+	this->PlayAnimMontage(KnockBackMontage);
+
+	GetWorld()->GetTimerManager().SetTimer(KnockBackTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// 실행할 내용
+				this->PlayAnimMontage(StandUpMontage);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(KnockBackTimer);
+			}), KnockBackTime, false);
+}
+
 
 ////////////////////////// 락온 ////////////////////////
 void ABarrett::LockOn()
