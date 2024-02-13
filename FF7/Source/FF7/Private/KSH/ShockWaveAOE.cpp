@@ -5,6 +5,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/SphereComponent.h"
+#include "JWK/Barrett.h"
 
 // Sets default values
 AShockWaveAOE::AShockWaveAOE()
@@ -17,11 +18,13 @@ AShockWaveAOE::AShockWaveAOE()
 	SetRootComponent(sphereComp);
 	sphereComp->SetGenerateOverlapEvents(true);
 	sphereComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	sphereComp->SetRelativeScale3D(FVector(4.0f));
 
 	// 불덩이
 	ShockWaveFire = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ShockWaveFire"));
 	ShockWaveFire->SetupAttachment(RootComponent);
-	ShockWaveFire->SetRelativeScale3D(FVector(1));
+	ShockWaveFire->SetRelativeLocation(FVector(5, 0, 0));
+	ShockWaveFire->SetRelativeScale3D(FVector(0.25f));
 	ConstructorHelpers::FObjectFinder<UParticleSystem>tempShockWave(TEXT("/Script/Engine.ParticleSystem'/Game/KSH/ParagonSteel/FX/Particles/Steel/Cinematics/FX/P_ShockWave.P_ShockWave'"));
 	if (tempShockWave.Succeeded())
 	{
@@ -65,4 +68,17 @@ void AShockWaveAOE::Tick(float DeltaTime)
 }
 
 // 플레이어와 충돌하면 데미지 주고 사라지기
+void AShockWaveAOE::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	// 충돌한 대상이 플레이어 캐릭터라면
+	if ( OtherActor->IsA<ABarrett>() )
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
+		// 플레이어 데미지 처리 함수 호출
+
+		// 나는 사라지기
+		Destroy();
+	}
+}
+
 

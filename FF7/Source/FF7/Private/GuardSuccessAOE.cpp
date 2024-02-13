@@ -7,6 +7,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Public/TimerManager.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystem.h"
 #include "../../../../../../../Source/Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Components/BoxComponent.h"
 
 // Sets default values
 AGuardSuccessAOE::AGuardSuccessAOE()
@@ -14,10 +15,18 @@ AGuardSuccessAOE::AGuardSuccessAOE()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// 충돌체
+	boxComp = CreateDefaultSubobject<UBoxComponent>("boxComp");
+	SetRootComponent(boxComp);
+	boxComp->SetGenerateOverlapEvents(true);
+	boxComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	boxComp->SetBoxExtent(FVector(100, 100, 10));
+
+
 	// 첫 장판
 	pFireFirst = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("pFireFirst"));
-	SetRootComponent(pFireFirst);
-	pFireFirst->SetRelativeScale3D(FVector(0.5));
+	pFireFirst->SetupAttachment(RootComponent);
+	//pFireFirst->SetRelativeScale3D(FVector(0.5));
 	ConstructorHelpers::FObjectFinder<UParticleSystem>tempFireFirst(TEXT("/Script/Engine.ParticleSystem'/Game/KSH/ParagonSteel/FX/Particles/Steel/Abilities/Ultimate/FX/P_Steel_Ultimate_Impact.P_Steel_Ultimate_Impact'"));
 	if (tempFireFirst.Succeeded())
 	{
@@ -83,7 +92,7 @@ void AGuardSuccessAOE::ActiveFirePillar()
 	pFirePillar0->Activate(true);
 	pFirePillar1->Activate(true);
 	pFirePillar2->Activate(true);
-	//pFirePillar3->OnSystemFinished.AddDynamic(this, &AGuardSuccessAOE::OnEffectFinished);
+	pFirePillar2->OnSystemFinished.AddDynamic(this, &AGuardSuccessAOE::OnEffectFinished);
 }
 
 void AGuardSuccessAOE::OnEffectFinished(UParticleSystemComponent* PSystem)

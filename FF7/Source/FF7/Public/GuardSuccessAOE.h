@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,11 +23,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Ã³À½ ÀåÆÇ - ÇÑ¹ø ÅÍÁö°í »ç¶óÁü
+	// ì¶©ëŒì²´
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent*boxComp;
+
+	// ì²˜ìŒ ì¥íŒ - í•œë²ˆ í„°ì§€ê³  ì‚¬ë¼ì§
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UParticleSystemComponent* pFireFirst;
 
-	// ±âµÕ (ºÒ ÆÄÆ¼Å¬ 4°³) - ÀåÆÇ »ç¶óÁö°í ³ª¼­ µîÀå (ÇÃ·¹ÀÌ¾î À§·Î º¸³»´Â °ø°İ)
+	// ê¸°ë‘¥ (ë¶ˆ íŒŒí‹°í´ 4ê°œ) - ì¥íŒ ì‚¬ë¼ì§€ê³  ë‚˜ì„œ ë“±ì¥ (í”Œë ˆì´ì–´ ìœ„ë¡œ ë³´ë‚´ëŠ” ê³µê²©)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UParticleSystemComponent* pFirePillar0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -35,7 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UParticleSystemComponent* pFirePillar2;
 
-	// ±âµÕ ³ª¿À´Â ÇÔ¼ö
+	// ê¸°ë‘¥ ë‚˜ì˜¤ëŠ” í•¨ìˆ˜
 	void ActiveFirePillar();
 
 	UFUNCTION()

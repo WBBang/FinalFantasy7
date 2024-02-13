@@ -37,6 +37,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// 충돌 처리
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
 	// 이동 속도
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float speed = 1500.0f;
@@ -48,4 +51,5 @@ public:
 	// 충돌체
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USphereComponent* sphereComp;
+
 };
