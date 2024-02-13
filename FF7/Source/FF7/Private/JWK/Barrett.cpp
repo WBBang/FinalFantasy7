@@ -15,7 +15,7 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Camera/PlayerCameraManager.h"
 
-// Sets default values
+///////////////////////// Barrett /////////////////////////
 ABarrett::ABarrett()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -140,7 +140,7 @@ void ABarrett::Tick(float DeltaTime)
 
 }
 
-// 플레이어 키 입력
+///////////////////////// 플레이어 키 입력 /////////////////////////
 void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -190,36 +190,6 @@ void ABarrett::OnAxisLookupPitch(float value)
 }
 
 
-// bool autofire = true;
-void ABarrett::StartAttack()
-{
-	if ( autofire )
-	{
-		IsFire = true;
-	}
-}
-
-void ABarrett::EndAttack()
-{
-	IsFire = false;
-	CurFireTime = MaxFireTime;
-	StopAnimMontage();
-}
-
-void ABarrett::IsAutoAttack(bool isAttacking)
-{
-	autofire = isAttacking;
-	IsFire = isAttacking;
-	/*if ( IsFire )
-	{
-		this->PlayAnimMontage(BasicAttackMontage);
-	}
-	else
-	{
-		StopAnimMontage();
-	}*/
-}
-
 ///////////////////////// 기본공격 /////////////////////////
 void ABarrett::Fire()
 {
@@ -248,6 +218,36 @@ void ABarrett::Fire()
 	//			GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
 	//		}), BasicTime, false);
 	//}
+}
+
+///////////////////////// 기본공격 시작 끝 /////////////////////////
+void ABarrett::StartAttack()
+{
+	if ( autofire )
+	{
+		IsFire = true;
+	}
+}
+
+void ABarrett::EndAttack()
+{
+	IsFire = false;
+	CurFireTime = MaxFireTime;
+	StopAnimMontage();
+}
+
+void ABarrett::IsAutoAttack(bool isAttacking)
+{
+	autofire = isAttacking;
+	IsFire = isAttacking;
+	/*if ( IsFire )
+	{
+		this->PlayAnimMontage(BasicAttackMontage);
+	}
+	else
+	{
+		StopAnimMontage();
+	}*/
 }
 
 
@@ -279,7 +279,11 @@ void ABarrett::EnergyFire()
 
 				FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 				GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
-
+				if ( nullptr == WangBBang )
+				{
+					return;
+				}
+				GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(WangBBang, 1.0f);
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
 			}), SkillTime, false);
@@ -288,6 +292,15 @@ void ABarrett::EnergyFire()
 }
 
 
+///////////////////////// 공격 당함 /////////////////////////
+void ABarrett::BarrettDamaged(int32 damage)
+{
+	BarretHP -= damage;
+	if ( BarretHP <= 0 )
+	{
+		BarretHP = 0;
+	}
+}
 
 ////////////////////////// 락온 ////////////////////////
 void ABarrett::LockOn()
@@ -357,6 +370,7 @@ void ABarrett::LockOn()
 //	Animinstance->Montage_Play(NewMontage);
 //}
 
+////////////////////////// 구르기 //////////////////////////
 void ABarrett::OnActionRoll()
 {
 	double Seconds = FPlatformTime::Seconds();

@@ -67,7 +67,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsSkill = false;
 
-	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> WangBBang;
 
 	////////////////////////// 락온 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -114,6 +115,15 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintCallable)
 	void EnergyFire();
+
+
+	////////////////////////// 공격 당함 //////////////////////////
+	UPROPERTY(EditAnywhere)
+	int32 BarretHP = 100;
+	
+	UFUNCTION(BlueprintCallable)
+	void BarrettDamaged(int32 damage);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool autofire = true;
