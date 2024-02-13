@@ -15,6 +15,7 @@ enum class EFinalBossState : uint8
 	FireMissile		UMETA(DisplayName = "FIREMISSILE"),
 	LAUNCHBOMB		UMETA(DisplayName = "LAUNCHBOMB"),
 	RUSH			UMETA(DisplayName = "RUSH"),
+	JUMPATTACK		UMETA(DisplayName = "JUMPATTACK"),
 	GROGGY			UMETA(DisplayName = "GROGGY"),
 	DEAD			UMETA(DisplayName = "DEAD")
 };
@@ -52,6 +53,8 @@ public:
 	float normalAttackCooldown = 2;
 	float rushSpeed = 3000;
 	float rushingTime = 1;
+
+	int normalAttackCount;
 	
 
 	void TickIdle();
@@ -59,7 +62,8 @@ public:
 	void TickNormalAttack();	
 	void TickFireMissile();	
 	void TickLaunchBomb();	
-	void TickRush();	
+	void TickRush();
+	void TickJumpAttack();
 	void TickGroggy();	
 	void TickDead();
 

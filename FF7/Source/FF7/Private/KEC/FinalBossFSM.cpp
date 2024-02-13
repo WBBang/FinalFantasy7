@@ -42,6 +42,7 @@ void UFinalBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		case EFinalBossState::LAUNCHBOMB:		TickLaunchBomb();		break;
 		case EFinalBossState::FireMissile:		TickFireMissile();		break;
 		case EFinalBossState::RUSH:				TickRush();				break;
+		case EFinalBossState::JUMPATTACK:		TickJumpAttack();		break;
 		case EFinalBossState::GROGGY:			TickGroggy();			break;
 		case EFinalBossState::DEAD:				TickDead();				break;
 	}
@@ -63,11 +64,19 @@ void UFinalBossFSM::TickMove()
 	
 	if(length < attackLength)
 	 	SetState(EFinalBossState::NORMALATTACK);
+
+	else if (length > detectRange && normalAttackCount > 3)
+	{
+	 	SetState(EFinalBossState::JUMPATTACK);
+		normalAttackCount = 0;
+	}
+	
 	else if (length > detectRange)
 	{
 		rushStartVector = me->GetActorLocation();
 	 	SetState(EFinalBossState::RUSH);
 	}
+
 	
 }
 
@@ -75,7 +84,7 @@ void UFinalBossFSM::TickNormalAttack()
 {
 	float length = target->GetDistanceTo(me);
 	currentTime += GetWorld()->GetDeltaSeconds();
-	
+	normalAttackCount++;
 		if(length > attackLength)
 		{
 			SetState(EFinalBossState::MOVE);
@@ -113,6 +122,24 @@ void UFinalBossFSM::TickRush()
 	   {
 		
 		SetState(EFinalBossState :: GROGGY);
+
+		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+	   }), Time, false);
+}
+
+void UFinalBossFSM::TickJumpAttack()
+{
+	float dist = (me->GetActorLocation() - rushStartVector).Size();
+	if(dist < 3000)
+	{
+		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * rushSpeed * GetWorld()->DeltaTimeSeconds);
+	}
+	FTimerHandle MyTimer;
+	float Time = 1.25f;
+	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
+	   {
+		
+		SetState(EFinalBossState :: IDLE);
 
 		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 	   }), Time, false);
