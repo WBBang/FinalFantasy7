@@ -151,7 +151,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 기열파 애니메이션이 실행중이 아니라면
 		if (!IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
 		{
-			UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
+			//UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 
 			// 가드 성공
 			// IsGuardSuccess = true;
@@ -162,6 +162,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 	// 가드 중이 아니라면
 	else
 	{
+		//UE_LOG(LogTemp, Log, TEXT("Damaged"));
 		// 데미지 받고
 		MiddleBossHP -= damage;
 
@@ -297,7 +298,7 @@ void AMiddleBossCharacter::GuardSuccess()
 	float Time = 0.35f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
 		{
-			UE_LOG(LogTemp, Log, TEXT("bye"));
+			//UE_LOG(LogTemp, Log, TEXT("bye"));
 			// 카메라 흔들기
 			if ( nullptr == CSShockWave )return;
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSShockWave, 1.0f);
@@ -328,7 +329,7 @@ void AMiddleBossCharacter::ShockWave()
 	float Time = 0.35f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
 		{
-			UE_LOG(LogTemp, Log, TEXT("bye"));
+			//UE_LOG(LogTemp, Log, TEXT("bye"));
 			// 카메라 흔들기
 			if ( nullptr == CSShockWave )return;
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSShockWave, 1.0f);

@@ -54,13 +54,27 @@ void ABulletActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
+/*
 void ABulletActor::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
 	if ( nullptr != middleBoss )
 	{
+		UE_LOG(LogTemp, Log, TEXT("Damaged"));
 		middleBoss->MiddleBossDamagedByBasicBullet(3);
+	}
+}
+*/
+
+void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
+	if ( nullptr != middleBoss )
+	{
+		middleBoss->MiddleBossDamagedByBasicBullet(3);
+
+		// 총알은 사라지기
+		Destroy();
 	}
 }
 

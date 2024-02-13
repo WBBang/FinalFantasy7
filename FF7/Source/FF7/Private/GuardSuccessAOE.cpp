@@ -98,6 +98,7 @@ void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 		ABarrett* player = Cast<ABarrett>(OtherActor);
 		player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z+100));
 		player->SetActorEnableCollision(false);
+
 		// 하늘로 3초뒤에 내리기
 		FTimerHandle MyTimer;
 		float Time = 3.0f;

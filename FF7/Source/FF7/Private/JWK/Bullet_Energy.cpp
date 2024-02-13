@@ -53,6 +53,7 @@ void ABullet_Energy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+/*
 void ABullet_Energy::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
@@ -61,5 +62,16 @@ void ABullet_Energy::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		middleBoss->MiddleBossDamagedBySkillBullet(3);
 	}
 }
+*/
 
+void ABullet_Energy::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
+	if ( nullptr != middleBoss )
+	{
+		middleBoss->MiddleBossDamagedBySkillBullet(3);
 
+		// 총알은 사라지기
+		Destroy();
+	}
+}
