@@ -55,10 +55,7 @@ void AFinalBossCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AttackLength();
-	if(isDetected)
-	{
-		JumpAttack();
-	}
+	
 	
 	
 		
@@ -88,7 +85,7 @@ void AFinalBossCharacter::LauchMissile()
 	GetWorld()->SpawnActor<AMissile>(missileFactory, launchPos);
 }
 
-void AFinalBossCharacter::JumpAttack()
+void AFinalBossCharacter::RushAttack()
 {
 	FVector player = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	FVector target = player - GetActorLocation();

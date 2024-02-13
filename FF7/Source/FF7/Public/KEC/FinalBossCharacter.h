@@ -59,11 +59,12 @@ public:
 	
 	bool bIsJumpAttack = true;
 	bool isDetected = true;
-	int32 fireNum = 1;
+	int32 fireNum = 0;
 	
+
 	void Fire();
 	void LauchMissile();
-	void JumpAttack();
+	void RushAttack();
 	void AttackLength();
 	
 };

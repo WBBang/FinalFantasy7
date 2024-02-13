@@ -44,12 +44,12 @@ void AMissile::Tick(float DeltaTime)
 
 void AMissile::LaunchMissile()
 {
-	// 미사일 UpVector Impulse
+	// ????? UpVector Impulse
 	//CapsuleComponent* comp = capsuleComponent;
 	USphereComponent* sphere = sphereComp;
 	FVector impulseDir = GetActorUpVector() * sphere->GetUpVector() * sphere->GetMass() * impuslePos;
 	sphere->AddImpulse(impulseDir);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Hello")); // 게임 화면
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Hello")); // ???? ???
 	dirSet = true;
 }
 
@@ -59,14 +59,14 @@ void AMissile::CruiseMissile()
 	FTimerHandle MyTimer;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 	{
-		//플레이어 방향가져오기
+		//?占쏙옙???? ??????????
 		FVector targetPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
 		targetPos.Normalize();
-		//플레이어 방향으로 이동하기
+		//?占쏙옙???? ???????? ??????
 		sphereComp->AddImpulse(targetPos * sphereComp->GetMass() * 3000);
 		
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Bye")); // 게임 화면
-		// TimerHandle 초기화
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Bye")); // ???? ???
+		// TimerHandle ????
 		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 	}), delayTime, false);
 }
