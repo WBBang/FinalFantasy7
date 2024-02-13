@@ -70,11 +70,14 @@ void AShockWaveAOE::Tick(float DeltaTime)
 // 플레이어와 충돌하면 데미지 주고 사라지기
 void AShockWaveAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	ABarrett* barrett = Cast<ABarrett>(OtherActor);
 	// 충돌한 대상이 플레이어 캐릭터라면
-	if ( OtherActor->IsA<ABarrett>() )
+	if ( nullptr != player )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
+		
 		// 플레이어 데미지 처리 함수 호출
+		barrett->BarrettDamaged(20);
 
 		// 나는 사라지기
 		Destroy();

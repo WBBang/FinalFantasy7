@@ -35,6 +35,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* dummyCubeMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* rightHandComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* leftHandComp;
+
 	// HP Bar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HPBar)
 	TSubclassOf<class AMBHpBarActor> hpBar;

@@ -35,6 +35,10 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	dummyCubeMesh->SetRelativeScale3D(FVector(0.2f));
 	dummyCubeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	dummyCubeMesh->bHiddenInGame = true;
+
+	// 기본 공격 Collision
+	// 기본 공격 CollisionrightHandComp
+	//rightHandComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT(""));
 }
 
 // Called when the game starts or when spawned
