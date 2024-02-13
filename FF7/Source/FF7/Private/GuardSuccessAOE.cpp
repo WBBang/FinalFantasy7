@@ -94,8 +94,13 @@ void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 	if ( OtherActor->IsA<ABarrett>() )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
-		// 하늘로 띄우기
+		
+		
+		
 		ABarrett* player = Cast<ABarrett>(OtherActor);
+		/*
+		
+		// 하늘로 띄우기
 		player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z+100));
 		player->SetActorEnableCollision(false);
 
@@ -110,8 +115,10 @@ void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 			}), Time, false);
 
-		// 플레이어 데미지 처리하고 넘어지는 함수, 호출
+		*/
 
+		// 플레이어 데미지 처리하고 넘어지는 함수, 호출
+		player->BarrettDamagedKnockBack(10);
 		
 	}
 }
