@@ -129,24 +129,26 @@ void AMiddleBossCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	// 충돌대상이 플레이어라면
 	if ( nullptr != barrett )
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("Attack"));
+		IsDuringAttack = true;
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("Attack11"));
+		UE_LOG(LogTemp, Log, TEXT("Attack"));
 
 		// 플레이어 데미지 처리 함수 호출
 		barrett->BarrettDamaged(5);
 	}
 }
 
-void AMiddleBossCharacter::SetRightHandCompColl(bool IsDuringAttacking)
+void AMiddleBossCharacter::SetRightHandCompColl(bool IsColl)
 {
 	// 공격 중이라면
-	if ( IsAttacking ) rightHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	if ( IsColl ) rightHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
 	else rightHandComp->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void AMiddleBossCharacter::SetLeftHandCompColl(bool IsDuringAttacking)
+void AMiddleBossCharacter::SetLeftHandCompColl(bool IsColl)
 {
 	// 공격 중이라면
-	if ( IsAttacking ) leftHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	if ( IsColl ) leftHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
 	else leftHandComp->SetCollisionProfileName(TEXT("NoCollision"));
 }
 

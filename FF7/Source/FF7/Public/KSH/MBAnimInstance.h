@@ -44,13 +44,13 @@ private:
 	void AnimNotify_MBAttackStartNotify();
 
 	UFUNCTION()
-	void AnimNotify_MBAttackStartEndNotify();
+	void AnimNotify_MBAttackEndNotify();
 
 	UFUNCTION()
 	void AnimNotify_MBLeftAttackStart();
 
 	UFUNCTION()
-	void AnimNotify_MBLeftAttackStartEnd();
+	void AnimNotify_MBLeftAttackEnd();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess = true))
 	UAnimMontage* AttackMontage;

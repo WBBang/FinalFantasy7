@@ -93,23 +93,27 @@ void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 	// 공격 판정 추가
 	me->SetRightHandCompColl(true);
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnRight"));
+	UE_LOG(LogTemp, Log, TEXT("CollOnRight"));
 }
 
-void UMBAnimInstance::AnimNotify_MBAttackStartEndNotify()
+void UMBAnimInstance::AnimNotify_MBAttackEndNotify()
 {
 	// 공격 판정 없애기
 	me->SetRightHandCompColl(false);
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffRight"));
+	UE_LOG(LogTemp, Log, TEXT("CollOffRight"));
 }
 
 void UMBAnimInstance::AnimNotify_MBLeftAttackStart()
 {
 	me->SetLeftHandCompColl(true);
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnLeft"));
+	UE_LOG(LogTemp, Log, TEXT("CollOnLeft"));
 }
 
-void UMBAnimInstance::AnimNotify_MBLeftAttackStartEnd()
+void UMBAnimInstance::AnimNotify_MBLeftAttackEnd()
 {
 	me->SetLeftHandCompColl(false);
 	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffLeft"));
+	UE_LOG(LogTemp, Log, TEXT("CollOffLeft"));
 }
