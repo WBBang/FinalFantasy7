@@ -14,11 +14,12 @@
 #include "JWK/Bullet_Energy.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Camera/PlayerCameraManager.h"
+#include "JWK/BarretHPWidget.h"
 
 ///////////////////////// Barrett /////////////////////////
 ABarrett::ABarrett()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("springArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
@@ -29,7 +30,7 @@ ABarrett::ABarrett()
 	cameraComp->SetupAttachment(springArmComp);
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/JWK/Barrett_Mixamo/Barrett.Barrett'"));
-	if (tempMesh.Succeeded())
+	if ( tempMesh.Succeeded() )
 	{
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);
 		GetMesh()->SetWorldScale3D(FVector(0.1f));
@@ -41,10 +42,10 @@ ABarrett::ABarrett()
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempRifleMesh(TEXT("/Script/Engine.StaticMesh'/Game/JWK/Rifle/Rifle.Rifle'"));
 	// RifleMeshComp 검색이 성공하면
-	if (tempRifleMesh.Succeeded())
+	if ( tempRifleMesh.Succeeded() )
 	{
 		RifleMeshComp->SetStaticMesh(tempRifleMesh.Object);
-		RifleMeshComp->SetRelativeLocationAndRotation(FVector(17.136384f, -319.395057f, 52.838305f), FRotator(-90,-180,2.422084f));
+		RifleMeshComp->SetRelativeLocationAndRotation(FVector(17.136384f, -319.395057f, 52.838305f), FRotator(-90, -180, 2.422084f));
 		RifleMeshComp->SetWorldScale3D(FVector(20, 35, 20));
 	}
 
@@ -71,9 +72,19 @@ ABarrett::ABarrett()
 void ABarrett::BeginPlay()
 {
 	Super::BeginPlay();
+	IsDie = false;
+	auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	// 마우스 커서를 안보이게
+	controller->SetShowMouseCursor(false);
+
+	// 입력 모드를 게임으로 하고싶다.
+	controller->SetInputMode(FInputModeGameOnly());
 	IsTargetLocked = false;
 	CurFireTime = MaxFireTime;
-	
+
+	BarretUI = CreateWidget<UBarretHPWidget>(GetWorld(), HPUIFactory);
+	BarretUI->AddToViewport(1);
+	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 }
 
 // Called every frame
@@ -88,7 +99,7 @@ void ABarrett::Tick(float DeltaTime)
 		IsSkill = false;
 	}
 
-	if (IsFire)
+	if ( IsFire )
 	{
 		CurFireTime += DeltaTime;                                                  // auto Fire 타이머
 		AttackEndTime += DeltaTime;                                                // IsFire 타이머
@@ -118,11 +129,11 @@ void ABarrett::Tick(float DeltaTime)
 		}
 	}
 	// 락온 타겟이 있다면
-	if (HitActor)
+	if ( HitActor )
 	{
 		/*APawn::GetController()->AController::SetControlRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),HitActor->GetActorLocation()));*/
 
-		if (APawn::GetController())
+		if ( APawn::GetController() )
 		{
 			// HitActor이 유효한지 체크
 			if ( HitActor->IsValidLowLevel() )
@@ -254,12 +265,12 @@ void ABarrett::IsAutoAttack(bool isAttacking)
 ///////////////////////// 스킬공격 /////////////////////////
 void ABarrett::EnergyFire()
 {
-	
+
 	double Seconds = FPlatformTime::Seconds();
 	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
 	IsSkill = true;
 	FTimerHandle SkillTimer;
-	float SkillTime =2;                                                       // 딜레이 타임
+	float SkillTime = 2;                                                       // 딜레이 타임
 
 	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));   // 소환 위치
 	if ( curMilSec - milliseconds > 5000 )
@@ -295,36 +306,51 @@ void ABarrett::EnergyFire()
 ///////////////////////// 공격 당함 /////////////////////////
 void ABarrett::BarrettDamaged(int32 damage)
 {
+	IsAttacked = true;
 	BarrettHP -= damage;
 	if ( BarrettHP <= 0 )
 	{
+		if ( !IsDie )
+		{
+			IsDie = true;
+			this->PlayAnimMontage(DieMontage);
+		}
 		BarrettHP = 0;
-		this->PlayAnimMontage(DieMontage);
 	}
+	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 }
 
 ///////////////////////// 넉백 공격 당함 /////////////////////////
 void ABarrett::BarrettDamagedKnockBack(int32 damage)
 {
+	IsAttacked = true;
 	FTimerHandle KnockBackTimer;
-	float KnockBackTime = 2;                                                       // 딜레이 타임
+	float KnockBackTime = 1.98f;                                                       // 딜레이 타임
 
 	BarrettHP -= damage;
 	if ( BarrettHP <= 0 )
 	{
+		if ( !IsDie )
+		{
+			IsDie = true;
+			this->PlayAnimMontage(DieMontage);
+		}
 		BarrettHP = 0;
-		this->PlayAnimMontage(DieMontage);
+	}
+	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
+	if ( IsAttacked)
+	{
+		IsAttacked = false;
+		this->PlayAnimMontage(KnockBackMontage);
+	GetWorld()->GetTimerManager().SetTimer(KnockBackTimer, FTimerDelegate::CreateLambda([ & ] ()
+		{
+			// 실행할 내용
+			this->PlayAnimMontage(StandUpMontage);
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(KnockBackTimer);
+		}), KnockBackTime, false);
 	}
 
-	this->PlayAnimMontage(KnockBackMontage);
-
-	GetWorld()->GetTimerManager().SetTimer(KnockBackTimer, FTimerDelegate::CreateLambda([ & ] ()
-			{
-				// 실행할 내용
-				this->PlayAnimMontage(StandUpMontage);
-				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(KnockBackTimer);
-			}), KnockBackTime, false);
 }
 
 
@@ -332,7 +358,7 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 void ABarrett::LockOn()
 {
 	UE_LOG(LogTemp, Log, TEXT("LockOn"));
-	if (!IsTargetLocked)
+	if ( !IsTargetLocked )
 	{
 		UE_LOG(LogTemp, Log, TEXT("IsTargetLocked"));
 		TArray<AActor*> ignoreActors;
@@ -364,12 +390,12 @@ void ABarrett::LockOn()
 		);
 		//OutHit.GetActor();
 
-		if (result)  // 만약 맞은 타겟이 있다면
+		if ( result )  // 만약 맞은 타겟이 있다면
 		{
 			IsTargetLocked = true;
 			UKismetSystemLibrary::PrintString(GetWorld(), FString(TEXT("TargetLocked")));
 			bool InputObject = UKismetSystemLibrary::IsValid(OutHit.GetActor());
-			if (InputObject)
+			if ( InputObject )
 			{
 				HitActor = OutHit.GetActor();
 			}
@@ -400,11 +426,11 @@ void ABarrett::LockOn()
 void ABarrett::OnActionRoll()
 {
 	double Seconds = FPlatformTime::Seconds();
-	int64 curMilSec = static_cast<int64>(Seconds * 1000);
+	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
 
 	// 만약 현재시간과 기억하고있던 시간의 차이가 800ms 를 초과한다면 Montage 를 재생하고싶다.
 
-	if (curMilSec - milliseconds > 800)
+	if ( curMilSec - milliseconds > 800 )
 	{
 		milliseconds = curMilSec;
 		this->PlayAnimMontage(rollMontage);

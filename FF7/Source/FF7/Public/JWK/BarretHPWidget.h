@@ -21,6 +21,9 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = ( BindWidget ));
 	class UTextBlock* BarrettCurHP;
-	void SetBarrettHP(int BarretHP);
+	UPROPERTY(EditAnywhere, meta = ( BindWidget ));
+	class UTextBlock* BarrettFullHP;
+
+	void SetBarrettHP(int32 BarrettHP, int32 BarrettMaxHP);
 
 };
