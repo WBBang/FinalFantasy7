@@ -56,6 +56,20 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	leftHandComp->SetGenerateOverlapEvents(true);
 	leftHandComp->SetCollisionProfileName(TEXT("NoCollision"));
 	//leftHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+
+	// 가드 시 생기는 쉴드
+	ShieldComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldComp"));
+	ShieldComp->SetRelativeScale3D(FVector(2.75));
+	ShieldComp->SetupAttachment(RootComponent);
+	ShieldComp->SetCollisionProfileName(TEXT("NoCollision"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>sphereTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	ConstructorHelpers::FObjectFinder<UMaterial>shieldMatTemp(TEXT("/Script/Engine.Material'/Game/KSH/VX/ShieldMaterial.ShieldMaterial'"));
+	if ( sphereTemp.Succeeded() && shieldMatTemp.Succeeded())
+	{
+		ShieldComp->SetStaticMesh(sphereTemp.Object);
+		ShieldComp->SetMaterial(0, shieldMatTemp.Object);
+	}
+	ShieldComp->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -253,9 +267,6 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	{
 		UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
 		IsAttacking = false;
-
-		// 공격 판정 없애기
-
 	}
 
 	// 가드 몽타주였다면
@@ -269,6 +280,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		IsGuarding = false;
 		IsGuardDeco = false;
 		guardBarUI->SetActorHiddenInGame(true);
+		ShieldComp->SetVisibility(false);
 
 		OnAttackFinished.ExecuteIfBound();
 		return;
@@ -325,6 +337,7 @@ void AMiddleBossCharacter::Guard()
 	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
+	ShieldComp->SetVisibility(true);
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if ( nullptr == AnimInstance ) return;

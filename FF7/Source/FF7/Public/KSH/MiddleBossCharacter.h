@@ -49,7 +49,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool IsDuringAttack;
 
-
 	// HP Bar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HPBar)
 	TSubclassOf<class AMBHpBarActor> hpBar;
@@ -63,12 +62,16 @@ public:
 	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;
 
 	// Guard Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = guardBar)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = guard)
 	TSubclassOf<class AMBGuardBarActor> guardBar;
 
 	// Guard Bar 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guardBar)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
 	class AMBGuardBarActor* guardBarUI;
+
+	// Guard시 나오는 쉴드
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
+	class UStaticMeshComponent* ShieldComp;
 
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
