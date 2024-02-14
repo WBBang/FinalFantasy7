@@ -14,6 +14,8 @@ UMBAnimInstance::UMBAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShockWave_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/ShockWave/M_ShockWaveMontage.M_ShockWaveMontage'"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> GuardSuccess_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/GuardSuccess/M_GuardSuccessMontage.M_GuardSuccessMontage'"));
 	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Die_Montage(TEXT("/Script/Engine.AnimMontage'/Game/KSH/Animations/Die/M_Die.M_Die'"));
+
 	if (Attack_Montage.Succeeded())
 	{
 		AttackMontage = Attack_Montage.Object;
@@ -32,6 +34,11 @@ UMBAnimInstance::UMBAnimInstance()
 	if (GuardSuccess_Montage.Succeeded())
 	{
 		GuardSuccessMontage = GuardSuccess_Montage.Object;
+	}
+
+	if ( Die_Montage.Succeeded() )
+	{
+		DieMontage = Die_Montage.Object;
 	}
 
 }
@@ -88,32 +95,41 @@ void UMBAnimInstance::PlayGuardSuccessMontage()
 	}
 }
 
+// 사망 애니메이션
+void UMBAnimInstance::PlayDieMontage()
+{
+	if ( !Montage_IsPlaying(DieMontage))
+	{
+		Montage_Play(DieMontage, 1.0f);
+	}
+}
+
 void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 {
 	// 공격 판정 추가
 	me->SetRightHandCompColl(true);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnRight"));
-	UE_LOG(LogTemp, Log, TEXT("CollOnRight"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnRight"));
+	//UE_LOG(LogTemp, Log, TEXT("CollOnRight"));
 }
 
 void UMBAnimInstance::AnimNotify_MBAttackEndNotify()
 {
 	// 공격 판정 없애기
 	me->SetRightHandCompColl(false);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffRight"));
-	UE_LOG(LogTemp, Log, TEXT("CollOffRight"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffRight"));
+	//UE_LOG(LogTemp, Log, TEXT("CollOffRight"));
 }
 
 void UMBAnimInstance::AnimNotify_MBLeftAttackStart()
 {
 	me->SetLeftHandCompColl(true);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnLeft"));
-	UE_LOG(LogTemp, Log, TEXT("CollOnLeft"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnLeft"));
+	//UE_LOG(LogTemp, Log, TEXT("CollOnLeft"));
 }
 
 void UMBAnimInstance::AnimNotify_MBLeftAttackEnd()
 {
 	me->SetLeftHandCompColl(false);
-	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffLeft"));
-	UE_LOG(LogTemp, Log, TEXT("CollOffLeft"));
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffLeft"));
+	//UE_LOG(LogTemp, Log, TEXT("CollOffLeft"));
 }

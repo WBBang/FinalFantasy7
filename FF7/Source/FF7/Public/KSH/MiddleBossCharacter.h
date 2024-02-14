@@ -139,6 +139,17 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsShockWaving;
 
+	// 경직중인지 판단
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	bool IsHitStuning;
+
+
+	// 죽어있는지 판단
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
+	bool IsDying;
+	// Decorator용
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
+	bool IsDyingDeco;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	int32 GuardingDamage;
@@ -146,9 +157,6 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	int32 CounterDamage = 3;
 
-	// 경직중인지 판단
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsHitStuning;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
 	class UCharacterMovementComponent* movementComp;
@@ -182,6 +190,7 @@ protected:
 
 	virtual bool GetAIGuardingSuccess() override;
 	virtual bool GetAIGuarding() override;
+	virtual bool GetAIDying() override;
 
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 	virtual void SetAIShockWaveDelegate(const FAICharacterShockWaveFinished& InOnShockWaveFinished) override;
@@ -189,6 +198,7 @@ protected:
 	virtual void ShockWaveByAI() override;
 	virtual void GuardByAI() override;
 	virtual void GuardSuccessByAI() override;
+	virtual void DieByAI() override;
 
 	virtual void SpeedChangeByAI(float Speed) override;
 

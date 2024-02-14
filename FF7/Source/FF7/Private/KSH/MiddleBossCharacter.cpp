@@ -155,11 +155,20 @@ void AMiddleBossCharacter::SetLeftHandCompColl(bool IsColl)
 // 중간보스 게임 클리어
 void AMiddleBossCharacter::MBGameClear()
 {
+	if ( IsDying ) return;
+	if ( !IsDyingDeco ) return;
+
+	IsDying = true;
+	IsDyingDeco = false;
+
+	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
+	if ( nullptr == AnimInstance ) return;
+
+	AnimInstance->PlayDieMontage();
+
+	// 막 보스로 넘어가는 문 소환
 	FVector t = FVector(-130.0f, 670.0f, 80.0f);
-
 	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
-
-	this->Destroy();
 }
 
 // 기본 스킬로 맞은 경우
@@ -219,7 +228,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 			MiddleBossHP = 0;
 
 			// 중간보스 클리어 처리
-			//MBGameClear();
+			IsDyingDeco = true;
 		}
 
 		// 30% 확률로 
@@ -292,6 +301,13 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		IsGuardSuccessDeco = false;
 
 		OnAttackFinished.ExecuteIfBound();
+		return;
+	}
+
+	else if ( Montage->GetFName() == "M_Die" )
+	{
+		IsDying = false;
+		IsDyingDeco = false;
 		return;
 	}
 
@@ -432,6 +448,11 @@ bool AMiddleBossCharacter::GetAIGuarding()
 	return IsGuardDeco;
 }
 
+bool AMiddleBossCharacter::GetAIDying()
+{
+	return IsDyingDeco;
+}
+
 void AMiddleBossCharacter::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
 {
 	OnAttackFinished = InOnAttackFinished;
@@ -461,6 +482,11 @@ void AMiddleBossCharacter::GuardByAI()
 void AMiddleBossCharacter::GuardSuccessByAI()
 {
 	GuardSuccess();
+}
+
+void AMiddleBossCharacter::DieByAI()
+{
+	MBGameClear();
 }
 
 // 스피드 변환 함수

@@ -33,6 +33,9 @@ public:
 	// 기열파 애니메이션 실행
 	void PlayGuardSuccessMontage();
 
+	// 죽는 애니메이션 실행
+	void PlayDieMontage();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pawn, Meta=(AllowPrivateAccess = true))
 	float CurrentPawnSpeed;
@@ -63,4 +66,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Guard, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* GuardSuccessMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Guard, Meta = ( AllowPrivateAccess = true ))
+	UAnimMontage* DieMontage;
 };
