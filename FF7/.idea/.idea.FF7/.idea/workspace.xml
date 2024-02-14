@@ -11,16 +11,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Jump_B_Full.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Asset/SpiderMech/Animation/Anim_Jump_B_Full.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/BossAnim/ABP_FinalBoss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/BossAnim/ABP_FinalBoss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FF7.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/FF7.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/JWK/BulletActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/JWK/BulletActor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/Missile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/Missile.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,6 +213,11 @@
       <workItem from="1707789186796" duration="487000" />
       <workItem from="1707805918462" duration="3851000" />
       <workItem from="1707810370805" duration="1636000" />
+      <workItem from="1707888837153" duration="3492000" />
+      <workItem from="1707892376581" duration="2873000" />
+      <workItem from="1707896304450" duration="1705000" />
+      <workItem from="1707898091277" duration="662000" />
+      <workItem from="1707898787062" duration="4252000" />
     </task>
     <servers />
   </component>

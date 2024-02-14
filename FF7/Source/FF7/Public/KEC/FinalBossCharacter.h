@@ -47,6 +47,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf <class AMissile> missileFactory;
+
+	UPROPERTY(EditAnywhere)
+	class UFBHPWidget* bossHPWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UWidgetComponent* healthUI;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
@@ -60,11 +66,18 @@ public:
 	bool bIsJumpAttack = true;
 	bool isDetected = true;
 	int32 fireNum = 0;
+	float maxHP = 1000;
+	float currentHp;
+	
 	
 
 	void Fire();
 	void LauchMissile();
 	void RushAttack();
 	void AttackLength();
+	void MakeBilboard();
+	void TakeDamage(int damage);
+	void SetHP();
+	
 	
 };
