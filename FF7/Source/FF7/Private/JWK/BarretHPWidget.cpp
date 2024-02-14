@@ -3,9 +3,15 @@
 
 #include "JWK/BarretHPWidget.h"
 #include "../../../../../../../Source/Runtime/UMG/Public/Components/TextBlock.h"
+#include "../../../../../../../Source/Runtime/UMG/Public/Components/ProgressBar.h"
 
 
-void UBarretHPWidget::SetBarrettHP(int BarretHP)
+void UBarretHPWidget::SetBarrettHP(int32 BarrettHP, int32 BarrettMaxHP)
 {
-	//BarrettCurHP->SetText(FText::AsNumber(BarretHP));
+
+	BarrettCurHP->SetText(FText::AsNumber(BarrettHP));
+
+	BarrettFullHP->SetText(FText::AsNumber(BarrettMaxHP));
+
+	BarrettHPBar->SetPercent((float)BarrettHP / BarrettMaxHP);
 }

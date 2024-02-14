@@ -125,7 +125,12 @@ public:
 	int32 BarrettMaxHP = 100;
 	UPROPERTY(EditAnywhere)
 	int32 BarrettHP = BarrettMaxHP;
-	
+	UPROPERTY(EditAnywhere)
+	bool IsAttacked = false;
+	UPROPERTY(EditAnywhere)
+	bool IsDie = false;
+
+
 	UFUNCTION(BlueprintCallable)
 	void BarrettDamaged(int32 damage);
 	UFUNCTION(BlueprintCallable)
@@ -187,4 +192,11 @@ public:
 	class UAnimMontage* StandUpMontage;
 
 	/*void PlayMontage(UAnimMontage* NewMontage);*/
+
+	//////////////////////// Barrett Widget////////////////////////
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget>HPUIFactory;
+
+	UPROPERTY()
+	class UBarretHPWidget* BarretUI;
 };
