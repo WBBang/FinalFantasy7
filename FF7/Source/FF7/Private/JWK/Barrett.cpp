@@ -48,24 +48,6 @@ ABarrett::ABarrett()
 		RifleMeshComp->SetRelativeLocationAndRotation(FVector(17.136384f, -319.395057f, 52.838305f), FRotator(-90, -180, 2.422084f));
 		RifleMeshComp->SetWorldScale3D(FVector(20, 35, 20));
 	}
-
-
-
-	/////////////////////////// 애니메이션 /////////////////////////
-
-	///* 기본공격 */
-	//static ConstructorHelpers::FObjectFinder<UAnimMontage> BasicAttackRef(TEXT("/Script/Engine.AnimMontage'/Game/JWK/Animation/Montage/Attack/MT_BasicAttack.MT_BasicAttack'"));
-	//if ( BasicAttackRef.Object )
-	//{
-	//	BasicAttackMontage = BasicAttackRef.Object;
-	//}
-
-	///* 우와앙 빵 */
-	//static ConstructorHelpers::FObjectFinder<UAnimMontage> SkillAttackRef(TEXT("/Script/Engine.AnimMontage'/Game/JWK/Animation/Montage/Attack/MT_WangBBang.MT_WangBBang'"));
-	//if ( SkillAttackRef.Object )
-	//{
-	//	SkillAttackMontage = SkillAttackRef.Object;
-	//}
 }
 
 // Called when the game starts or when spawned
@@ -73,6 +55,8 @@ void ABarrett::BeginPlay()
 {
 	Super::BeginPlay();
 	IsDie = false;
+	IsAttacked = false;
+	IsCountered = false;
 	auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	// 마우스 커서를 안보이게
 	controller->SetShowMouseCursor(false);
@@ -93,13 +77,13 @@ void ABarrett::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	Move();
 
-	if ( IsSkill )
+	if ( IsSkill == true && !IsCountered && !IsDie )
 	{
 		EnergyFire();
 		IsSkill = false;
 	}
 
-	if ( IsFire )
+	if ( IsFire == true && IsCountered && !IsDie )
 	{
 		CurFireTime += DeltaTime;                                                  // auto Fire 타이머
 		AttackEndTime += DeltaTime;                                                // IsFire 타이머
@@ -205,10 +189,13 @@ void ABarrett::OnAxisLookupPitch(float value)
 ///////////////////////// 기본공격 /////////////////////////
 void ABarrett::Fire()
 {
+	if ( !IsDie )
+	{
 	// 총알 생성
 	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 
 	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
+	}
 
 	//double Seconds = FPlatformTime::Seconds();
 
@@ -265,40 +252,42 @@ void ABarrett::IsAutoAttack(bool isAttacking)
 ///////////////////////// 스킬공격 /////////////////////////
 void ABarrett::EnergyFire()
 {
-
-	double Seconds = FPlatformTime::Seconds();
-	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
-	IsSkill = true;
-	FTimerHandle SkillTimer;
-	float SkillTime = 2;                                                       // 딜레이 타임
-
-	FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));   // 소환 위치
-	if ( curMilSec - milliseconds > 5000 )
+	if ( !IsDie )
 	{
-		// Sparkle Emitter 총구 위치에 Spawn
-		UParticleSystemComponent* SpawnedEnergy = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
+		double Seconds = FPlatformTime::Seconds();
+		int64 curMilSec = static_cast<int64>( Seconds * 1000 );
+		IsSkill = true;
+		FTimerHandle SkillTimer;
+		float SkillTime = 2;                                                       // 딜레이 타임
 
-		milliseconds = curMilSec;
+		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));   // 소환 위치
+		if ( curMilSec - milliseconds > 5000 )
+		{
+			// Sparkle Emitter 총구 위치에 Spawn
+			UParticleSystemComponent* SpawnedEnergy = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
 
-		// 스킬공격 몽타주 재생
-		this->PlayAnimMontage(SkillAttackMontage);
+			milliseconds = curMilSec;
 
-		// 딜레이 2 초
-		GetWorld()->GetTimerManager().SetTimer(SkillTimer, FTimerDelegate::CreateLambda([ & ] ()
-			{
-				// 실행할 내용
+			// 스킬공격 몽타주 재생
+			this->PlayAnimMontage(SkillAttackMontage);
 
-				FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
-				GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
-				if ( nullptr == WangBBang )
+			// 딜레이 2 초
+			GetWorld()->GetTimerManager().SetTimer(SkillTimer, FTimerDelegate::CreateLambda([ & ] ()
 				{
-					return;
-				}
-				GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(WangBBang, 1.0f);
-				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
-			}), SkillTime, false);
+					// 실행할 내용
 
+					FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+					GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
+					if ( nullptr == WangBBang )
+					{
+						return;
+					}
+					GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(WangBBang, 1.0f);
+					// TimerHandle 초기화
+					GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
+				}), SkillTime, false);
+
+		}
 	}
 }
 
@@ -306,8 +295,23 @@ void ABarrett::EnergyFire()
 ///////////////////////// 공격 당함 /////////////////////////
 void ABarrett::BarrettDamaged(int32 damage)
 {
+	FTimerHandle HitTimer;
+	float HitTime = 0.68f;
 	IsAttacked = true;
 	BarrettHP -= damage;
+	if ( IsAttacked == true && !IsCountered && !IsDie )
+	{
+		this->PlayAnimMontage(HitMontage);
+		GetWorld()->GetTimerManager().SetTimer(HitTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// 실행할 내용
+				IsAttacked = false;
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(HitTimer);
+			}), HitTime, false);
+	}
+
+	// 만약 Barrett 의 피가 0 이라면
 	if ( BarrettHP <= 0 )
 	{
 		if ( !IsDie )
@@ -317,17 +321,26 @@ void ABarrett::BarrettDamaged(int32 damage)
 		}
 		BarrettHP = 0;
 	}
+
+	// 실시간 Barrett HP 업데이트
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 }
 
-///////////////////////// 넉백 공격 당함 /////////////////////////
+///////////////////////// 카운터 공격 당함 /////////////////////////
 void ABarrett::BarrettDamagedKnockBack(int32 damage)
 {
-	IsAttacked = true;
-	FTimerHandle KnockBackTimer;
-	float KnockBackTime = 1.98f;                                                       // 딜레이 타임
+	IsCountered = true;
+	FTimerHandle CounterHitTimer;
+	FTimerHandle StandUpTimer;
+
+
+	// 딜레이 타임
+	float CounterHitTime = 2;
+	float StandUpTime = 3;
 
 	BarrettHP -= damage;
+
+	// 만약 바레트의 체력이 0 이 되면
 	if ( BarrettHP <= 0 )
 	{
 		if ( !IsDie )
@@ -338,19 +351,28 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 		BarrettHP = 0;
 	}
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
-	if ( IsAttacked)
-	{
-		IsAttacked = false;
-		this->PlayAnimMontage(KnockBackMontage);
-	GetWorld()->GetTimerManager().SetTimer(KnockBackTimer, FTimerDelegate::CreateLambda([ & ] ()
-		{
-			// 실행할 내용
-			this->PlayAnimMontage(StandUpMontage);
-			// TimerHandle 초기화
-			GetWorld()->GetTimerManager().ClearTimer(KnockBackTimer);
-		}), KnockBackTime, false);
-	}
 
+	// CounterHitMontage 재생
+	this->PlayAnimMontage(CounterHitMontage);
+
+	// 넘어지고 나서 1.92초 뒤 기상 애니메이션
+	GetWorld()->GetTimerManager().SetTimer(CounterHitTimer, FTimerDelegate::CreateLambda([ & ] ()
+		{
+			// StandUp Montage 재생
+			this->PlayAnimMontage(StandUpMontage);
+			IsCountered = false;
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(CounterHitTimer);
+		}), CounterHitTime, false);
+
+	// 일어나기 시작하고 나서 2.76초 뒤 판정 리셋
+	GetWorld()->GetTimerManager().SetTimer(StandUpTimer, FTimerDelegate::CreateLambda([ & ] ()
+		{
+			// StandUp Montage 재생
+			IsCountered = false;
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(StandUpTimer);
+		}), StandUpTime, false);
 }
 
 

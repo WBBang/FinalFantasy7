@@ -128,6 +128,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool IsAttacked = false;
 	UPROPERTY(EditAnywhere)
+	bool IsCountered = false;
+
+	UPROPERTY(EditAnywhere)
 	bool IsDie = false;
 
 
@@ -187,7 +190,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* DieMontage;
 	UPROPERTY(EditAnywhere)
-	class UAnimMontage* KnockBackMontage;
+	class UAnimMontage* CounterHitMontage;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* HitMontage;
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* StandUpMontage;
 
