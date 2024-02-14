@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KSH/MBAnimInstance.h"
+#include "KSH/MiddleBossCharacter.h"
 
 UMBAnimInstance::UMBAnimInstance()
 {
@@ -35,6 +36,11 @@ UMBAnimInstance::UMBAnimInstance()
 
 }
 
+void UMBAnimInstance::NativeInitializeAnimation()
+{
+	me = Cast<AMiddleBossCharacter>(TryGetPawnOwner());
+}
+
 void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
@@ -46,7 +52,7 @@ void UMBAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-// °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç
+// ê³µê²© ì• ë‹ˆë©”ì´ì…˜
 void UMBAnimInstance::PlayAttackMontage()
 {
 	if (!Montage_IsPlaying(AttackMontage))
@@ -55,7 +61,7 @@ void UMBAnimInstance::PlayAttackMontage()
 	}
 }
 
-// °¡µå ¾Ö´Ï¸ÞÀÌ¼Ç
+// ê°€ë“œ ì• ë‹ˆë©”ì´ì…˜
 void UMBAnimInstance::PlayGuardMontage()
 {
 	if (!Montage_IsPlaying(GuardMontage))
@@ -64,7 +70,7 @@ void UMBAnimInstance::PlayGuardMontage()
 	}
 }
 
-// Áö¸é Ãæ°ÝÆÄ ¾Ö´Ï¸ÞÀÌ¼Ç
+// ì§€ë©´ ì¶©ê²©íŒŒ ì• ë‹ˆë©”ì´ì…˜
 void UMBAnimInstance::PlayShockWaveMontage()
 {
 	if (!Montage_IsPlaying(ShockWaveMontage))
@@ -73,7 +79,7 @@ void UMBAnimInstance::PlayShockWaveMontage()
 	}
 }
 
-// ±â¿­ÆÄ ¾Ö´Ï¸ÞÀÌ¼Ç
+// ê¸°ì—´íŒŒ ì• ë‹ˆë©”ì´ì…˜
 void UMBAnimInstance::PlayGuardSuccessMontage()
 {
 	if (!Montage_IsPlaying(GuardSuccessMontage))
@@ -84,5 +90,26 @@ void UMBAnimInstance::PlayGuardSuccessMontage()
 
 void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 {
-	// °ø°Ý ÆÇÁ¤ Ãß°¡
+	// ê³µê²© íŒì • ì¶”ê°€
+	me->SetRightHandCompColl(true);
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnRight"));
+}
+
+void UMBAnimInstance::AnimNotify_MBAttackStartEndNotify()
+{
+	// ê³µê²© íŒì • ì—†ì• ê¸°
+	me->SetRightHandCompColl(false);
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffRight"));
+}
+
+void UMBAnimInstance::AnimNotify_MBLeftAttackStart()
+{
+	me->SetLeftHandCompColl(true);
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnLeft"));
+}
+
+void UMBAnimInstance::AnimNotify_MBLeftAttackStartEnd()
+{
+	me->SetLeftHandCompColl(false);
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOffLeft"));
 }

@@ -11,12 +11,14 @@
 #include "KSH/MBHpBarActor.h"
 #include "KSH/MBGuardBarActor.h"
 #include "KEC/LevelTransitionPortal.h"
+#include "../../../../../../../Source/Runtime/Engine/Classes/Components/CapsuleComponent.h"
+#include "JWK/Barrett.h"
 
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	AIControllerClass = AMBAIController::StaticClass();
@@ -37,8 +39,23 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	dummyCubeMesh->bHiddenInGame = true;
 
 	// 기본 공격 Collision
-	// 기본 공격 CollisionrightHandComp
-	//rightHandComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT(""));
+	rightHandComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("rightHandComp"));
+	rightHandComp->SetupAttachment(GetMesh(), TEXT("rhandSocket"));
+	rightHandComp->SetRelativeLocation(FVector(-1.1f, 0.45f, 0));
+	rightHandComp->SetRelativeRotation(FRotator(90, 0, -5));
+	rightHandComp->SetCapsuleRadius(24);
+	rightHandComp->SetGenerateOverlapEvents(true);
+	rightHandComp->SetCollisionProfileName(TEXT("NoCollision"));
+	//rightHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+
+	leftHandComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("leftHandComp"));
+	leftHandComp->SetupAttachment(GetMesh(), TEXT("lhandSocket"));
+	leftHandComp->SetRelativeLocation(FVector(2.2f, -1.89f, 0));
+	leftHandComp->SetRelativeRotation(FRotator(90.0f, 194.0f, 186.0f));
+	leftHandComp->SetCapsuleRadius(24);
+	leftHandComp->SetGenerateOverlapEvents(true);
+	leftHandComp->SetCollisionProfileName(TEXT("NoCollision"));
+	//leftHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
 }
 
 // Called when the game starts or when spawned
@@ -55,8 +72,8 @@ void AMiddleBossCharacter::BeginPlay()
 
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = dummyCubeMesh->GetComponentLocation();
-	FVector locHP = FVector(loc.X, loc.Y, loc.Z+20);
-	FVector locGuard = FVector(loc.X, loc.Y, loc.Z+80);
+	FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
+	FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 80);
 	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, locHP, FRotator(0, 0, 0));
 	guardBarUI = GetWorld()->SpawnActor<AMBGuardBarActor>(guardBar, locGuard, FRotator(0, 0, 0));
 
@@ -75,7 +92,7 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 	// SkillRange 이상이면 기열파나 뛰어오기
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
 
-	if ( nullptr != hpBarUI && nullptr != guardBarUI)
+	if ( nullptr != hpBarUI && nullptr != guardBarUI )
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
@@ -94,7 +111,7 @@ void AMiddleBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
+	if ( nullptr == AnimInstance ) return;
 
 	AnimInstance->OnMontageEnded.AddDynamic(this, &AMiddleBossCharacter::OnMontageEnded);
 }
@@ -104,6 +121,33 @@ void AMiddleBossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMiddleBossCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	ABarrett* barrett = Cast<ABarrett>(OtherActor);
+	// 충돌대상이 플레이어라면
+	if ( nullptr != barrett )
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("Attack"));
+
+		// 플레이어 데미지 처리 함수 호출
+		barrett->BarrettDamaged(5);
+	}
+}
+
+void AMiddleBossCharacter::SetRightHandCompColl(bool IsDuringAttacking)
+{
+	// 공격 중이라면
+	if ( IsAttacking ) rightHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	else rightHandComp->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+void AMiddleBossCharacter::SetLeftHandCompColl(bool IsDuringAttacking)
+{
+	// 공격 중이라면
+	if ( IsAttacking ) leftHandComp->SetCollisionProfileName(TEXT("EnemyAttack"));
+	else leftHandComp->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 // 중간보스 게임 클리어
@@ -127,7 +171,7 @@ void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(int32 damage)
 void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 {
 	// 가드 상태가 아니라면
-	if (false == IsGuardDeco)
+	if ( false == IsGuardDeco )
 	{
 		// 경직 상태
 		IsHitStuning = true;
@@ -146,19 +190,16 @@ void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 {
 	// 가드 중이라면
-	if (true == IsGuardDeco)
+	if ( true == IsGuardDeco )
 	{
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
 		// 기열파 애니메이션이 실행중이 아니라면
-		if (!IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
+		if ( !IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
 		{
 			//UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
-
-			// 가드 성공
-			// IsGuardSuccess = true;
 			IsGuardSuccessDeco = true;
 		}
 	}
@@ -171,7 +212,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		MiddleBossHP -= damage;
 
 		// 0이하라면
-		if (MiddleBossHP <= 0)
+		if ( MiddleBossHP <= 0 )
 		{
 			MiddleBossHP = 0;
 
@@ -184,7 +225,6 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		//if (randomNum < 3) // 0, 1, 2
 		{
 			IsGuardDeco = true;
-			//Guard();
 		}
 	}
 }
@@ -198,7 +238,7 @@ void AMiddleBossCharacter::SetIsGuarding(bool isGuarding)
 void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	// 평타 몽타주였다면
-	if (Montage->GetFName() == "M_AttackMontage")
+	if ( Montage->GetFName() == "M_AttackMontage" )
 	{
 		UE_LOG(LogTemp, Log, TEXT("Attack Montage End"));
 		IsAttacking = false;
@@ -208,7 +248,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	}
 
 	// 가드 몽타주였다면
-	else if (Montage->GetFName() == "M_Guard_Montage")
+	else if ( Montage->GetFName() == "M_Guard_Montage" )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Cyan, TEXT("Guard End"));
 		//UE_LOG(LogTemp, Log, TEXT("Guard Montage End"));
@@ -224,7 +264,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	}
 
 	// 지면 충격파 몽타주였다면
-	else if (Montage->GetFName() == "M_ShockWaveMontage")
+	else if ( Montage->GetFName() == "M_ShockWaveMontage" )
 	{
 		IsShockWaving = false;
 		OnShockWaveFinished.ExecuteIfBound();
@@ -232,7 +272,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	}
 
 	// 기열파 몽타주였다면
-	else if (Montage->GetFName() == "M_GuardSuccessMontage")
+	else if ( Montage->GetFName() == "M_GuardSuccessMontage" )
 	{
 		// 애니메이션 관련 변수 초기화
 		IsGuardSuccessing = false;
@@ -289,11 +329,11 @@ void AMiddleBossCharacter::Attack()
 // 가드 성공 - 기열파
 void AMiddleBossCharacter::GuardSuccess()
 {
-	if (IsGuardSuccessing) return;
+	if ( IsGuardSuccessing ) return;
 	if ( !IsGuardSuccessDeco ) return;
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
+	if ( nullptr == AnimInstance ) return;
 
 	AnimInstance->PlayGuardSuccessMontage();
 
@@ -322,10 +362,10 @@ void AMiddleBossCharacter::GuardSuccess()
 // 지면 충격파
 void AMiddleBossCharacter::ShockWave()
 {
-	if (IsShockWaving) return;
+	if ( IsShockWaving ) return;
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInstance) return;
+	if ( nullptr == AnimInstance ) return;
 
 	AnimInstance->PlayShockWaveMontage();
 

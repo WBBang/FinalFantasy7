@@ -35,11 +35,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* dummyCubeMesh;
 
+	// 기본 공격 Collision
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* rightHandComp;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* leftHandComp;
+	// 기본 공격 충돌 처리 (Overlap으로만 받아서 몸체랑은 처리안하게)
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
+	void SetRightHandCompColl(bool IsDuringAttacking);
+	void SetLeftHandCompColl(bool IsDuringAttacking);
 
 	// HP Bar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HPBar)
