@@ -77,6 +77,6 @@ public:
 	void AttackLength();
 	void MakeBilboard();
 	void TakeDamage(int damage);
-	
+
 	
 };
