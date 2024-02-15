@@ -59,7 +59,7 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 
 	// 가드 시 생기는 쉴드
 	ShieldComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldComp"));
-	ShieldComp->SetRelativeScale3D(FVector(2.75));
+	ShieldComp->SetRelativeScale3D(FVector(2.3));
 	ShieldComp->SetupAttachment(RootComponent);
 	ShieldComp->SetCollisionProfileName(TEXT("NoCollision"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh>sphereTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
@@ -87,7 +87,7 @@ void AMiddleBossCharacter::BeginPlay()
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = dummyCubeMesh->GetComponentLocation();
 	FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
-	FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 80);
+	FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5);
 	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, locHP, FRotator(0, 0, 0));
 	guardBarUI = GetWorld()->SpawnActor<AMBGuardBarActor>(guardBar, locGuard, FRotator(0, 0, 0));
 
@@ -112,17 +112,21 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		FVector loc = dummyCubeMesh->GetComponentLocation();
 		FVector camLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
 		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
-		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 80);
+
+		// 항상 일정한 크기 유지
+		float distance = ( ( loc - camLoc ).Length() ) * 0.001;
+		if ( distance > 4 ) distance = 4.0f;
+		else if ( distance < 1 ) distance = 1.0f;
 
 		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
 		hpBarUI->UpdateLocation(locHP, LookAtRotation);
-		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 
-		// 항상 일정한 크기 유지
-		float distance = (( loc - camLoc ).Length()) * 0.001;
-		if ( distance > 4 ) distance = 4.0f;
-		else if ( distance < 1 ) distance = 1.0f;
 		hpBarUI->UpdateScale(distance);
+		guardBarUI->UpdateScale(distance);
+
+		// 거리 비율에 따라 위치 수정
+		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5 - (distance * 5));
+		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 	}
 }
 

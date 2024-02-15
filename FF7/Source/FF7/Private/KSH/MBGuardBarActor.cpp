@@ -34,3 +34,8 @@ void AMBGuardBarActor::UpdateLocation(FVector Location, FRotator Rotator)
 	this->SetActorLocationAndRotation(Location, Rotator);
 }
 
+void AMBGuardBarActor::UpdateScale(float mulTimes)
+{
+	MBGuardBarUI->SetRelativeScale3D(FVector(1.4f) * mulTimes);
+}
+

@@ -29,4 +29,7 @@ public:
 	UFUNCTION()
 	void UpdateLocation(FVector Location, FRotator Rotator);
 
+	UFUNCTION()
+	void UpdateScale(float mulTimes);
+
 };
