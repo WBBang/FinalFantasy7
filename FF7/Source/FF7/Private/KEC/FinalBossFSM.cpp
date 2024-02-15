@@ -97,14 +97,51 @@ void UFinalBossFSM::TickNormalAttack()
 		{
 			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
+	SetState(EFinalBossState::GATLINGATTACK);
 }
 
 void UFinalBossFSM::TickGatlingAttack()
 {
 	//보스 양쪽 애로우에서 LineTrace를 발사 -> 플레이어 방향
+	FHitResult outHitLeft;
+	FHitResult outHitRight;
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(me);
+	//왼쪽 발사
+	FVector leftEnd = leftGun.GetLocation().ForwardVector * 1000000;
+	bool bReturnValueLeft = GetWorld()->LineTraceSingleByChannel(outHitLeft,leftGun.GetLocation(), leftEnd, ECC_Visibility, params );
+
+	if(bReturnValueLeft)
+	{
+		//발사하면서 왼쪽 애로우에 VFX 스폰
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,leftGun.GetLocation());
+		DrawDebugLine(GetWorld(),outHitLeft.TraceStart, outHitLeft.ImpactPoint, FColor::Red, false, 5);
+		//적중한 컴포넌트
+		UPrimitiveComponent* hitComp = outHitLeft.GetComponent();
+		if(hitComp)
+		{
+			//적중한 위치에 vfx생성
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,outHitLeft.ImpactPoint);
+		}
+	}
+	//오른쪽 발사
+	FVector rightEnd = rightGun.GetLocation().ForwardVector * 1000000;
+	bool bReturnValueRight = GetWorld()->LineTraceSingleByChannel(outHitRight,rightGun.GetLocation(), rightEnd, ECC_Visibility, params );
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,rightGun.GetLocation());
+
+	if(bReturnValueRight)
+	{
+		//발사하면서 오른쪽 애로우에 VFX 스폰
+		DrawDebugLine(GetWorld(),outHitRight.TraceStart, outHitRight.ImpactPoint, FColor::Red, false, 5);
+		UPrimitiveComponent* hitComp = outHitRight.GetComponent();
+		if(hitComp)
+		{
+			//적중한 위치에 vfx생성
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,outHitRight.ImpactPoint);
+		}
+	}
 	
-	//발사하면서 양쪽 애로우에 VFX 스폰
-	//LineTrace가 적중한 위치에 VFX 스폰
+	
 }
 
 
