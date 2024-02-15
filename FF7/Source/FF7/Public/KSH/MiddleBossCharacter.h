@@ -181,7 +181,7 @@ private:
 	int32 MiddleBossHP;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	int32 MiddleBossMaxHP = 10;
+	int32 MiddleBossMaxHP = 1000;
 
 // AI Section
 protected:
