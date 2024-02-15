@@ -13,7 +13,7 @@
 #include "KEC/LevelTransitionPortal.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/CapsuleComponent.h"
 #include "JWK/Barrett.h"
-
+#include "KSH/UI/MBNameActor.h"
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
@@ -88,8 +88,10 @@ void AMiddleBossCharacter::BeginPlay()
 	FVector loc = dummyCubeMesh->GetComponentLocation();
 	FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
 	FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5);
+	FVector locName = FVector(loc.X, loc.Y, loc.Z + 40);
 	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, locHP, FRotator(0, 0, 0));
 	guardBarUI = GetWorld()->SpawnActor<AMBGuardBarActor>(guardBar, locGuard, FRotator(0, 0, 0));
+	MBNameUI = GetWorld()->SpawnActor<AMBNameActor>(MBName, locName, FRotator(0, 0, 0));
 
 	guardBarUI->SetActorHiddenInGame(true);
 }
@@ -106,7 +108,7 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 	// SkillRange 이상이면 기열파나 뛰어오기
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
 
-	if ( nullptr != hpBarUI && nullptr != guardBarUI )
+	if ( nullptr != hpBarUI && nullptr != guardBarUI  && nullptr != MBNameUI)
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
@@ -123,10 +125,18 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 
 		hpBarUI->UpdateScale(distance);
 		guardBarUI->UpdateScale(distance);
+		MBNameUI->UpdateScale(distance);
 
 		// 거리 비율에 따라 위치 수정
 		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5 - (distance * 5));
 		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
+
+		float locNameZ = distance * 30;
+		UE_LOG(LogTemp, Warning, TEXT("%f"), distance);
+		if ( locNameZ > 56 ) locNameZ = 56;
+		else if ( locNameZ < 35 ) locNameZ = 35;
+		FVector locName = FVector(loc.X, loc.Y, loc.Z + locNameZ);
+		MBNameUI->UpdateLocation(locName, LookAtRotation);
 	}
 }
 

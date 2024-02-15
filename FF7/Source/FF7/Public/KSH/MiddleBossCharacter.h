@@ -50,11 +50,11 @@ public:
 	bool IsDuringAttack;
 
 	// HP Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HPBar)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class AMBHpBarActor> hpBar;
 
 	// HP Bar 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = HPBar)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
 	class AMBHpBarActor* hpBarUI;
 
 	// 게임 클리어 때 부를 액터 공장
@@ -62,16 +62,25 @@ public:
 	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;
 
 	// Guard Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = guard)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class AMBGuardBarActor> guardBar;
 
 	// Guard Bar 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
 	class AMBGuardBarActor* guardBarUI;
 
 	// Guard시 나오는 쉴드
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
 	class UStaticMeshComponent* ShieldComp;
+
+	// 이름 UI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBNameActor> MBName;
+	// 이름 UI 레퍼런스 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
+	class AMBNameActor* MBNameUI;
+
+	// 스킬명 UI
 
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
