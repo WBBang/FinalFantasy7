@@ -3,6 +3,7 @@
 
 #include "KEC/FinalBossFSM.h"
 
+#include "Components/ArrowComponent.h"
 #include "KEC/FinalBossCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,9 +23,10 @@ void UFinalBossFSM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	me = Cast<AFinalBossCharacter>(GetOwner());
-	
+	// 보스 총구 Transfrom 가져오기
+	leftGun = me->leftArrowComp->GetComponentTransform();
+	rightGun = me->rightArrowComp->GetComponentTransform();
 }
 
 
@@ -39,8 +41,9 @@ void UFinalBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		case EFinalBossState::IDLE:				TickIdle();				break;
 		case EFinalBossState::MOVE:				TickMove();				break;
 		case EFinalBossState::NORMALATTACK:		TickNormalAttack();		break;
+		case EFinalBossState::GATLINGATTACK:	TickGatlingAttack();		break;
 		case EFinalBossState::LAUNCHBOMB:		TickLaunchBomb();		break;
-		case EFinalBossState::FireMissile:		TickFireMissile();		break;
+		case EFinalBossState::FIREMISSILE:		TickFireMissile();		break;
 		case EFinalBossState::RUSH:				TickRush();				break;
 		case EFinalBossState::JUMPATTACK:		TickJumpAttack();		break;
 		case EFinalBossState::GROGGY:			TickGroggy();			break;
@@ -95,8 +98,14 @@ void UFinalBossFSM::TickNormalAttack()
 			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
 }
-		
 
+void UFinalBossFSM::TickGatlingAttack()
+{
+	//보스 양쪽 애로우에서 LineTrace를 발사 -> 플레이어 방향
+	
+	//발사하면서 양쪽 애로우에 VFX 스폰
+	//LineTrace가 적중한 위치에 VFX 스폰
+}
 
 
 void UFinalBossFSM::TickFireMissile()

@@ -66,7 +66,7 @@ public:
 	bool bIsJumpAttack = true;
 	bool isDetected = true;
 	int32 fireNum = 0;
-	float maxHP = 1000;
+	float maxHP = 10000;
 	float currentHp;
 	
 	
@@ -77,7 +77,6 @@ public:
 	void AttackLength();
 	void MakeBilboard();
 	void TakeDamage(int damage);
-	void SetHP();
 	
 	
 };

@@ -16,7 +16,7 @@ void UFBHPWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	float curPercent = HPBarMid->GetPercent();
 	float targetPercent = HPBar->GetPercent();
-	float lerpPercent = FMath::Lerp<float>( curPercent, targetPercent, InDeltaTime * 3);
+	float lerpPercent = FMath::Lerp<float>( curPercent, targetPercent, InDeltaTime * 20);
 
 	HPBarMid->SetPercent(lerpPercent);
 }

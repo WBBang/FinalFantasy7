@@ -12,12 +12,19 @@
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Maps/implementMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/JWK/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/JWK/TestMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FF7/Private/JWK/BulletActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/JWK/BulletActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBoss.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/JWK/Bullet_Energy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/JWK/Bullet_Energy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FBHPWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FBHPWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KSH/MBHpBarActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KSH/MBHpBarActor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KSH/MiddleBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KSH/MiddleBossCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBoss.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KSH/MBHpBarActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KSH/MBHpBarActor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KSH/MiddleBossCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KSH/MiddleBossCharacter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,6 +225,12 @@
       <workItem from="1707896304450" duration="1705000" />
       <workItem from="1707898091277" duration="662000" />
       <workItem from="1707898787062" duration="4252000" />
+      <workItem from="1707904094124" duration="2438000" />
+      <workItem from="1707915484075" duration="182000" />
+      <workItem from="1707957414283" duration="1243000" />
+      <workItem from="1707964497431" duration="663000" />
+      <workItem from="1707982167052" duration="1781000" />
+      <workItem from="1707983995029" duration="2264000" />
     </task>
     <servers />
   </component>
