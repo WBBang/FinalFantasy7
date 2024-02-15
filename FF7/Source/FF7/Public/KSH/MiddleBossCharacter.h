@@ -81,6 +81,14 @@ public:
 	class AMBNameActor* MBNameUI;
 
 	// 스킬명 UI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBSkillNameActor> MBSkillName;
+	// 스킬명 UI 레퍼런스 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
+	class AMBSkillNameActor* MBSkillNameUI;
+	// 스킬명
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
+	FString SkillName;
 
 	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)

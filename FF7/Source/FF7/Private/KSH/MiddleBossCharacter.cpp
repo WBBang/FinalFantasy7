@@ -11,9 +11,11 @@
 #include "KSH/MBHpBarActor.h"
 #include "KSH/MBGuardBarActor.h"
 #include "KEC/LevelTransitionPortal.h"
+#include "Engine/SkeletalMesh.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/CapsuleComponent.h"
 #include "JWK/Barrett.h"
 #include "KSH/UI/MBNameActor.h"
+#include "KSH/UI/MBSkillNameActor.h"
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
@@ -23,6 +25,15 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 
 	AIControllerClass = AMBAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
+	// 캐릭터 mesh
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/KSH/ParagonSteel/Characters/Heroes/Steel/Meshes/Steel.Steel'"));
+	if ( tempMesh.Succeeded() )
+	{
+		GetMesh()->SetSkeletalMesh(tempMesh.Object);
+		GetMesh()->SetWorldScale3D(FVector(0.8f));
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -90), FRotator(0, -90, 0));
+	}
 
 	// 회전 자연스럽게 설정
 	bUseControllerRotationYaw = false;
@@ -89,11 +100,14 @@ void AMiddleBossCharacter::BeginPlay()
 	FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
 	FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5);
 	FVector locName = FVector(loc.X, loc.Y, loc.Z + 40);
+	FVector locSkillName = FVector(loc.X, loc.Y, loc.Z + 60);
 	hpBarUI = GetWorld()->SpawnActor<AMBHpBarActor>(hpBar, locHP, FRotator(0, 0, 0));
 	guardBarUI = GetWorld()->SpawnActor<AMBGuardBarActor>(guardBar, locGuard, FRotator(0, 0, 0));
 	MBNameUI = GetWorld()->SpawnActor<AMBNameActor>(MBName, locName, FRotator(0, 0, 0));
+	MBSkillNameUI = GetWorld()->SpawnActor<AMBSkillNameActor>(MBSkillName, locSkillName, FRotator(0, 0, 0));
 
 	guardBarUI->SetActorHiddenInGame(true);
+	MBSkillNameUI->SetActorHiddenInGame(true);
 }
 
 // Called every frame
@@ -108,7 +122,7 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 	// SkillRange 이상이면 기열파나 뛰어오기
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), GetAISkillRange(), 16, FColor::Yellow, false, 0.1f);
 
-	if ( nullptr != hpBarUI && nullptr != guardBarUI  && nullptr != MBNameUI)
+	if ( nullptr != hpBarUI && nullptr != guardBarUI  && nullptr != MBNameUI && nullptr != MBSkillNameUI )
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
@@ -126,6 +140,7 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		hpBarUI->UpdateScale(distance);
 		guardBarUI->UpdateScale(distance);
 		MBNameUI->UpdateScale(distance);
+		MBSkillNameUI->UpdateScale(distance);
 
 		// 거리 비율에 따라 위치 수정
 		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5 - (distance * 5));
@@ -134,8 +149,14 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		float locNameZ = distance * 30;
 		if ( locNameZ > 56 ) locNameZ = 56;
 		else if ( locNameZ < 35 ) locNameZ = 35;
-		FVector locName = FVector(loc.X, loc.Y, loc.Z + locNameZ);
+		FVector locName = FVector(loc.X, loc.Y + 10, loc.Z + locNameZ);
 		MBNameUI->UpdateLocation(locName, LookAtRotation);
+
+		float locSkillNameZ = locNameZ + 30;
+		if ( locSkillNameZ > 85 ) locSkillNameZ = 85;
+		else if ( locSkillNameZ < 60 ) locSkillNameZ = 60;
+		FVector locSkillName = FVector(loc.X, loc.Y + 10, loc.Z + locSkillNameZ);
+		MBSkillNameUI->UpdateLocation(locSkillName, LookAtRotation);
 	}
 }
 
@@ -301,6 +322,9 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		guardBarUI->SetActorHiddenInGame(true);
 		ShieldComp->SetVisibility(false);
 
+		// 스킬 이름 UI 숨기기
+		MBSkillNameUI->SetActorHiddenInGame(true);
+
 		OnAttackFinished.ExecuteIfBound();
 		return;
 	}
@@ -309,6 +333,10 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 	else if ( Montage->GetFName() == "M_ShockWaveMontage" )
 	{
 		IsShockWaving = false;
+
+		// 스킬 이름 UI 숨기기
+		MBSkillNameUI->SetActorHiddenInGame(true);
+
 		OnShockWaveFinished.ExecuteIfBound();
 		return;
 	}
@@ -325,6 +353,9 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
+
+		// 스킬 이름 UI 숨기기
+		MBSkillNameUI->SetActorHiddenInGame(true);
 
 		guardBarUI->SetActorHiddenInGame(true);
 
@@ -352,6 +383,8 @@ void AMiddleBossCharacter::Guard()
 {
 	if ( IsGuarding ) return;
 	if ( !IsGuardDeco ) return;
+	MBSkillNameUI->SetActorHiddenInGame(false);
+	SkillName = FString(TEXT("가드"));
 	guardBarUI->SetActorHiddenInGame(false);
 	GuardingDamage = 0;
 	IsGuarding = true;
@@ -381,6 +414,9 @@ void AMiddleBossCharacter::GuardSuccess()
 {
 	if ( IsGuardSuccessing ) return;
 	if ( !IsGuardSuccessDeco ) return;
+
+	MBSkillNameUI->SetActorHiddenInGame(false);
+	SkillName = FString(TEXT("기열파"));
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if ( nullptr == AnimInstance ) return;
@@ -413,6 +449,9 @@ void AMiddleBossCharacter::GuardSuccess()
 void AMiddleBossCharacter::ShockWave()
 {
 	if ( IsShockWaving ) return;
+
+	MBSkillNameUI->SetActorHiddenInGame(false);
+	SkillName = FString(TEXT("지면 충격파"));
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if ( nullptr == AnimInstance ) return;
