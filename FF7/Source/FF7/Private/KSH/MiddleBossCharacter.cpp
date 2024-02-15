@@ -132,7 +132,6 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 
 		float locNameZ = distance * 30;
-		UE_LOG(LogTemp, Warning, TEXT("%f"), distance);
 		if ( locNameZ > 56 ) locNameZ = 56;
 		else if ( locNameZ < 35 ) locNameZ = 35;
 		FVector locName = FVector(loc.X, loc.Y, loc.Z + locNameZ);
