@@ -110,13 +110,19 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 	{
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
+		FVector camLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
 		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
 		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 80);
 
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation() - dummyCubeMesh->GetComponentLocation()).Rotator();
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
 		hpBarUI->UpdateLocation(locHP, LookAtRotation);
 		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 
+		// 항상 일정한 크기 유지
+		float distance = (( loc - camLoc ).Length()) * 0.001;
+		if ( distance > 4 ) distance = 4.0f;
+		else if ( distance < 1 ) distance = 1.0f;
+		hpBarUI->UpdateScale(distance);
 	}
 }
 

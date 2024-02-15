@@ -43,3 +43,10 @@ void AMBHpBarActor::UpdateLocation(FVector Location, FRotator Rotator)
 	///this->SetActorLocation(Location);
 	this->SetActorLocationAndRotation(Location, Rotator);
 }
+
+void AMBHpBarActor::UpdateScale(float mulTimes)
+{
+	MBHpBarUI->SetRelativeScale3D(FVector(1.55f) * mulTimes);
+		//SetActorScale3D(this->GetActorScale3D() * mulTimes);
+}
+
