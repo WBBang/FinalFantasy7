@@ -5,8 +5,10 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
+#include "KEC/FinalBossCharacter.h"
 #include "KSH/MiddleBossCharacter.h"
 
+class AFinalBossCharacter;
 // Sets default values
 ABullet_Energy::ABullet_Energy()
 {
@@ -67,11 +69,18 @@ void ABullet_Energy::OnMyCompBeginOverlap(UPrimitiveComponent* OverlappedCompone
 void ABullet_Energy::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	AMiddleBossCharacter* middleBoss = Cast<AMiddleBossCharacter>(OtherActor);
+	AFinalBossCharacter* finalBoss = Cast<AFinalBossCharacter>(OtherActor);
 	if ( nullptr != middleBoss )
 	{
 		middleBoss->MiddleBossDamagedBySkillBullet(3);
 
 		// 총알은 사라지기
+		Destroy();
+	}
+
+	if( nullptr != finalBoss)
+	{
+		finalBoss->TakeDamage(100);
 		Destroy();
 	}
 }

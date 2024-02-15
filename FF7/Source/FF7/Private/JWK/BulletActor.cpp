@@ -81,7 +81,7 @@ void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if( nullptr != finalBoss)
 	{
-		finalBoss->TakeDamage(10);
+		finalBoss->TakeDamage(300);
 		Destroy();
 	}
 }
