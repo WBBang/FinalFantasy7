@@ -4,6 +4,7 @@
 #include "KEC/FinalBossFSM.h"
 
 #include "Components/ArrowComponent.h"
+#include "JWK/Barrett.h"
 #include "KEC/FinalBossCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -24,6 +25,7 @@ void UFinalBossFSM::BeginPlay()
 	Super::BeginPlay();
 
 	me = Cast<AFinalBossCharacter>(GetOwner());
+	target = GetWorld()->GetFirstPlayerController()->GetPawn();
 	// 보스 총구 Transfrom 가져오기
 	leftGun = me->leftArrowComp->GetComponentTransform();
 	rightGun = me->rightArrowComp->GetComponentTransform();
@@ -53,7 +55,6 @@ void UFinalBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 void UFinalBossFSM::TickIdle()
 {
-	target = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if(me->playerLength < detectRange)
 		SetState(EFinalBossState::MOVE);
 	
@@ -97,7 +98,6 @@ void UFinalBossFSM::TickNormalAttack()
 		{
 			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
-	SetState(EFinalBossState::GATLINGATTACK);
 }
 
 void UFinalBossFSM::TickGatlingAttack()

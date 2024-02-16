@@ -15,8 +15,17 @@ class FF7_API UFinalBossAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
+virtual void NativeInitializeAnimation() override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFinalBossState state;
+
+	UPROPERTY()
+	class UFinalBossFSM* finalBossFsm;
 	
+	
+	UFUNCTION()
+	void AnimNotify_Attack();
 };

@@ -42,7 +42,7 @@ public:
 	EFinalBossState state;
 
 	UPROPERTY(EditAnywhere)
-	class ACharacter* target;
+	class AActor* target;
 	
 	UPROPERTY(EditAnywhere)
 	class AFinalBossCharacter* me;
