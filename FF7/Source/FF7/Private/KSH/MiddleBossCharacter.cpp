@@ -240,11 +240,6 @@ void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 	{
 		// 경직 상태
 		IsHitStuning = true;
-
-		// 경직 애니메이션 호출
-
-
-		// 경직 애니메이션 끝날 때 IsHitStuning = false 처리 하기
 	}
 
 	// 보스한테 데미지 처리

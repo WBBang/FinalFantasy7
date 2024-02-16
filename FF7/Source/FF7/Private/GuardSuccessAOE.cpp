@@ -9,6 +9,7 @@
 #include "../../../../../../../Source/Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "../../../../../../../Source/Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "JWK/Barrett.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AGuardSuccessAOE::AGuardSuccessAOE()
@@ -94,32 +95,13 @@ void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 	if ( OtherActor->IsA<ABarrett>() )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
-		
-		
-		
+
 		ABarrett* player = Cast<ABarrett>(OtherActor);
-		/*
-		
-		// 하늘로 띄우기
-		player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z+100));
-		player->SetActorEnableCollision(false);
 
-		// 하늘로 3초뒤에 내리기
-		FTimerHandle MyTimer;
-		float Time = 3.0f;
-		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
-			{
-				player->SetActorLocation(FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 100));
-				player->SetActorEnableCollision(true);
-				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
-			}), Time, false);
-
-		*/
+		//player->LaunchCharacter(player->GetActorUpVector() * 10000000, false, false);
 
 		// 플레이어 데미지 처리하고 넘어지는 함수, 호출
 		player->BarrettDamagedKnockBack(10);
-		
 	}
 }
 
