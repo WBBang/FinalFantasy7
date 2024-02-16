@@ -22,14 +22,18 @@ ABarrett::ABarrett()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// sprintArmComponent 세팅
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("springArmComp"));
 	springArmComp->SetupAttachment(RootComponent);
 	springArmComp->SetWorldLocation(FVector(0, 40, 120));
 	springArmComp->bUsePawnControlRotation = true;
 
+	// cameraComponent 세팅
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
 	cameraComp->SetupAttachment(springArmComp);
 
+	// movementComponent 세팅
 	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/JWK/Barrett_Mixamo/Barrett.Barrett'"));
@@ -79,18 +83,17 @@ void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Move();
-	if ( IsSkill == true && IsCountered == false && IsDie == false )
-	{
-		EnergyFire();
-		IsSkill = false;
-	}
 
-	if ( IsFire == true && IsCountered == false && IsDie == false )
+	// 기본공격을 했을 때
+	if ( IsFire == true )
 	{
-		CurFireTime += DeltaTime;                                                  // auto Fire 타이머
-		AttackEndTime += DeltaTime;                                                // IsFire 타이머
+		// auto Fire 타이머
+		CurFireTime += DeltaTime;
+		// IsFire 타이머
+		AttackEndTime += DeltaTime;
 
-		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));    // 소환 위치
+		// 소환 위치
+		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 
 		if ( CurFireTime >= MaxFireTime )
 		{
@@ -108,12 +111,32 @@ void ABarrett::Tick(float DeltaTime)
 
 				// 기본공격끝 파티클 생성
 				UParticleSystemComponent* SpawnBasicEnd = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), basicAttackEnd, s);
-
-				// 기본공격 길이 초기화
-				AttackEndTime = 0;
+				if ( AttackEndTime >= 4, 5 )
+				{
+					// 기본공격 길이 초기화
+					AttackEndTime = 0;
+				}
 			}
 		}
 	}
+
+	// 스킬을 썼을 때
+	if ( IsSkill == true && IsCountered == false && IsDie == false )
+	{
+		EnergyFire();
+		IsSkill = false;
+	}
+
+	// 죽었을 때
+	if ( IsDie == true )
+	{
+		IsFire = false;
+		IsSkill = false;
+
+		DeltaTime = 0;
+		GetCharacterMovement()->SetMovementMode(MOVE_None);
+	}
+
 	// 락온 타겟이 있다면
 	if ( HitActor )
 	{
@@ -203,10 +226,7 @@ void ABarrett::Fire()
 ///////////////////////// 기본공격 시작 끝 /////////////////////////
 void ABarrett::StartAttack()
 {
-	if ( autofire )
-	{
-		IsFire = true;
-	}
+	IsFire = true;
 }
 
 void ABarrett::EndAttack()
@@ -216,19 +236,19 @@ void ABarrett::EndAttack()
 	StopAnimMontage();
 }
 
-void ABarrett::IsAutoAttack(bool isAttacking)
-{
-	autofire = isAttacking;
-	IsFire = isAttacking;
-	/*if ( IsFire )
-	{
-		this->PlayAnimMontage(BasicAttackMontage);
-	}
-	else
-	{
-		StopAnimMontage();
-	}*/
-}
+//void ABarrett::IsAutoAttack(bool isAttacking)
+//{
+//	autofire = isAttacking;
+//	IsFire = isAttacking;
+//	/*if ( IsFire )
+//	{
+//		this->PlayAnimMontage(BasicAttackMontage);
+//	}
+//	else
+//	{
+//		StopAnimMontage();
+//	}*/
+//}
 
 
 ///////////////////////// 스킬공격 /////////////////////////
@@ -358,20 +378,12 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 				GetWorld()->GetTimerManager().ClearTimer(CounterHitTimer);
 			}), CounterHitTime, false);
 
-		// 일어나기 시작하고 나서 3초 뒤 판정 리셋
-		GetWorld()->GetTimerManager().SetTimer(StandUpTimer, FTimerDelegate::CreateLambda([ & ] ()
-			{
-				// StandUp Montage 재생
-				IsCountered = false;
-				// TimerHandle 초기화
-				GetWorld()->GetTimerManager().ClearTimer(StandUpTimer);
-			}), StandUpTime, false);
-
 		// 완전히 일어날 때 까지 이동X
 		GetWorld()->GetTimerManager().SetTimer(CanMoveTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
 				// StandUp Montage 재생
 				GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+				IsCountered = false;
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(CanMoveTimer);
 			}), CanMoveTime, false);
@@ -441,25 +453,22 @@ void ABarrett::LockOn()
 	}
 }
 
-//void ABarrett::PlayMontage(UAnimMontage* NewMontage)
-//{
-//	UAnimInstance* Animinstance = GetMesh()->GetAnimInstance();
-//	Animinstance->StopAllMontages(0.0f);
-//	Animinstance->Montage_Play(NewMontage);
-//}
 
 ////////////////////////// 구르기 //////////////////////////
 void ABarrett::OnActionRoll()
 {
-	double Seconds = FPlatformTime::Seconds();
-	int64 curMilSec = static_cast<int64>( Seconds * 1000 );
-
-	// 만약 현재시간과 기억하고있던 시간의 차이가 800ms 를 초과한다면 Montage 를 재생하고싶다.
-
-	if ( curMilSec - milliseconds > 800 )
+	if ( IsDie == false )
 	{
-		milliseconds = curMilSec;
-		this->PlayAnimMontage(rollMontage);
+		double Seconds = FPlatformTime::Seconds();
+		int64 curMilSec = static_cast<int64>( Seconds * 1000 );
+
+		// 만약 현재시간과 기억하고있던 시간의 차이가 800ms 를 초과한다면 Montage 를 재생하고싶다.
+
+		if ( curMilSec - milliseconds > 800 )
+		{
+			milliseconds = curMilSec;
+			this->PlayAnimMontage(rollMontage);
+		}
 	}
 }
 

@@ -73,8 +73,6 @@ public:
 
 	////////////////////////// 기본 공격 //////////////////////////
 	UFUNCTION(BlueprintCallable)
-	void IsAutoAttack(bool isAttacking);
-	UFUNCTION(BlueprintCallable)
 	void StartAttack();
 	UFUNCTION(BlueprintCallable)
 	void EndAttack();
