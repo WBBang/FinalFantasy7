@@ -68,6 +68,7 @@ void AFinalBossCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AttackLength();
 	MakeBilboard();
+	
 }
 
 // Called to bind functionality to input
@@ -136,5 +137,9 @@ void AFinalBossCharacter::TakeDamage(int damage)
 {
 	currentHp -= damage;
 	bossHPWidget->SetHP(currentHp, maxHP);
+	if (currentHp <= 0)
+	{
+		isDead = true;
+	}
 }
 

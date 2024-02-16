@@ -58,6 +58,8 @@ void UFinalBossFSM::TickIdle()
 	if(me->playerLength < detectRange)
 		SetState(EFinalBossState::MOVE);
 	
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
 }
 
 void UFinalBossFSM::TickMove()
@@ -81,11 +83,15 @@ void UFinalBossFSM::TickMove()
 	 	SetState(EFinalBossState::RUSH);
 	}
 
-	
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
 }
 
 void UFinalBossFSM::TickNormalAttack()
 {
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
+	
 	float length = target->GetDistanceTo(me);
 	currentTime += GetWorld()->GetDeltaSeconds();
 	normalAttackCount++;
@@ -98,6 +104,7 @@ void UFinalBossFSM::TickNormalAttack()
 		{
 			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
+
 }
 
 void UFinalBossFSM::TickGatlingAttack()
@@ -147,6 +154,9 @@ void UFinalBossFSM::TickGatlingAttack()
 
 void UFinalBossFSM::TickFireMissile()
 {
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
+	
 	SetState(EFinalBossState :: IDLE);
 }
 
@@ -157,6 +167,9 @@ void UFinalBossFSM::TickLaunchBomb()
 
 void UFinalBossFSM::TickRush()
 {
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
+	
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
 	if(dist < 3000)
 	{
@@ -175,6 +188,9 @@ void UFinalBossFSM::TickRush()
 
 void UFinalBossFSM::TickJumpAttack()
 {
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
+	
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
 	if(dist < 3000)
 	{
@@ -193,6 +209,9 @@ void UFinalBossFSM::TickJumpAttack()
 
 void UFinalBossFSM::TickGroggy()
 {
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
+	
 	FTimerHandle MyTimer;
 	float Time = 5.0f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()

@@ -68,6 +68,7 @@ public:
 	int32 fireNum = 0;
 	float maxHP = 10000;
 	float currentHp;
+	bool isDead = false;
 	
 	
 
