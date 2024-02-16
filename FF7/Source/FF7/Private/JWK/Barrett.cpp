@@ -4,16 +4,17 @@
 #include "JWK/Barrett.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "JWK/BulletActor.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "JWK/Bullet_Energy.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
-#include "../../../../../../../Source/Runtime/Engine/Classes/Camera/PlayerCameraManager.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "JWK/BarretHPWidget.h"
 
 ///////////////////////// Barrett /////////////////////////
@@ -28,6 +29,8 @@ ABarrett::ABarrett()
 
 	cameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("cameraComp"));
 	cameraComp->SetupAttachment(springArmComp);
+
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> tempMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/JWK/Barrett_Mixamo/Barrett.Barrett'"));
 	if ( tempMesh.Succeeded() )
@@ -76,14 +79,13 @@ void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Move();
-
-	if ( IsSkill == true && !IsCountered && !IsDie )
+	if ( IsSkill == true && IsCountered == false && IsDie == false )
 	{
 		EnergyFire();
 		IsSkill = false;
 	}
 
-	if ( IsFire == true && IsCountered && !IsDie )
+	if ( IsFire == true && IsCountered == false && IsDie == false )
 	{
 		CurFireTime += DeltaTime;                                                  // auto Fire 타이머
 		AttackEndTime += DeltaTime;                                                // IsFire 타이머
@@ -189,33 +191,13 @@ void ABarrett::OnAxisLookupPitch(float value)
 ///////////////////////// 기본공격 /////////////////////////
 void ABarrett::Fire()
 {
-	if ( !IsDie )
+	if ( IsDie == false )
 	{
-	// 총알 생성
-	FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
+		// 총알 생성
+		FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 
-	GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
+		GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
 	}
-
-	//double Seconds = FPlatformTime::Seconds();
-
-	//int64 curMilSec = static_cast<int64>( Seconds * 1000 );
-
-	//FTimerHandle BasicTimer;
-
-	//float BasicTime = 2;                                                       // 딜레이 타임
-
-	//
-	//if ( curMilSec - milliseconds > 3000 )                                     // 3초 쿨타임
-	//{
-	//	milliseconds = curMilSec;
-	//	GetWorld()->GetTimerManager().SetTimer(BasicTimer, FTimerDelegate::CreateLambda([ & ] ()
-	//		{
-	//			// 실행할 내용
-	//			// TimerHandle 초기화
-	//			GetWorld()->GetTimerManager().ClearTimer(BasicTimer);
-	//		}), BasicTime, false);
-	//}
 }
 
 ///////////////////////// 기본공격 시작 끝 /////////////////////////
@@ -252,7 +234,7 @@ void ABarrett::IsAutoAttack(bool isAttacking)
 ///////////////////////// 스킬공격 /////////////////////////
 void ABarrett::EnergyFire()
 {
-	if ( !IsDie )
+	if ( IsDie == false )
 	{
 		double Seconds = FPlatformTime::Seconds();
 		int64 curMilSec = static_cast<int64>( Seconds * 1000 );
@@ -296,16 +278,18 @@ void ABarrett::EnergyFire()
 void ABarrett::BarrettDamaged(int32 damage)
 {
 	FTimerHandle HitTimer;
-	float HitTime = 0.68f;
+	float HitTime = 0.3f;
 	IsAttacked = true;
 	BarrettHP -= damage;
-	if ( IsAttacked == true && !IsCountered && !IsDie )
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	if ( BarrettHP > 0 && IsAttacked == true && IsCountered == false && IsDie == false )
 	{
 		this->PlayAnimMontage(HitMontage);
 		GetWorld()->GetTimerManager().SetTimer(HitTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
 				// 실행할 내용
 				IsAttacked = false;
+				GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(HitTimer);
 			}), HitTime, false);
@@ -316,8 +300,10 @@ void ABarrett::BarrettDamaged(int32 damage)
 	{
 		if ( !IsDie )
 		{
+			movementComp->MaxWalkSpeed = 0;
 			IsDie = true;
 			this->PlayAnimMontage(DieMontage);
+			GetCharacterMovement()->SetMovementMode(MOVE_None);
 		}
 		BarrettHP = 0;
 	}
@@ -329,14 +315,18 @@ void ABarrett::BarrettDamaged(int32 damage)
 ///////////////////////// 카운터 공격 당함 /////////////////////////
 void ABarrett::BarrettDamagedKnockBack(int32 damage)
 {
+	IsFire = false;
 	IsCountered = true;
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
 	FTimerHandle CounterHitTimer;
 	FTimerHandle StandUpTimer;
+	FTimerHandle CanMoveTimer;
 
 
 	// 딜레이 타임
 	float CounterHitTime = 2;
 	float StandUpTime = 3;
+	float CanMoveTime = 4.5;
 
 	BarrettHP -= damage;
 
@@ -347,32 +337,46 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 		{
 			IsDie = true;
 			this->PlayAnimMontage(DieMontage);
+			GetCharacterMovement()->SetMovementMode(MOVE_None);
 		}
 		BarrettHP = 0;
 	}
+
+	if ( BarrettHP > 0 )
+	{
+
+		// CounterHitMontage 재생
+		this->PlayAnimMontage(CounterHitMontage);
+
+		// 넘어지고 나서 2초 뒤 기상 애니메이션
+		GetWorld()->GetTimerManager().SetTimer(CounterHitTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// StandUp Montage 재생
+				this->PlayAnimMontage(StandUpMontage);
+				IsCountered = false;
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(CounterHitTimer);
+			}), CounterHitTime, false);
+
+		// 일어나기 시작하고 나서 3초 뒤 판정 리셋
+		GetWorld()->GetTimerManager().SetTimer(StandUpTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// StandUp Montage 재생
+				IsCountered = false;
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(StandUpTimer);
+			}), StandUpTime, false);
+
+		// 완전히 일어날 때 까지 이동X
+		GetWorld()->GetTimerManager().SetTimer(CanMoveTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// StandUp Montage 재생
+				GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(CanMoveTimer);
+			}), CanMoveTime, false);
+	}
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
-
-	// CounterHitMontage 재생
-	this->PlayAnimMontage(CounterHitMontage);
-
-	// 넘어지고 나서 1.92초 뒤 기상 애니메이션
-	GetWorld()->GetTimerManager().SetTimer(CounterHitTimer, FTimerDelegate::CreateLambda([ & ] ()
-		{
-			// StandUp Montage 재생
-			this->PlayAnimMontage(StandUpMontage);
-			IsCountered = false;
-			// TimerHandle 초기화
-			GetWorld()->GetTimerManager().ClearTimer(CounterHitTimer);
-		}), CounterHitTime, false);
-
-	// 일어나기 시작하고 나서 2.76초 뒤 판정 리셋
-	GetWorld()->GetTimerManager().SetTimer(StandUpTimer, FTimerDelegate::CreateLambda([ & ] ()
-		{
-			// StandUp Montage 재생
-			IsCountered = false;
-			// TimerHandle 초기화
-			GetWorld()->GetTimerManager().ClearTimer(StandUpTimer);
-		}), StandUpTime, false);
 }
 
 

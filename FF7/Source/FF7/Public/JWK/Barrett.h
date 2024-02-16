@@ -43,7 +43,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UCameraComponent* cameraComp;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCharacterMovementComponent* movementComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector direction;
@@ -61,7 +62,6 @@ public:
 	bool S = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool D = false;
-	
 
 	//////////////////////// 스킬 ////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
