@@ -13,8 +13,12 @@ void UFinalBossAnimInstance::NativeInitializeAnimation()
 	if(owner != nullptr)
 		return;
 
-	//AFinalBossCharacter* me = Cast<AFinalBossCharacter>(owner);
-	//finalBossFsm = me->bossFsm;
+	AFinalBossCharacter* me = Cast<AFinalBossCharacter>(owner);
+
+	if(me != nullptr)
+		finalBossFsm = me->bossFsm;
+	else
+		return;
 	
 		
 }
@@ -31,6 +35,6 @@ void UFinalBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UFinalBossAnimInstance::AnimNotify_Attack()
 {
 	auto barrett = Cast<ABarrett>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Test!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Test!"));
 	barrett->BarrettDamaged(20);
 }

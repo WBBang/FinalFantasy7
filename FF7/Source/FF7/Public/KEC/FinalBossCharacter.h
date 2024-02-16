@@ -69,6 +69,9 @@ public:
 	float maxHP = 10000;
 	float currentHp;
 	bool isDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool isSecondPhase = false;
 	
 	
 

@@ -59,7 +59,7 @@ void AFinalBossCharacter::BeginPlay()
 	currentHp = FMath::Clamp(currentHp,0, maxHP);
 	bossHPWidget = Cast<UFBHPWidget>(healthUI->GetWidget());
 	//Fire();
-	//LauchMissile();
+	LauchMissile();
 }	
 
 // Called every frame
@@ -140,6 +140,11 @@ void AFinalBossCharacter::TakeDamage(int damage)
 	if (currentHp <= 0)
 	{
 		isDead = true;
+	}
+
+	if (currentHp <= maxHP/2)
+	{
+		isSecondPhase = true;
 	}
 }
 
