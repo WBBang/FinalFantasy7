@@ -85,7 +85,7 @@ void ABarrett::Tick(float DeltaTime)
 	Move();
 
 	// 기본공격을 했을 때
-	if ( IsFire == true )
+	if ( IsFire == true && !IsAttacked && !IsCountered )
 	{
 		// auto Fire 타이머
 		CurFireTime += DeltaTime;
@@ -232,9 +232,11 @@ void ABarrett::StartAttack()
 
 void ABarrett::EndAttack()
 {
-	IsFire = false;
-	CurFireTime = MaxFireTime;
-	StopAnimMontage();
+	if ( IsFire == true && !IsAttacked && !IsCountered ) {
+		IsFire = false;
+		CurFireTime = MaxFireTime;
+		StopAnimMontage();
+	}
 }
 
 //void ABarrett::IsAutoAttack(bool isAttacking)
@@ -255,7 +257,7 @@ void ABarrett::EndAttack()
 ///////////////////////// 스킬공격 /////////////////////////
 void ABarrett::EnergyFire()
 {
-	if ( IsDie == false )
+	if ( IsDie == false && !IsAttacked && !IsCountered)
 	{
 		double Seconds = FPlatformTime::Seconds();
 		int64 curMilSec = static_cast<int64>( Seconds * 1000 );
