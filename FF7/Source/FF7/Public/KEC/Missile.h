@@ -28,15 +28,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AMissile* missile;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// class USkeletalMeshComponent* skeletalMeshComp;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// class UCapsuleComponent* capsuleComponent;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// class UNiagaraComponent* MissileNiagara;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USphereComponent* sphereComp;
 
@@ -52,10 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float missileSpeed = 5000.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float delayTime = 1.5f;
+	UPROPERTY(EditAnywhere)
+	class ABarrett* player;
 	
-
 	void LaunchMissile();
 	void CruiseMissile();
 
@@ -72,4 +62,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool dirSet;
+
+	float currentTime = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float delayTime = 1.5f;
+	
 };
