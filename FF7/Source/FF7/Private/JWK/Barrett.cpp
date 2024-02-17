@@ -186,6 +186,7 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABarrett::Move()
 {
+	if ( IsAttacked || IsCountered ) return;
 	FTransform trans = GetActorTransform();
 	AddMovementInput(trans.TransformVector(direction));
 }
@@ -301,7 +302,7 @@ void ABarrett::BarrettDamaged(int32 damage)
 	float HitTime = 0.3f;
 	IsAttacked = true;
 	BarrettHP -= damage;
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	//GetCharacterMovement()->SetMovementMode(MOVE_None);
 	if ( BarrettHP > 0 && IsAttacked == true && IsCountered == false && IsDie == false )
 	{
 		this->PlayAnimMontage(HitMontage);
@@ -335,13 +336,14 @@ void ABarrett::BarrettDamaged(int32 damage)
 ///////////////////////// 카운터 공격 당함 /////////////////////////
 void ABarrett::BarrettDamagedKnockBack(int32 damage)
 {
+	if ( IsCountered ) return;
 	IsFire = false;
 	IsCountered = true;
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	//GetCharacterMovement()->SetMovementMode(MOVE_None);
 	FTimerHandle CounterHitTimer;
 	FTimerHandle StandUpTimer;
 	FTimerHandle CanMoveTimer;
-
+	FTimerHandle MyTimer;
 
 	// 딜레이 타임
 	float CounterHitTime = 2;
@@ -365,15 +367,25 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 	if ( BarrettHP > 0 )
 	{
 
-		// CounterHitMontage 재생
-		this->PlayAnimMontage(CounterHitMontage);
 
+		// 1초 뒤에 하늘로 보내기
+		float Time = 0.5f;
+		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
+			{
+				// CounterHitMontage 재생
+				this->PlayAnimMontage(CounterHitMontage);
+
+				LaunchCharacter(GetActorUpVector() * 1000, false, false);
+				// TimerHandle 초기화
+				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
+			}), Time, false);
+		
 		// 넘어지고 나서 2초 뒤 기상 애니메이션
 		GetWorld()->GetTimerManager().SetTimer(CounterHitTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
 				// StandUp Montage 재생
 				this->PlayAnimMontage(StandUpMontage);
-				IsCountered = false;
+				// IsCountered = false; <- 애니메이션 노티파이에서 실행
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(CounterHitTimer);
 			}), CounterHitTime, false);
@@ -383,14 +395,13 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 			{
 				// StandUp Montage 재생
 				GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-				IsCountered = false;
+				// IsCountered = false; // ABP에서 notify로 처리
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(CanMoveTimer);
 			}), CanMoveTime, false);
 	}
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 }
-
 
 ////////////////////////// 락온 ////////////////////////
 void ABarrett::LockOn()
@@ -457,7 +468,7 @@ void ABarrett::LockOn()
 ////////////////////////// 구르기 //////////////////////////
 void ABarrett::OnActionRoll()
 {
-	if ( IsDie == false )
+	if ( IsDie == false && IsAttacked == false && IsCountered  == false )
 	{
 		double Seconds = FPlatformTime::Seconds();
 		int64 curMilSec = static_cast<int64>( Seconds * 1000 );

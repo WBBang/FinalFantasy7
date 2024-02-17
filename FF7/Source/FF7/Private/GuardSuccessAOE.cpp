@@ -97,11 +97,8 @@ void AGuardSuccessAOE::NotifyActorBeginOverlap(AActor* OtherActor)
 		GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Black, TEXT("ShockWaveAttack"));
 
 		ABarrett* player = Cast<ABarrett>(OtherActor);
-
-		//player->LaunchCharacter(player->GetActorUpVector() * 10000000, false, false);
-
-		// 플레이어 데미지 처리하고 넘어지는 함수, 호출
 		player->BarrettDamagedKnockBack(10);
+
 	}
 }
 

@@ -125,7 +125,7 @@ public:
 	int32 BarrettHP = BarrettMaxHP;
 	UPROPERTY(EditAnywhere)
 	bool IsAttacked = false;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsCountered = false;
 
 	UPROPERTY(EditAnywhere)

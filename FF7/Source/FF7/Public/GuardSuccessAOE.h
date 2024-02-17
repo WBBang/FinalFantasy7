@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "JWK/Barrett.h"
 #include "GuardSuccessAOE.generated.h"
 
 UCLASS()
