@@ -186,7 +186,7 @@ void ABarrett::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABarrett::Move()
 {
-	if ( IsAttacked || IsCountered ) return;
+	if ( IsAttacked || IsCountered || IsDie) return;
 	FTransform trans = GetActorTransform();
 	AddMovementInput(trans.TransformVector(direction));
 }
