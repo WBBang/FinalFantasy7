@@ -346,10 +346,11 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 	FTimerHandle MyTimer;
 
 	// 딜레이 타임
-	float CounterHitTime = 2;
+	float CounterHitTime = 3;
 	float StandUpTime = 3;
 	float CanMoveTime = 4.5;
-
+	float FlyTime = 0.5f;
+	
 	BarrettHP -= damage;
 
 	// 만약 바레트의 체력이 0 이 되면
@@ -366,10 +367,7 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 
 	if ( BarrettHP > 0 )
 	{
-
-
 		// 1초 뒤에 하늘로 보내기
-		float Time = 0.5f;
 		GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
 				// CounterHitMontage 재생
@@ -378,7 +376,7 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 				LaunchCharacter(GetActorUpVector() * 1000, false, false);
 				// TimerHandle 초기화
 				GetWorld()->GetTimerManager().ClearTimer(MyTimer);
-			}), Time, false);
+			}), FlyTime, false);
 		
 		// 넘어지고 나서 2초 뒤 기상 애니메이션
 		GetWorld()->GetTimerManager().SetTimer(CounterHitTimer, FTimerDelegate::CreateLambda([ & ] ()
