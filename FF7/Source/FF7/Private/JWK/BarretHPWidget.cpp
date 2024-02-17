@@ -15,3 +15,8 @@ void UBarretHPWidget::SetBarrettHP(int32 BarrettHP, int32 BarrettMaxHP)
 
 	BarrettHPBar->SetPercent((float)BarrettHP / BarrettMaxHP);
 }
+
+void UBarretHPWidget::SetBarretSkillTime(int32 BarrettSkill, int32 BarrettMaxSkill)
+{
+	BarrettSkillBar->SetPercent((float)BarrettSkill / BarrettMaxSkill);
+}

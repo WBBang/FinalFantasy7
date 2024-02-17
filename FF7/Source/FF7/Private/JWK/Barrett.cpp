@@ -76,12 +76,15 @@ void ABarrett::BeginPlay()
 	BarretUI = CreateWidget<UBarretHPWidget>(GetWorld(), HPUIFactory);
 	BarretUI->AddToViewport(1);
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
+
+	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
 }
 
 // Called every frame
 void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	BarrettSkill += DeltaTime;
 	Move();
 
 	// 기본공격을 했을 때
@@ -159,6 +162,7 @@ void ABarrett::Tick(float DeltaTime)
 		}
 	}
 
+	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
 }
 
 ///////////////////////// 플레이어 키 입력 /////////////////////////
@@ -288,10 +292,11 @@ void ABarrett::EnergyFire()
 						return;
 					}
 					GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(WangBBang, 1.0f);
+					BarrettSkill -= 5;
 					// TimerHandle 초기화
 					GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
 				}), SkillTime, false);
-
+			BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
 		}
 	}
 }

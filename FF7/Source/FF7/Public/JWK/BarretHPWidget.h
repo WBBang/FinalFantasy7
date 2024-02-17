@@ -18,6 +18,9 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = ( BindWidget ))
 	class UProgressBar* BarrettHPBar;
+	UPROPERTY(EditAnywhere, meta = ( BindWidget ))
+	class UProgressBar* BarrettSkillBar;
+
 
 	UPROPERTY(EditAnywhere, meta = ( BindWidget ));
 	class UTextBlock* BarrettCurHP;
@@ -26,4 +29,5 @@ public:
 
 	void SetBarrettHP(int32 BarrettHP, int32 BarrettMaxHP);
 
+	void SetBarretSkillTime(int32 BarrettSkill, int32 BarrettMaxSkill);
 };
