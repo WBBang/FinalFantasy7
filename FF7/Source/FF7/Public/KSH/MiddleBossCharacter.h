@@ -131,6 +131,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
 	float canAttackRange;													// 평타 범위
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<UCameraShakeBase> CSAttack;									// Camera Shake - 평타
+
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;		// 기본 공격 충돌 처리 (Overlap으로만 받아서 몸체랑은 처리안하게)
 	void SetRightHandCompColl(bool IsColl);
 	void SetLeftHandCompColl(bool IsColl);

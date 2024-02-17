@@ -198,6 +198,10 @@ void AMiddleBossCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		// 플레이어 데미지 처리 함수 호출
 		barrett->BarrettDamaged(5);
+
+		// 카메라 흔들기
+		if ( nullptr == CSAttack )return;
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSAttack, 0.5f);
 	}
 }
 
