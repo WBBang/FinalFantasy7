@@ -75,10 +75,13 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	ShieldComp->SetCollisionProfileName(TEXT("NoCollision"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh>sphereTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	ConstructorHelpers::FObjectFinder<UMaterial>shieldMatTemp(TEXT("/Script/Engine.Material'/Game/KSH/VX/ShieldMaterial.ShieldMaterial'"));
-	if ( sphereTemp.Succeeded() && shieldMatTemp.Succeeded())
+	ConstructorHelpers::FObjectFinder<UMaterial>shieldMatRedTemp(TEXT("/Script/Engine.Material'/Game/KSH/VX/ShieldMaterialRed.ShieldMaterialRed'"));
+	if ( sphereTemp.Succeeded() && shieldMatTemp.Succeeded() && shieldMatRedTemp.Succeeded())
 	{
 		ShieldComp->SetStaticMesh(sphereTemp.Object);
 		ShieldComp->SetMaterial(0, shieldMatTemp.Object);
+		shieldMatBlue = shieldMatTemp.Object;
+		shieldMatRed = shieldMatRedTemp.Object;
 	}
 	ShieldComp->SetVisibility(false);
 }
@@ -94,6 +97,7 @@ void AMiddleBossCharacter::BeginPlay()
 	//IsGuarding = false;
 	IsGuardDeco = false;
 	GuardingDamage = 0;
+	GuardStartTempDamage = 0;
 
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = dummyCubeMesh->GetComponentLocation();
@@ -106,7 +110,6 @@ void AMiddleBossCharacter::BeginPlay()
 	MBNameUI = GetWorld()->SpawnActor<AMBNameActor>(MBName, locName, FRotator(0, 0, 0));
 	MBSkillNameUI = GetWorld()->SpawnActor<AMBSkillNameActor>(MBSkillName, locSkillName, FRotator(0, 0, 0));
 
-	guardBarUI->SetActorHiddenInGame(true);
 	MBSkillNameUI->SetActorHiddenInGame(true);
 }
 
@@ -127,35 +130,41 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
 		FVector camLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
 
-		// 항상 일정한 크기 유지
+		// 항상 일정한 크기 유지, 거리 비율에 따라 위치 수정
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
 		float distance = ( ( loc - camLoc ).Length() ) * 0.001;
 		if ( distance > 4 ) distance = 4.0f;
 		else if ( distance < 1 ) distance = 1.0f;
 
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
+
+		// HP
+		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
+		hpBarUI->UpdateScale(distance);
 		hpBarUI->UpdateLocation(locHP, LookAtRotation);
 
-		hpBarUI->UpdateScale(distance);
-		guardBarUI->UpdateScale(distance);
-		MBNameUI->UpdateScale(distance);
-		MBSkillNameUI->UpdateScale(distance);
+		// 가드
+		float locGuardZ = 5 - (distance * 10);
+		if ( distance < 1.5 ) locGuardZ = 10 - (distance * 7);
 
-		// 거리 비율에 따라 위치 수정
-		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5 - (distance * 5));
+		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + locGuardZ);
+		guardBarUI->UpdateScale(distance);
 		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 
+		// 이름
 		float locNameZ = distance * 30;
 		if ( locNameZ > 56 ) locNameZ = 56;
 		else if ( locNameZ < 35 ) locNameZ = 35;
 		FVector locName = FVector(loc.X, loc.Y + 10, loc.Z + locNameZ);
+		MBNameUI->UpdateScale(distance);
 		MBNameUI->UpdateLocation(locName, LookAtRotation);
 
+		// 스킬 이름
 		float locSkillNameZ = locNameZ + 30;
 		if ( locSkillNameZ > 85 ) locSkillNameZ = 85;
 		else if ( locSkillNameZ < 60 ) locSkillNameZ = 60;
 		FVector locSkillName = FVector(loc.X, loc.Y + 10, loc.Z + locSkillNameZ);
+		MBSkillNameUI->UpdateScale(distance);
 		MBSkillNameUI->UpdateLocation(locSkillName, LookAtRotation);
 	}
 }
@@ -189,6 +198,10 @@ void AMiddleBossCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		// 플레이어 데미지 처리 함수 호출
 		barrett->BarrettDamaged(5);
+
+		// 카메라 흔들기
+		if ( nullptr == CSAttack )return;
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSAttack, 0.5f);
 	}
 }
 
@@ -235,13 +248,6 @@ void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(int32 damage)
 // 우와아왕빵으로 맞은 경우
 void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 {
-	// 가드 상태가 아니라면
-	if ( false == IsGuardDeco )
-	{
-		// 경직 상태
-		IsHitStuning = true;
-	}
-
 	// 보스한테 데미지 처리
 	MiddleBossDamaged(damage);
 }
@@ -255,12 +261,21 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
+		// 가드 데미지가 GuardColorChangeDamage 이상되면 색 변함
+		if ( GuardingDamage >= GuardColorChangeDamage )
+		{
+			ShieldComp->SetMaterial(0, shieldMatRed);
+		}
+
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
 		// 기열파 애니메이션이 실행중이 아니라면
 		if ( !IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
 		{
 			//UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 			IsGuardSuccessDeco = true;
+
+			// 카메라 쉐이크
+
 		}
 	}
 
@@ -271,6 +286,9 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 데미지 받고
 		MiddleBossHP -= damage;
 
+		// 가드 시작용 누적 데미지 증가
+		GuardStartTempDamage += damage;
+
 		// 0이하라면
 		if ( MiddleBossHP <= 0 )
 		{
@@ -280,10 +298,14 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 			IsDyingDeco = true;
 		}
 
-		// 30% 확률로 
-		int randomNum = FMath::RandRange(0, 9);
-		if (randomNum < 3) // 0, 1, 2
+		// 누적 데미지가 가드 시작 데미지 이상이라면
+		else if ( GuardStartTempDamage >= GuardStartDamage )
 		{
+			// UI 숨기기
+			guardBarUI->SetActorHiddenInGame(true);
+
+			// 초기화하고 가드 시작
+			GuardStartTempDamage = 0;
 			IsGuardDeco = true;
 		}
 	}
@@ -314,7 +336,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
-		guardBarUI->SetActorHiddenInGame(true);
+		guardBarUI->SetActorHiddenInGame(false);
 		ShieldComp->SetVisibility(false);
 
 		// 스킬 이름 UI 숨기기
@@ -352,8 +374,6 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		// 스킬 이름 UI 숨기기
 		MBSkillNameUI->SetActorHiddenInGame(true);
 
-		guardBarUI->SetActorHiddenInGame(true);
-
 		IsGuardSuccessing = false;
 		IsGuardSuccessDeco = false;
 
@@ -380,10 +400,11 @@ void AMiddleBossCharacter::Guard()
 	if ( !IsGuardDeco ) return;
 	MBSkillNameUI->SetActorHiddenInGame(false);
 	SkillName = FString(TEXT("가드"));
-	guardBarUI->SetActorHiddenInGame(false);
+
 	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
+	ShieldComp->SetMaterial(0, shieldMatBlue);
 	ShieldComp->SetVisibility(true);
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());

@@ -25,8 +25,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+	// ----------------------- 컴포넌트 -----------------------
+private:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
+	class UCharacterMovementComponent* movementComp;
 
 public: 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -35,172 +39,209 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* dummyCubeMesh;
 
-	// 기본 공격 Collision
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
+	class UStaticMeshComponent* ShieldComp;									// Guard시 나오는 쉴드
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+
+	// ----------------------- 플레이어 관련 -----------------------
+private:
+	UPROPERTY()
+	class AActor* player;
+
+public:
+	UFUNCTION()
+	void MiddleBossDamagedByBasicBullet(int32 damage);						// 플레이어에게 기본 공격으로 맞은 경우
+
+	UFUNCTION()
+	void MiddleBossDamagedBySkillBullet(int32 damage);						// 플레이어에게 스킬 공격으로 맞은 경우
+
+	UFUNCTION(BlueprintCallable)
+	void MiddleBossDamaged(int32 damage);									// 공격 당하면 무조건 호출하는 함수
+
+
+
+	// ----------------------- 중간 보스 -----------------------
+private:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
+	int32 MiddleBossHP;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
+	int32 MiddleBossMaxHP = 100;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
+	class AMBHpBarActor* hpBarUI;											// HP Bar 레퍼런스 변수
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
+	class AMBNameActor* MBNameUI;											// 이름 UI 레퍼런스 변수
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
+	class AMBGuardBarActor* guardBarUI;										// Guard Bar 레퍼런스 변수
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
+	class AMBSkillNameActor* MBSkillNameUI;									// 스킬명 UI 레퍼런스 변수
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
+	FString SkillName;														// 스킬명
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBHpBarActor> hpBar;									// HP Bar
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBNameActor> MBName;									// 이름 UI
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBGuardBarActor> guardBar;							// Guard Bar
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBSkillNameActor> MBSkillName;						// 스킬명 UI
+
+
+
+	// ----------------------- 애니메이션 -----------------------
+private:
+	UFUNCTION()
+	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+public:
+
+
+
+	// ----------------------- 평타 -----------------------
+private:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	bool IsAttacking;
+
+	void Attack();
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* rightHandComp;
+	class UCapsuleComponent* rightHandComp;									// 오른손 Collision
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* leftHandComp;
-	
-	// 기본 공격 충돌 처리 (Overlap으로만 받아서 몸체랑은 처리안하게)
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-	void SetRightHandCompColl(bool IsColl);
-	void SetLeftHandCompColl(bool IsColl);
+	class UCapsuleComponent* leftHandComp;									// 왼손 Collision
 	
 	UPROPERTY(EditAnywhere)
 	bool IsDuringAttack;
 
-	// HP Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
-	TSubclassOf<class AMBHpBarActor> hpBar;
-
-	// HP Bar 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	class AMBHpBarActor* hpBarUI;
-
-	// 게임 클리어 때 부를 액터 공장
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
-	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;
-
-	// Guard Bar
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
-	TSubclassOf<class AMBGuardBarActor> guardBar;
-
-	// Guard Bar 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	class AMBGuardBarActor* guardBarUI;
-
-	// Guard시 나오는 쉴드
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
-	class UStaticMeshComponent* ShieldComp;
-
-	// 이름 UI
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
-	TSubclassOf<class AMBNameActor> MBName;
-	// 이름 UI 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	class AMBNameActor* MBNameUI;
-
-	// 스킬명 UI
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
-	TSubclassOf<class AMBSkillNameActor> MBSkillName;
-	// 스킬명 UI 레퍼런스 변수
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	class AMBSkillNameActor* MBSkillNameUI;
-	// 스킬명
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	FString SkillName;
-
-	// 기열파 장판
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
-	TSubclassOf<class AGuardSuccessAOE> aoeActor;
+	float canAttackRange;													// 평타 범위
 
-	// 지면 충격파 불덩이
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
-	TSubclassOf<class AShockWaveAOE> shockWaveActor;
+	TSubclassOf<UCameraShakeBase> CSAttack;									// Camera Shake - 평타
 
-	// 공격 범위
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
-	float canAttackRange;
-
-	// 스킬 범위
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
-	float canSkillRange;
-
-	// 플레이어에게 기본 공격으로 맞은 경우
-	UFUNCTION()
-	void MiddleBossDamagedByBasicBullet(int32 damage);
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;		// 기본 공격 충돌 처리 (Overlap으로만 받아서 몸체랑은 처리안하게)
+	void SetRightHandCompColl(bool IsColl);
+	void SetLeftHandCompColl(bool IsColl);
 	
-	// 플레이어에게 스킬 공격으로 맞은 경우
-	UFUNCTION()
-	void MiddleBossDamagedBySkillBullet(int32 damage);
-	
-	// 공격 당함
-	UFUNCTION(BlueprintCallable)
-	void MiddleBossDamaged(int32 damage);
 
-	// 가드 아예 끝나는거 BTTask에서 하게
-	UFUNCTION(BlueprintCallable)
-	void SetIsGuarding(bool isGuarding);
 
-	// Camera Shake - 지면 충격파
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
-	TSubclassOf<UCameraShakeBase> CSShockWave;
-
-	
+	// ----------------------- 스킬 ----------------------- 
 private:
 
-	// 플레이어
-	UPROPERTY()
-	class AActor* player;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	float canSkillRange;													// 스킬 범위
 
-	void Attack();
 
-	UFUNCTION()
-	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta=(AllowPrivateAccess = true))
-	bool IsAttacking;
+	// ----------------------- 가드 ----------------------- 
+private:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 GuardStartTempDamage = 0;											// 가드 시작하는지 판단 누적 데미지
 
-	// 가드 확률 터졌는지 판단하는 변수(BT Decorator용)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 GuardStartDamage = 15;											// 가드 시작하는 데미지
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 GuardingDamage;													// 가드 중일 때 누적되는 데미지
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 GuardColorChangeDamage = 8;										// 가드 색 변하는 데미지
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 CounterDamage = 10;												// 가드 카운터되는 데미지
+
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsGuardDeco;
+	bool IsGuardDeco;														// 가드 시작인지 판단하는 변수(BT Decorator용)
 
 	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuarding;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	class UMaterial* shieldMatBlue;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	class UMaterial* shieldMatRed;
+
+	void Guard();															// 가드
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetIsGuarding(bool isGuarding);									// 가드 아예 끝나는거 BTTask에서 하게
+
+
+
+	// ----------------------- 가드 성공 ----------------------- 
+private:
 	// 가드 성공했는지 판단하는 변수(BT Decorator용)
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	bool IsGuardSuccessDeco;
 
-	// 기열파 실행중인지 판단하는 변수
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsGuardSuccessing;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	bool IsGuardSuccessing;													// 기열파 실행중인지 판단 변수
 
+	void GuardSuccess();													// 기열파
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<class AGuardSuccessAOE> aoeActor;							// 기열파 장판
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<class AShockWaveAOE> shockWaveActor;						// 지면 충격파 불덩이
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<UCameraShakeBase> CSShockWave;								// Camera Shake - 지면 충격파
+
+
+
+	// ----------------------- 지면 충격파 ----------------------- 
+private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsShockWaving;
 
-	// 경직중인지 판단
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
-	bool IsHitStuning;
+	void ShockWave(); 														// 지면 충격파
+
+public:
 
 
-	// 죽어있는지 판단
+
+	// ----------------------- 죽기 ----------------------- 
+private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
-	bool IsDying;
-	// Decorator용
+	bool IsDying;															// 죽어있는지 판단
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
-	bool IsDyingDeco;
+	bool IsDyingDeco;														// Decorator용
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
-	int32 GuardingDamage;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
-	int32 CounterDamage = 3;
+public:
 
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	class UCharacterMovementComponent* movementComp;
 
-	// 기열파
-	void GuardSuccess();
+	// ----------------------- 게임 이벤트 ----------------------- 
+private:
+	void MBGameClear();														// 게임 클리어
 
-	// 지면 충격파
-	void ShockWave();
-
-	// 가드
-	void Guard();
-
-	// 게임 클리어
-	void MBGameClear();
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
+	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;	// 게임 클리어 때 부를 액터 공장
 
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	int32 MiddleBossHP;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = (AllowPrivateAccess = true))
-	int32 MiddleBossMaxHP = 1000;
-
-// AI Section
+	// ----------------------- AI ----------------------- 
 protected:
 	virtual float GetAIPatrolRadius() override;
 	virtual float GetAIDetectRange() override;
