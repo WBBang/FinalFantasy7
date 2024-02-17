@@ -69,6 +69,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShakeBase> WangBBang;
+	UPROPERTY(EditAnywhere)
+	int32 BarrettMaxSkill = 10;
+	UPROPERTY(EditAnywhere)
+	int32 BarrettSkill = BarrettMaxSkill;
 
 
 	////////////////////////// 기본 공격 //////////////////////////

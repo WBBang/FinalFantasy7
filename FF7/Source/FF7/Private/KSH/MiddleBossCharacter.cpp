@@ -282,7 +282,7 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 
 		// 30% 확률로 
 		int randomNum = FMath::RandRange(0, 9);
-		//if (randomNum < 3) // 0, 1, 2
+		if (randomNum < 3) // 0, 1, 2
 		{
 			IsGuardDeco = true;
 		}
