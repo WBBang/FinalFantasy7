@@ -73,7 +73,8 @@ void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
 	AFinalBossCharacter* finalBoss = Cast<AFinalBossCharacter>(OtherActor);
 	if ( nullptr != middleBoss )
 	{
-		middleBoss->MiddleBossDamagedByBasicBullet(3);
+		int randDamage = FMath::RandRange(1, 3);
+		middleBoss->MiddleBossDamagedByBasicBullet(randDamage);
 
 		// 총알은 사라지기
 		Destroy();

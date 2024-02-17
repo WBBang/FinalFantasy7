@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,4 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+	// ------------ 컴포넌트 ------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTextRenderComponent* textRender;
+
+	// ------------ 데미지 ------------
+	UFUNCTION(BlueprintCallable)
+	void SetDamageText(int32 AttackType, int32 Damage);
 };

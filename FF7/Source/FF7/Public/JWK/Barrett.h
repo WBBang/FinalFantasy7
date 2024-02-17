@@ -144,6 +144,8 @@ public:
 	void BarrettDamaged(int32 damage);
 	UFUNCTION(BlueprintCallable)
 	void BarrettDamagedKnockBack(int32 damage);
+	UFUNCTION(BlueprintCallable)
+	void BarrettDamagedLittleKnockBack();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

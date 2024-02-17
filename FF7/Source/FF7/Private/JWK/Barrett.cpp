@@ -422,6 +422,18 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 }
 
+void ABarrett::BarrettDamagedLittleKnockBack()
+{
+	IsAttacked = true;
+
+	if ( BarrettHP > 0 && IsAttacked == true && IsCountered == false && IsDie == false )
+	{
+		// 하드 코딩.. (ShockWave 장판일 때 뒤로 미는걸 많이 하게) <- 시간이 없어서 우선 이렇게 함
+		FVector launchVelo = ( GetActorForwardVector() * -400 ) + ( GetActorUpVector() * 400 );
+		LaunchCharacter(launchVelo, false, false);
+	}
+}
+
 ////////////////////////// 락온 ////////////////////////
 void ABarrett::LockOn()
 {

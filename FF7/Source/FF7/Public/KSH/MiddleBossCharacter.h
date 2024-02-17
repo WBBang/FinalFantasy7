@@ -52,6 +52,7 @@ private:
 	UPROPERTY()
 	class AActor* player;
 
+	
 public:
 	UFUNCTION()
 	void MiddleBossDamagedByBasicBullet(int32 damage);						// 플레이어에게 기본 공격으로 맞은 경우
@@ -61,7 +62,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void MiddleBossDamaged(int32 damage);									// 공격 당하면 무조건 호출하는 함수
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class AMBDamageTextUI> MBDamageTextUI;						// 공격 당하면 나오는 데미지
 
+	UFUNCTION()
+	void MiddleBossDamagedText(int32 AttackType, int32 damage);				// 공격 당하면 데미지 출력하는 함수
 
 
 	// ----------------------- 중간 보스 -----------------------

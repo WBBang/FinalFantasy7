@@ -16,6 +16,7 @@
 #include "JWK/Barrett.h"
 #include "KSH/UI/MBNameActor.h"
 #include "KSH/UI/MBSkillNameActor.h"
+#include "KSH/UI/MBDamageTextUI.h"
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
@@ -261,6 +262,9 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
+		// 데미지 텍스트 함수 호출
+		MiddleBossDamagedText(1, damage);
+
 		// 가드 데미지가 GuardColorChangeDamage 이상되면 색 변함
 		if ( GuardingDamage >= GuardColorChangeDamage )
 		{
@@ -286,6 +290,9 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 가드 시작용 누적 데미지 증가
 		GuardStartTempDamage += damage;
 
+		// 데미지 텍스트 함수 호출
+		MiddleBossDamagedText(0, damage);
+
 		// 0이하라면
 		if ( MiddleBossHP <= 0 )
 		{
@@ -305,6 +312,20 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 			GuardStartTempDamage = 0;
 			IsGuardDeco = true;
 		}
+	}
+}
+
+void AMiddleBossCharacter::MiddleBossDamagedText(int32 AttackType, int32 damage)
+{
+	// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
+	FVector loc = dummyCubeMesh->GetComponentLocation();
+	FVector camLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+	FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
+
+	auto damageTextUI = GetWorld()->SpawnActor<AMBDamageTextUI>(MBDamageTextUI, loc + ( dummyCubeMesh->GetRightVector() * -50 ), LookAtRotation);
+	if ( nullptr != damageTextUI )
+	{
+		damageTextUI->SetDamageText(AttackType, damage);
 	}
 }
 
