@@ -4,6 +4,7 @@
 #include "KEC/FinalBossCharacter.h"
 #include "Components/ArrowComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "KEC/BossBullet.h"
 #include "KEC/FBHPWidget.h"
 #include "KEC/FinalBossFSM.h"
@@ -59,7 +60,7 @@ void AFinalBossCharacter::BeginPlay()
 	currentHp = FMath::Clamp(currentHp,0, maxHP);
 	bossHPWidget = Cast<UFBHPWidget>(healthUI->GetWidget());
 	//Fire();
-	LauchMissile();
+	
 }	
 
 // Called every frame
@@ -145,6 +146,7 @@ void AFinalBossCharacter::TakeDamage(int damage)
 	if (currentHp <= maxHP/2)
 	{
 		isSecondPhase = true;
+		this->GetCharacterMovement()->MaxWalkSpeed = 800;
 	}
 }
 

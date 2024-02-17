@@ -5,22 +5,23 @@
 
 #include "JWK/Barrett.h"
 #include "KEC/FinalBossCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 void UFinalBossAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
-	auto owner = TryGetPawnOwner();
-	if(owner != nullptr)
-		return;
 
-	AFinalBossCharacter* me = Cast<AFinalBossCharacter>(owner);
+	me = Cast<AFinalBossCharacter>(TryGetPawnOwner());
 
 	if(me != nullptr)
+	{
 		finalBossFsm = me->bossFsm;
+	}
 	else
+	{
 		return;
+	}
 	
-		
 }
 
 void UFinalBossAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -38,3 +39,13 @@ void UFinalBossAnimInstance::AnimNotify_Attack()
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Test!"));
 	barrett->BarrettDamaged(20);
 }
+
+void UFinalBossAnimInstance::AnimNotify_Launch()
+{
+		
+	if( me != nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Test!"));
+		me->LauchMissile();
+	}
+} 

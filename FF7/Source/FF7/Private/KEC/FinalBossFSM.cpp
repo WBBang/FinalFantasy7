@@ -162,6 +162,7 @@ void UFinalBossFSM::TickFireMissile()
 
 void UFinalBossFSM::TickLaunchBomb()
 {
+	SetState(EFinalBossState :: MOVE);
 }
 
 

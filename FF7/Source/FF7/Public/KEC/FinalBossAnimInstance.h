@@ -24,8 +24,13 @@ public:
 
 	UPROPERTY()
 	class UFinalBossFSM* finalBossFsm;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class AFinalBossCharacter* me;
 	
 	UFUNCTION()
 	void AnimNotify_Attack();
+
+	UFUNCTION()
+	void AnimNotify_Launch();
 };
