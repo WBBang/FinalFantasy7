@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* dummyCubeMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
+	class UStaticMeshComponent* ShieldComp;									// Guard시 나오는 쉴드
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -67,7 +70,7 @@ private:
 	int32 MiddleBossHP;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Moving, Meta = ( AllowPrivateAccess = true ))
-	int32 MiddleBossMaxHP = 1000;
+	int32 MiddleBossMaxHP = 100;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = UI, Meta = ( AllowPrivateAccess = true ))
 	class AMBHpBarActor* hpBarUI;											// HP Bar 레퍼런스 변수
@@ -155,13 +158,22 @@ private:
 	int32 GuardingDamage;													// 가드 중일 때 누적되는 데미지
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
-	int32 CounterDamage = 3;												// 가드 카운터되는 데미지
+	int32 GuardColorChangeDamage = 8;										// 가드 색 변하는 데미지
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	int32 CounterDamage = 10;												// 가드 카운터되는 데미지
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuardDeco;														// 가드 시작인지 판단하는 변수(BT Decorator용)
 
 	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = (AllowPrivateAccess = true))
 	bool IsGuarding;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	class UMaterial* shieldMatBlue;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
+	class UMaterial* shieldMatRed;
 
 	void Guard();															// 가드
 
@@ -223,9 +235,6 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
 	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;	// 게임 클리어 때 부를 액터 공장
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = guard)
-	class UStaticMeshComponent* ShieldComp;									// Guard시 나오는 쉴드
 
 
 

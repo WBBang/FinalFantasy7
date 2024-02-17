@@ -72,7 +72,7 @@ void ABullet_Energy::NotifyActorBeginOverlap(AActor* OtherActor)
 	AFinalBossCharacter* finalBoss = Cast<AFinalBossCharacter>(OtherActor);
 	if ( nullptr != middleBoss )
 	{
-		middleBoss->MiddleBossDamagedBySkillBullet(3);
+		middleBoss->MiddleBossDamagedBySkillBullet(10);
 
 		// 총알은 사라지기
 		Destroy();

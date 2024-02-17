@@ -75,10 +75,13 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 	ShieldComp->SetCollisionProfileName(TEXT("NoCollision"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh>sphereTemp(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	ConstructorHelpers::FObjectFinder<UMaterial>shieldMatTemp(TEXT("/Script/Engine.Material'/Game/KSH/VX/ShieldMaterial.ShieldMaterial'"));
-	if ( sphereTemp.Succeeded() && shieldMatTemp.Succeeded())
+	ConstructorHelpers::FObjectFinder<UMaterial>shieldMatRedTemp(TEXT("/Script/Engine.Material'/Game/KSH/VX/ShieldMaterialRed.ShieldMaterialRed'"));
+	if ( sphereTemp.Succeeded() && shieldMatTemp.Succeeded() && shieldMatRedTemp.Succeeded())
 	{
 		ShieldComp->SetStaticMesh(sphereTemp.Object);
 		ShieldComp->SetMaterial(0, shieldMatTemp.Object);
+		shieldMatBlue = shieldMatTemp.Object;
+		shieldMatRed = shieldMatRedTemp.Object;
 	}
 	ShieldComp->SetVisibility(false);
 }
@@ -254,12 +257,21 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 피 줄어드는 대신 가드에 데미지 누적
 		GuardingDamage += damage;
 
+		// 가드 데미지가 GuardColorChangeDamage 이상되면 색 변함
+		if ( GuardingDamage >= GuardColorChangeDamage )
+		{
+			ShieldComp->SetMaterial(0, shieldMatRed);
+		}
+
 		// 가드 데미지가 카운터 가능 데미지(CounterDamage)까지 도달했고
 		// 기열파 애니메이션이 실행중이 아니라면
 		if ( !IsGuardSuccessDeco && GuardingDamage >= CounterDamage )
 		{
 			//UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 			IsGuardSuccessDeco = true;
+
+			// 카메라 쉐이크
+
 		}
 	}
 
@@ -388,6 +400,7 @@ void AMiddleBossCharacter::Guard()
 	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
+	ShieldComp->SetMaterial(0, shieldMatBlue);
 	ShieldComp->SetVisibility(true);
 
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
