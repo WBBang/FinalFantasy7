@@ -488,7 +488,7 @@ float AMiddleBossCharacter::GetAIDetectRange()
 // 플레이어 공격할 수 있는 범위
 float AMiddleBossCharacter::GetAIAttackRange()
 {
-	canAttackRange = 300.0f;
+	canAttackRange = 200.0f;
 	return canAttackRange;
 }
 

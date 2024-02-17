@@ -306,6 +306,10 @@ void ABarrett::BarrettDamaged(int32 damage)
 	if ( BarrettHP > 0 && IsAttacked == true && IsCountered == false && IsDie == false )
 	{
 		this->PlayAnimMontage(HitMontage);
+
+		// 조금 뒤로 밀기
+		LaunchCharacter(GetActorForwardVector() * -1 * 100, false, false);
+
 		GetWorld()->GetTimerManager().SetTimer(HitTimer, FTimerDelegate::CreateLambda([ & ] ()
 			{
 				// 실행할 내용
