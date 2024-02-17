@@ -185,7 +185,6 @@ public:
 	void SetIsGuarding(bool isGuarding);									// 가드 아예 끝나는거 BTTask에서 하게
 
 
-
 	// ----------------------- 가드 성공 ----------------------- 
 private:
 	// 가드 성공했는지 판단하는 변수(BT Decorator용)

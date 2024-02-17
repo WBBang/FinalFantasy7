@@ -273,9 +273,6 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		{
 			//UE_LOG(LogTemp, Log, TEXT("IsGuardSuccessing"));
 			IsGuardSuccessDeco = true;
-
-			// 카메라 쉐이크
-
 		}
 	}
 
