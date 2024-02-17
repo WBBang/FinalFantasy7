@@ -94,6 +94,7 @@ void AMiddleBossCharacter::BeginPlay()
 	//IsGuarding = false;
 	IsGuardDeco = false;
 	GuardingDamage = 0;
+	GuardStartTempDamage = 0;
 
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 	FVector loc = dummyCubeMesh->GetComponentLocation();
@@ -235,13 +236,6 @@ void AMiddleBossCharacter::MiddleBossDamagedByBasicBullet(int32 damage)
 // 우와아왕빵으로 맞은 경우
 void AMiddleBossCharacter::MiddleBossDamagedBySkillBullet(int32 damage)
 {
-	// 가드 상태가 아니라면
-	if ( false == IsGuardDeco )
-	{
-		// 경직 상태
-		IsHitStuning = true;
-	}
-
 	// 보스한테 데미지 처리
 	MiddleBossDamaged(damage);
 }
@@ -271,6 +265,9 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		// 데미지 받고
 		MiddleBossHP -= damage;
 
+		// 가드 시작용 누적 데미지 증가
+		GuardStartTempDamage += damage;
+
 		// 0이하라면
 		if ( MiddleBossHP <= 0 )
 		{
@@ -280,10 +277,11 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 			IsDyingDeco = true;
 		}
 
-		// 30% 확률로 
-		int randomNum = FMath::RandRange(0, 9);
-		if (randomNum < 3) // 0, 1, 2
+		// 누적 데미지가 가드 시작 데미지 이상이라면
+		else if ( GuardStartTempDamage > GuardStartDamage )
 		{
+			// 초기화하고 가드 시작
+			GuardStartTempDamage = 0;
 			IsGuardDeco = true;
 		}
 	}
