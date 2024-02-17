@@ -107,7 +107,6 @@ void AMiddleBossCharacter::BeginPlay()
 	MBNameUI = GetWorld()->SpawnActor<AMBNameActor>(MBName, locName, FRotator(0, 0, 0));
 	MBSkillNameUI = GetWorld()->SpawnActor<AMBSkillNameActor>(MBSkillName, locSkillName, FRotator(0, 0, 0));
 
-	guardBarUI->SetActorHiddenInGame(true);
 	MBSkillNameUI->SetActorHiddenInGame(true);
 }
 
@@ -128,35 +127,41 @@ void AMiddleBossCharacter::Tick(float DeltaTime)
 		// 항상 HP UI 앞면이 보이고 보스 몬스터 머리위에 떠있게
 		FVector loc = dummyCubeMesh->GetComponentLocation();
 		FVector camLoc = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
 
-		// 항상 일정한 크기 유지
+		// 항상 일정한 크기 유지, 거리 비율에 따라 위치 수정
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
 		float distance = ( ( loc - camLoc ).Length() ) * 0.001;
 		if ( distance > 4 ) distance = 4.0f;
 		else if ( distance < 1 ) distance = 1.0f;
 
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(camLoc - dummyCubeMesh->GetComponentLocation()).Rotator();
+
+		// HP
+		FVector locHP = FVector(loc.X, loc.Y, loc.Z + 20);
+		hpBarUI->UpdateScale(distance);
 		hpBarUI->UpdateLocation(locHP, LookAtRotation);
 
-		hpBarUI->UpdateScale(distance);
-		guardBarUI->UpdateScale(distance);
-		MBNameUI->UpdateScale(distance);
-		MBSkillNameUI->UpdateScale(distance);
+		// 가드
+		float locGuardZ = 5 - (distance * 10);
+		if ( distance < 1.5 ) locGuardZ = 10 - (distance * 7);
 
-		// 거리 비율에 따라 위치 수정
-		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + 5 - (distance * 5));
+		FVector locGuard = FVector(loc.X, loc.Y, loc.Z + locGuardZ);
+		guardBarUI->UpdateScale(distance);
 		guardBarUI->UpdateLocation(locGuard, LookAtRotation);
 
+		// 이름
 		float locNameZ = distance * 30;
 		if ( locNameZ > 56 ) locNameZ = 56;
 		else if ( locNameZ < 35 ) locNameZ = 35;
 		FVector locName = FVector(loc.X, loc.Y + 10, loc.Z + locNameZ);
+		MBNameUI->UpdateScale(distance);
 		MBNameUI->UpdateLocation(locName, LookAtRotation);
 
+		// 스킬 이름
 		float locSkillNameZ = locNameZ + 30;
 		if ( locSkillNameZ > 85 ) locSkillNameZ = 85;
 		else if ( locSkillNameZ < 60 ) locSkillNameZ = 60;
 		FVector locSkillName = FVector(loc.X, loc.Y + 10, loc.Z + locSkillNameZ);
+		MBSkillNameUI->UpdateScale(distance);
 		MBSkillNameUI->UpdateLocation(locSkillName, LookAtRotation);
 	}
 }
@@ -278,8 +283,11 @@ void AMiddleBossCharacter::MiddleBossDamaged(int32 damage)
 		}
 
 		// 누적 데미지가 가드 시작 데미지 이상이라면
-		else if ( GuardStartTempDamage > GuardStartDamage )
+		else if ( GuardStartTempDamage >= GuardStartDamage )
 		{
+			// UI 숨기기
+			guardBarUI->SetActorHiddenInGame(true);
+
 			// 초기화하고 가드 시작
 			GuardStartTempDamage = 0;
 			IsGuardDeco = true;
@@ -312,7 +320,7 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		GuardingDamage = 0;
 		IsGuarding = false;
 		IsGuardDeco = false;
-		guardBarUI->SetActorHiddenInGame(true);
+		guardBarUI->SetActorHiddenInGame(false);
 		ShieldComp->SetVisibility(false);
 
 		// 스킬 이름 UI 숨기기
@@ -350,8 +358,6 @@ void AMiddleBossCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupt
 		// 스킬 이름 UI 숨기기
 		MBSkillNameUI->SetActorHiddenInGame(true);
 
-		guardBarUI->SetActorHiddenInGame(true);
-
 		IsGuardSuccessing = false;
 		IsGuardSuccessDeco = false;
 
@@ -378,7 +384,7 @@ void AMiddleBossCharacter::Guard()
 	if ( !IsGuardDeco ) return;
 	MBSkillNameUI->SetActorHiddenInGame(false);
 	SkillName = FString(TEXT("가드"));
-	guardBarUI->SetActorHiddenInGame(false);
+
 	GuardingDamage = 0;
 	IsGuarding = true;
 	IsGuardSuccessDeco = false;
