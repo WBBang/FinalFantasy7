@@ -72,7 +72,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 BarrettMaxSkill = 10;
 	UPROPERTY(EditAnywhere)
-	int32 BarrettSkill = BarrettMaxSkill;
+	int32 BarrettSkill = 0;
+	UPROPERTY(EditAnywhere)
+	float SkillCurTime = 0;
+	UPROPERTY(EditAnywhere)
+	float AutoRestoreTime = 1.5f;
 
 
 	////////////////////////// 기본 공격 //////////////////////////

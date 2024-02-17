@@ -61,6 +61,7 @@ ABarrett::ABarrett()
 void ABarrett::BeginPlay()
 {
 	Super::BeginPlay();
+	BarrettSkill = BarrettMaxSkill;
 	IsDie = false;
 	IsAttacked = false;
 	IsCountered = false;
@@ -84,7 +85,18 @@ void ABarrett::BeginPlay()
 void ABarrett::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	BarrettSkill += DeltaTime;
+	
+	if ( BarrettSkill < BarrettMaxSkill ) {
+		SkillCurTime += DeltaTime;
+
+		if ( SkillCurTime >= AutoRestoreTime )
+		{
+			BarrettSkill++;
+			BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
+			SkillCurTime = 0;
+		}
+	}
+		
 	Move();
 
 	// 기본공격을 했을 때
@@ -161,8 +173,6 @@ void ABarrett::Tick(float DeltaTime)
 			}
 		}
 	}
-
-	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
 }
 
 ///////////////////////// 플레이어 키 입력 /////////////////////////
