@@ -77,6 +77,7 @@ void AMissile::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		player->BarrettDamaged(20);
 	}
+	
 	this->Destroy();
 	
 }

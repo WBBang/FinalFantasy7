@@ -69,7 +69,12 @@ void AFinalBossCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AttackLength();
 	MakeBilboard();
-	
+
+	if (currentHp <= maxHP/2)
+	{
+		isSecondPhase = true;
+		this->GetCharacterMovement()->MaxWalkSpeed = 800;
+	}
 }
 
 // Called to bind functionality to input
@@ -94,6 +99,9 @@ void AFinalBossCharacter::LauchMissile()
 {
 	FTransform launchPos = missieLaunchArrowComp->GetComponentTransform();
 	GetWorld()->SpawnActor<AMissile>(missileFactory, launchPos);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("U Cant move now"));
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+
 }
 
 void AFinalBossCharacter::RushAttack()
@@ -143,10 +151,6 @@ void AFinalBossCharacter::TakeDamage(int damage)
 		isDead = true;
 	}
 
-	if (currentHp <= maxHP/2)
-	{
-		isSecondPhase = true;
-		this->GetCharacterMovement()->MaxWalkSpeed = 800;
-	}
+	
 }
 

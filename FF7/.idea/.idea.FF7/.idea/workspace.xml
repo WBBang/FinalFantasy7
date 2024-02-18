@@ -19,6 +19,17 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Private/JWK/Bullet_Energy.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossAnimInstance.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossFSM.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Private/KEC/Missile.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossAnimInstance.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossFSM.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/FF7/Public/KEC/Missile.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -226,6 +237,7 @@
       <workItem from="1708175591620" duration="598000" />
       <workItem from="1708176220833" duration="3170000" />
       <workItem from="1708187370901" duration="679000" />
+      <workItem from="1708236109268" duration="4379000" />
     </task>
     <servers />
   </component>
