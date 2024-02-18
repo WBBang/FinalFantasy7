@@ -210,6 +210,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget>HPUIFactory;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBarretHPWidget* BarretUI;
 };

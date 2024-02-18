@@ -75,7 +75,7 @@ void ABarrett::BeginPlay()
 	CurFireTime = MaxFireTime;
 
 	BarretUI = CreateWidget<UBarretHPWidget>(GetWorld(), HPUIFactory);
-	BarretUI->AddToViewport(1);
+	//BarretUI->AddToViewport(1);
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 
 	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
