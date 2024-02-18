@@ -139,7 +139,6 @@ void AFinalBossCharacter::MakeBilboard()
 	FRotator bilboardRotate = UKismetMathLibrary::MakeRotFromX(tmp);
 	//UI의 rotation을 set
 	healthUI->SetWorldRotation(bilboardRotate);
-	
 }
 
 void AFinalBossCharacter::TakeDamage(int damage)

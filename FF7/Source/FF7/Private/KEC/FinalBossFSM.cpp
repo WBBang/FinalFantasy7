@@ -176,11 +176,13 @@ void UFinalBossFSM::TickRush()
 {
 	if(me->isDead == true)
 		SetState(EFinalBossState::DEAD);
-	
+
+	FVector dir = target->GetActorLocation() - me->GetActorLocation();
+	dir.Normalize();
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
 	if(dist < 3000)
 	{
-		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * rushSpeed * GetWorld()->DeltaTimeSeconds);
+		me->SetActorLocation(me->GetActorLocation() + dir * rushSpeed * GetWorld()->DeltaTimeSeconds);
 	}
 	FTimerHandle MyTimer;
 	float Time = 1.25f;
