@@ -212,4 +212,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBarretHPWidget* BarretUI;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> GameOverWidgetFactory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBarrettGameOverWidget* GameOverUI;
 };
