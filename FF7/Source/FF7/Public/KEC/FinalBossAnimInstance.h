@@ -33,4 +33,10 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_Launch();
+
+	UFUNCTION()
+	void AnimNotify_MoveAgain();
+
+	UFUNCTION()
+	void AnimNotify_SetStateMove();
 };

@@ -4,7 +4,7 @@
 #include "KEC/FinalBossFSM.h"
 
 #include "Components/ArrowComponent.h"
-#include "JWK/Barrett.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "KEC/FinalBossCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -60,6 +60,9 @@ void UFinalBossFSM::TickIdle()
 	
 	if(me->isDead == true)
 		SetState(EFinalBossState::DEAD);
+
+	if(me->isSecondPhase == true)
+		SetState(EFinalBossState::LAUNCHBOMB);
 }
 
 void UFinalBossFSM::TickMove()
@@ -91,18 +94,18 @@ void UFinalBossFSM::TickNormalAttack()
 {
 	if(me->isDead == true)
 		SetState(EFinalBossState::DEAD);
+
+	else if(me->isSecondPhase == true)
+		SetState(EFinalBossState::LAUNCHBOMB);
+
 	
 	float length = target->GetDistanceTo(me);
 	currentTime += GetWorld()->GetDeltaSeconds();
 	normalAttackCount++;
-		if(length > attackLength)
+
+	if(length > attackLength)
 		{
 			SetState(EFinalBossState::MOVE);
-		}
-		
-		else
-		{
-			UE_LOG( LogTemp , Warning , TEXT( "Enemy->Player Attack!!!" ) );
 		}
 
 }
@@ -162,7 +165,10 @@ void UFinalBossFSM::TickFireMissile()
 
 void UFinalBossFSM::TickLaunchBomb()
 {
-	SetState(EFinalBossState :: MOVE);
+	//SetState(EFinalBossState :: MOVE);
+
+	if(me->isDead == true)
+		SetState(EFinalBossState::DEAD);
 }
 
 
@@ -195,6 +201,7 @@ void UFinalBossFSM::TickJumpAttack()
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
 	if(dist < 3000)
 	{
+		me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * rushSpeed * GetWorld()->DeltaTimeSeconds);
 	}
 	FTimerHandle MyTimer;
@@ -202,7 +209,7 @@ void UFinalBossFSM::TickJumpAttack()
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 	   {
 		
-		SetState(EFinalBossState :: IDLE);
+		SetState(EFinalBossState :: RUSH);
 
 		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 	   }), Time, false);

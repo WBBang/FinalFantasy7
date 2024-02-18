@@ -68,4 +68,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float delayTime = 1.5f;
 	
+	
 };
