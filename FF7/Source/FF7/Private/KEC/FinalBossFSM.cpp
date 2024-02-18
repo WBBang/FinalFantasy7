@@ -43,7 +43,6 @@ void UFinalBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		case EFinalBossState::IDLE:				TickIdle();				break;
 		case EFinalBossState::MOVE:				TickMove();				break;
 		case EFinalBossState::NORMALATTACK:		TickNormalAttack();		break;
-		case EFinalBossState::GATLINGATTACK:	TickGatlingAttack();		break;
 		case EFinalBossState::LAUNCHBOMB:		TickLaunchBomb();		break;
 		case EFinalBossState::FIREMISSILE:		TickFireMissile();		break;
 		case EFinalBossState::RUSH:				TickRush();				break;
@@ -110,51 +109,6 @@ void UFinalBossFSM::TickNormalAttack()
 
 }
 
-void UFinalBossFSM::TickGatlingAttack()
-{
-	//보스 양쪽 애로우에서 LineTrace를 발사 -> 플레이어 방향
-	FHitResult outHitLeft;
-	FHitResult outHitRight;
-	FCollisionQueryParams params;
-	params.AddIgnoredActor(me);
-	//왼쪽 발사
-	FVector leftEnd = leftGun.GetLocation().ForwardVector * 1000000;
-	bool bReturnValueLeft = GetWorld()->LineTraceSingleByChannel(outHitLeft,leftGun.GetLocation(), leftEnd, ECC_Visibility, params );
-
-	if(bReturnValueLeft)
-	{
-		//발사하면서 왼쪽 애로우에 VFX 스폰
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,leftGun.GetLocation());
-		DrawDebugLine(GetWorld(),outHitLeft.TraceStart, outHitLeft.ImpactPoint, FColor::Red, false, 5);
-		//적중한 컴포넌트
-		UPrimitiveComponent* hitComp = outHitLeft.GetComponent();
-		if(hitComp)
-		{
-			//적중한 위치에 vfx생성
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,outHitLeft.ImpactPoint);
-		}
-	}
-	//오른쪽 발사
-	FVector rightEnd = rightGun.GetLocation().ForwardVector * 1000000;
-	bool bReturnValueRight = GetWorld()->LineTraceSingleByChannel(outHitRight,rightGun.GetLocation(), rightEnd, ECC_Visibility, params );
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,rightGun.GetLocation());
-
-	if(bReturnValueRight)
-	{
-		//발사하면서 오른쪽 애로우에 VFX 스폰
-		DrawDebugLine(GetWorld(),outHitRight.TraceStart, outHitRight.ImpactPoint, FColor::Red, false, 5);
-		UPrimitiveComponent* hitComp = outHitRight.GetComponent();
-		if(hitComp)
-		{
-			//적중한 위치에 vfx생성
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),me->fireVFX,outHitRight.ImpactPoint);
-		}
-	}
-	
-	
-}
-
-
 void UFinalBossFSM::TickFireMissile()
 {
 	if(me->isDead == true)
@@ -201,17 +155,17 @@ void UFinalBossFSM::TickJumpAttack()
 		SetState(EFinalBossState::DEAD);
 	
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
-	if(dist < 3000)
+	if(dist < 2000)
 	{
 		me->GetCharacterMovement()->SetMovementMode(MOVE_None);
-		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * rushSpeed * GetWorld()->DeltaTimeSeconds);
+		me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * 1000 * GetWorld()->DeltaTimeSeconds);
 	}
 	FTimerHandle MyTimer;
 	float Time = 1.25f;
 	GetWorld()->GetTimerManager().SetTimer(MyTimer, FTimerDelegate::CreateLambda([&]()
 	   {
 		
-		SetState(EFinalBossState :: RUSH);
+		SetState(EFinalBossState :: MOVE);
 
 		GetWorld()->GetTimerManager().ClearTimer(MyTimer);
 	   }), Time, false);
