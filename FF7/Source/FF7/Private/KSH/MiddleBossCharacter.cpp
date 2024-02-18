@@ -18,6 +18,7 @@
 #include "KSH/UI/MBSkillNameActor.h"
 #include "KSH/UI/MBDamageTextUI.h"
 #include "KSH/Level/MBFloor.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
@@ -240,7 +241,7 @@ void AMiddleBossCharacter::MBGameClear()
 	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
 
 	// 보스 바닥 사라지게
-	auto middleBossFloor = Cast<AMBFloor>(MiddleBossFloor);
+	auto middleBossFloor = Cast<AMBFloor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMBFloor::StaticClass()));
 	if ( nullptr != middleBossFloor )
 	{
 		middleBossFloor->MiddleBossGameClear();

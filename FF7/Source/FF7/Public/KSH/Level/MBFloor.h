@@ -24,5 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// --------------- 게임 클리어 -----------------
+	UFUNCTION(BlueprintCallable)
 	void MiddleBossGameClear();
 };

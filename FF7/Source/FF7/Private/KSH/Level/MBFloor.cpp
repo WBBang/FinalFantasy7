@@ -30,6 +30,8 @@ void AMBFloor::Tick(float DeltaTime)
 void AMBFloor::MiddleBossGameClear()
 {
 	UE_LOG(LogTemp, Log, TEXT("Floor Destroy"));
-	this->Destroy();
+
+	FTimerHandle timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([ this ] ()->void {this->Destroy(); }), 3, false);
 }
 

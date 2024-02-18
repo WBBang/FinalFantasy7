@@ -244,11 +244,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
 	TSubclassOf<class ALevelTransitionPortal> MoveToFinalBossMapFactory;	// 게임 클리어 때 부를 액터 공장
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameEvent)
-	TSubclassOf<class AMBFloor> MiddleBossFloor;							// 게임 클리어 시 사라지는 바닥
-
-
-
 	// ----------------------- AI ----------------------- 
 protected:
 	virtual float GetAIPatrolRadius() override;
