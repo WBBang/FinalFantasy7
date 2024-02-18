@@ -8,7 +8,7 @@
 void UFBHPWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
 }
 
 void UFBHPWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

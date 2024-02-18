@@ -37,7 +37,7 @@ void UFinalBossAnimInstance::AnimNotify_Attack()
 {
 	auto barrett = Cast<ABarrett>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Test!"));
-	barrett->BarrettDamaged(20);
+	barrett->BarrettDamaged(10);
 }
 
 void UFinalBossAnimInstance::AnimNotify_Launch()

@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	class UProgressBar* HPBarMid;
 
+	UPROPERTY(EditDefaultsOnly)
+	class UWidgetComponent* thisWidget;
+
 	void SetHP( int32 hp , int32 maxHP);
 
 	UPROPERTY()
