@@ -21,6 +21,7 @@ public:
 	UPROPERTY(EditAnywhere, meta = ( BindWidget ))
 	class UButton* ButtonQuit;
 
+
 	UFUNCTION()
 	void OnMyRestart();
 

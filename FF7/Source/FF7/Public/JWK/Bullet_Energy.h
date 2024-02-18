@@ -35,6 +35,11 @@ public:
 	class UProjectileMovementComponent* movementComp;
 
 
+	//////////////////////// 타겟 ////////////////////////
+	UPROPERTY()
+	class AMiddleBossCharacter* mbcharacter;
+
+
 	//////////////////////// 총알 ////////////////////////
 	FORCEINLINE void AutoDestroy() { this->Destroy(); }
 	//UFUNCTION()
@@ -42,4 +47,5 @@ public:
 
 	// 충돌 처리
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
 };
