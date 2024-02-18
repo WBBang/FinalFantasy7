@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KEC/LevelTransitionPortal.h"
@@ -14,6 +14,7 @@ ALevelTransitionPortal::ALevelTransitionPortal()
 	levelTransitionPortal = CreateDefaultSubobject<UBoxComponent>(TEXT("levelTransitionPortal"));
 
 	SetRootComponent(levelTransitionPortal);
+	levelTransitionPortal->SetBoxExtent(FVector(100));
 
 	levelTransitionPortal->SetCollisionProfileName(TEXT("BarretOnly"));
 	
@@ -23,7 +24,9 @@ ALevelTransitionPortal::ALevelTransitionPortal()
 void ALevelTransitionPortal::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), portalParticle, GetActorLocation(),GetActorRotation(), FVector(3));
+
+	FRotator rot = FRotator(20, 20, -110);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), portalParticle, GetActorLocation(),rot, FVector(1));
 	
 }
 

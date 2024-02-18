@@ -235,7 +235,7 @@ void AMiddleBossCharacter::MBGameClear()
 	AnimInstance->PlayDieMontage();
 
 	// 막 보스로 넘어가는 문 소환
-	FVector t = FVector(-130.0f, 670.0f, 80.0f);
+	FVector t = FVector(-480.0f, 800.0f, -690.0f);
 	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
 }
 
