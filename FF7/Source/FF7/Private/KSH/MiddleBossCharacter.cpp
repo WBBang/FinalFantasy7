@@ -17,6 +17,7 @@
 #include "KSH/UI/MBNameActor.h"
 #include "KSH/UI/MBSkillNameActor.h"
 #include "KSH/UI/MBDamageTextUI.h"
+#include "KSH/Level/MBFloor.h"
 
 // Sets default values
 AMiddleBossCharacter::AMiddleBossCharacter()
@@ -237,6 +238,13 @@ void AMiddleBossCharacter::MBGameClear()
 	// 막 보스로 넘어가는 문 소환
 	FVector t = FVector(-480.0f, 800.0f, -690.0f);
 	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
+
+	// 보스 바닥 사라지게
+	auto middleBossFloor = Cast<AMBFloor>(MiddleBossFloor);
+	if ( nullptr != middleBossFloor )
+	{
+		middleBossFloor->MiddleBossGameClear();
+	}
 }
 
 // 기본 스킬로 맞은 경우

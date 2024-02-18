@@ -7,12 +7,13 @@
 #include "../../../../../../../Source/Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 #include "KEC/FinalBossCharacter.h"
 #include "KSH/MiddleBossCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 class AFinalBossCharacter;
 // Sets default values
 ABullet_Energy::ABullet_Energy()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("sphereComp"));
@@ -24,7 +25,7 @@ ABullet_Energy::ABullet_Energy()
 	movementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("movementComp"));
 
 	// 총알 이동속도, bounce Set
-	movementComp->InitialSpeed = 2500.0f;
+	movementComp->InitialSpeed = 1500.0f;
 	movementComp->MaxSpeed = 2500.0f;
 	movementComp->bShouldBounce = false;
 
@@ -45,14 +46,24 @@ void ABullet_Energy::BeginPlay()
 	Super::BeginPlay();
 	movementComp->SetUpdatedComponent(sphereComp);
 
+
 	FTimerHandle timerHandle;
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([this]()->void {this->Destroy(); }), 2, false);
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([ this ] ()->void {this->Destroy(); }), 2, false);
+	mbcharacter = Cast< AMiddleBossCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AMiddleBossCharacter::StaticClass()));
+
 }
 
 // Called every frame
 void ABullet_Energy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FVector P0 = GetActorLocation();
+	FVector dirToMiddle = mbcharacter->GetActorLocation() - GetActorLocation();
+
+	if ( mbcharacter != nullptr )
+	{
+		SetActorLocation(P0 + ( dirToMiddle.GetSafeNormal() * movementComp->MaxSpeed ) * DeltaTime);
+	}
 }
 
 /*
@@ -79,7 +90,7 @@ void ABullet_Energy::NotifyActorBeginOverlap(AActor* OtherActor)
 		Destroy();
 	}
 
-	if( nullptr != finalBoss)
+	if ( nullptr != finalBoss )
 	{
 		finalBoss->TakeDamage(100);
 		Destroy();

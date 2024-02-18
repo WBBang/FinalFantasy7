@@ -1,7 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KSH/Level/MBFloor.h"
+#include "KSH/MiddleBossCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMBFloor::AMBFloor()
@@ -23,5 +25,11 @@ void AMBFloor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AMBFloor::MiddleBossGameClear()
+{
+	UE_LOG(LogTemp, Log, TEXT("Floor Destroy"));
+	this->Destroy();
 }
 

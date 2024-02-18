@@ -137,7 +137,7 @@ void ABarrett::Tick(float DeltaTime)
 	}
 
 	// 스킬을 썼을 때
-	if ( IsSkill == true && IsCountered == false && IsDie == false && BarrettSkill >=5 )
+	if ( IsSkill == true && IsCountered == false && IsDie == false && BarrettSkill >=10 )
 	{
 		EnergyFire();
 		IsSkill = false;
@@ -282,7 +282,7 @@ void ABarrett::EnergyFire()
 		float SkillTime = 2;                                                       // 딜레이 타임
 
 		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));   // 소환 위치
-		if ( curMilSec - milliseconds > 5000 )
+		if ( curMilSec - milliseconds > 20000 )
 		{
 			// Sparkle Emitter 총구 위치에 Spawn
 			UParticleSystemComponent* SpawnedEnergy = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), sparkle, s);
@@ -304,7 +304,7 @@ void ABarrett::EnergyFire()
 						return;
 					}
 					GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(WangBBang, 1.0f);
-					BarrettSkill -= 5;
+					BarrettSkill -= 11;
 					// TimerHandle 초기화
 					GetWorld()->GetTimerManager().ClearTimer(SkillTimer);
 				}), SkillTime, false);
