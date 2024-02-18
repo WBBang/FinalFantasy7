@@ -12,7 +12,6 @@ enum class EFinalBossState : uint8
 	IDLE			UMETA(DisplayName = "IDLE"),
 	MOVE			UMETA(DisplayName = "MOVE"),
 	NORMALATTACK	UMETA(DisplayName = "NORMALATTACK"),
-	GATLINGATTACK	UMETA(DisplayName = "GATLINGATTACK"),
 	FIREMISSILE		UMETA(DisplayName = "FIREMISSILE"),
 	LAUNCHBOMB		UMETA(DisplayName = "LAUNCHBOMB"),
 	RUSH			UMETA(DisplayName = "RUSH"),
@@ -65,7 +64,6 @@ public:
 	void TickIdle();
 	void TickMove();
 	void TickNormalAttack();	
-	void TickGatlingAttack();	
 	void TickFireMissile();	
 	void TickLaunchBomb();	
 	void TickRush();

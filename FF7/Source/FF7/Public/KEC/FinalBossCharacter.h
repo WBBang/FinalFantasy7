@@ -32,7 +32,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* rightArrowComp;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* missieLaunchArrowComp;
 	
@@ -53,6 +53,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UWidgetComponent* healthUI;
+
+	UPROPERTY(EditAnywhere)
+	class UFinalBossFSM* state;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
@@ -69,11 +72,10 @@ public:
 	float maxHP = 10000;
 	float currentHp;
 	bool isDead = false;
+	bool jumpAttack = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool isSecondPhase = false;
-	
-	
 
 	void Fire();
 	void LauchMissile();
@@ -81,6 +83,7 @@ public:
 	void AttackLength();
 	void MakeBilboard();
 	void TakeDamage(int damage);
+	void CheckDistance();
 
 	
 };

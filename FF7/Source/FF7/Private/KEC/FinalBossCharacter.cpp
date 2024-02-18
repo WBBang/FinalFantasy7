@@ -3,6 +3,7 @@
 
 #include "KEC/FinalBossCharacter.h"
 #include "Components/ArrowComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "KEC/BossBullet.h"
@@ -49,6 +50,7 @@ AFinalBossCharacter::AFinalBossCharacter()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	}
 
+
 }
 
 // Called when the game starts or when spawned
@@ -69,12 +71,6 @@ void AFinalBossCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AttackLength();
 	MakeBilboard();
-
-	if (currentHp <= maxHP/2)
-	{
-		isSecondPhase = true;
-		this->GetCharacterMovement()->MaxWalkSpeed = 800;
-	}
 }
 
 // Called to bind functionality to input
@@ -124,6 +120,7 @@ void AFinalBossCharacter::AttackLength()
 	{
 		isDetected = true;
 	}
+	
 }
 
 void AFinalBossCharacter::MakeBilboard()
@@ -150,6 +147,17 @@ void AFinalBossCharacter::TakeDamage(int damage)
 		isDead = true;
 	}
 
+	if (currentHp <= maxHP/2)
+	{
+		bossFsm->SetState(EFinalBossState::LAUNCHBOMB);
+		this->GetCharacterMovement()->MaxWalkSpeed = 800;
+	}
+
+	
+}
+
+void AFinalBossCharacter::CheckDistance()
+{
 	
 }
 
