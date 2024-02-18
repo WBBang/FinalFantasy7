@@ -16,6 +16,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "JWK/BarretHPWidget.h"
+#include "JWK/BarrettGameOverWidget.h"
 
 ///////////////////////// Barrett /////////////////////////
 ABarrett::ABarrett()
@@ -75,7 +76,7 @@ void ABarrett::BeginPlay()
 	CurFireTime = MaxFireTime;
 
 	BarretUI = CreateWidget<UBarretHPWidget>(GetWorld(), HPUIFactory);
-	//BarretUI->AddToViewport(1);
+	BarretUI->AddToViewport(1);
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 
 	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
@@ -126,7 +127,7 @@ void ABarrett::Tick(float DeltaTime)
 
 				// 기본공격끝 파티클 생성
 				UParticleSystemComponent* SpawnBasicEnd = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), basicAttackEnd, s);
-				if ( AttackEndTime >= 4, 5 )
+				if ( AttackEndTime >= 4.5 )
 				{
 					// 기본공격 길이 초기화
 					AttackEndTime = 0;
@@ -136,7 +137,7 @@ void ABarrett::Tick(float DeltaTime)
 	}
 
 	// 스킬을 썼을 때
-	if ( IsSkill == true && IsCountered == false && IsDie == false )
+	if ( IsSkill == true && IsCountered == false && IsDie == false && BarrettSkill >=5 )
 	{
 		EnergyFire();
 		IsSkill = false;
@@ -346,6 +347,12 @@ void ABarrett::BarrettDamaged(int32 damage)
 			IsDie = true;
 			this->PlayAnimMontage(DieMontage);
 			GetCharacterMovement()->SetMovementMode(MOVE_None);
+			GameOverUI = CreateWidget<UBarrettGameOverWidget>(GetWorld(), GameOverWidgetFactory);
+			GameOverUI->AddToViewport(1);
+
+			auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			controller->SetShowMouseCursor(true);
+			controller->SetInputMode(FInputModeGameOnly());
 		}
 		BarrettHP = 0;
 	}
@@ -382,6 +389,14 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 			IsDie = true;
 			this->PlayAnimMontage(DieMontage);
 			GetCharacterMovement()->SetMovementMode(MOVE_None);
+
+			GetCharacterMovement()->SetMovementMode(MOVE_None);
+			GameOverUI = CreateWidget<UBarrettGameOverWidget>(GetWorld(), GameOverWidgetFactory);
+			GameOverUI->AddToViewport(1);
+
+			auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			controller->SetShowMouseCursor(true);
+			controller->SetInputMode(FInputModeGameOnly());
 		}
 		BarrettHP = 0;
 	}
