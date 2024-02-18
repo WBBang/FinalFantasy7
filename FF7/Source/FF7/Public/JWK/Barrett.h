@@ -80,6 +80,13 @@ public:
 
 
 	////////////////////////// 기본 공격 //////////////////////////
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool autofire = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsFire = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsAttacking = true;
+
 	UFUNCTION(BlueprintCallable)
 	void StartAttack();
 	UFUNCTION(BlueprintCallable)
@@ -88,6 +95,7 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintCallable)
 	void EnergyFire();
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShakeBase> Basic;
 
@@ -148,12 +156,7 @@ public:
 	void BarrettDamagedLittleKnockBack();
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool autofire = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsFire = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsAttacking = true;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
 	class UParticleSystem* sparkle;            // 우와앙빵 파티클
 	UPROPERTY(EditAnywhere,BlueprintReadWrite) 
@@ -192,6 +195,7 @@ public:
 	class UAnimMontage* rollMontage;
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* BasicAttackMontage;
+
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* SkillAttackMontage;
 

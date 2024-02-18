@@ -76,7 +76,7 @@ void ABarrett::BeginPlay()
 	CurFireTime = MaxFireTime;
 
 	BarretUI = CreateWidget<UBarretHPWidget>(GetWorld(), HPUIFactory);
-	BarretUI->AddToViewport(1);
+	//BarretUI->AddToViewport(1);
 	BarretUI->SetBarrettHP(BarrettHP, BarrettMaxHP);
 
 	BarretUI->SetBarretSkillTime(BarrettSkill, BarrettMaxSkill);
@@ -123,7 +123,7 @@ void ABarrett::Tick(float DeltaTime)
 			// 기본공격 길이가 3초가 되면
 			if ( AttackEndTime >= 3 )
 			{
-				this->PlayAnimMontage(BasicAttackMontage);
+				//this->PlayAnimMontage(BasicAttackMontage);
 
 				// 기본공격끝 파티클 생성
 				UParticleSystemComponent* SpawnBasicEnd = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), basicAttackEnd, s);
@@ -247,14 +247,15 @@ void ABarrett::StartAttack()
 
 void ABarrett::EndAttack()
 {
-	if ( IsFire == true && !IsAttacked && !IsCountered ) {
+	if ( IsFire == true && !IsAttacked && !IsCountered )
+	{
 		IsFire = false;
 		CurFireTime = MaxFireTime;
 		StopAnimMontage();
 	}
 }
 
-//void ABarrett::IsAutoAttack(bool isAttacking)
+//void ABarrett::BasicAttackMontage()
 //{
 //	autofire = isAttacking;
 //	IsFire = isAttacking;
