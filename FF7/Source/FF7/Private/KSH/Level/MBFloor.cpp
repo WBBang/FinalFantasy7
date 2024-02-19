@@ -2,8 +2,11 @@
 
 
 #include "KSH/Level/MBFloor.h"
+#include "KSH/Level/BrokenFloor.h"
 #include "KSH/MiddleBossCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "../../../../../../../Source/Runtime/Experimental/GeometryCollectionEngine/Public/GeometryCollection/GeometryCollectionObject.h"
+#include "GeometryCollection/GeometryCollectionActor.h"
 
 // Sets default values
 AMBFloor::AMBFloor()
@@ -32,6 +35,11 @@ void AMBFloor::MiddleBossGameClear()
 	UE_LOG(LogTemp, Log, TEXT("Floor Destroy"));
 
 	FTimerHandle timerHandle;
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([ this ] ()->void {this->Destroy(); }), 3, false);
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([ this ] ()->void {
+		FVector loc = FVector(185, 285, 1);
+		FRotator rot = FRotator(0, 0, 0);
+		GetWorld()->SpawnActor<ABrokenFloor>(brokenFloor, loc, rot);
+		this->Destroy();
+		}), 3, false);
 }
 

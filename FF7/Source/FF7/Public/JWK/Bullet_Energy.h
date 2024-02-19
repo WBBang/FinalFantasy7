@@ -38,6 +38,8 @@ public:
 	//////////////////////// 타겟 ////////////////////////
 	UPROPERTY()
 	class AMiddleBossCharacter* mbcharacter;
+	UPROPERTY()
+	class AFinalBossCharacter* finalCharacter;
 
 
 	//////////////////////// 총알 ////////////////////////
