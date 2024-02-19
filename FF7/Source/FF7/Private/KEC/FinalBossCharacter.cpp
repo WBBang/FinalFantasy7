@@ -147,8 +147,9 @@ void AFinalBossCharacter::TakeDamage(int damage)
 		isDead = true;
 	}
 
-	if (currentHp <= maxHP/2)
+	if (currentHp <= maxHP/2 && isUsed == false)
 	{
+		isUsed = true;
 		bossFsm->SetState(EFinalBossState::LAUNCHBOMB);
 		this->GetCharacterMovement()->MaxWalkSpeed = 800;
 	}

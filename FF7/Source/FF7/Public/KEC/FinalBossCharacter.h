@@ -71,11 +71,16 @@ public:
 	int32 fireNum = 0;
 	float maxHP = 10000;
 	float currentHp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool isDead = false;
+	
 	bool jumpAttack = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool isSecondPhase = false;
+
+	bool isUsed = false;
 
 	void Fire();
 	void LauchMissile();

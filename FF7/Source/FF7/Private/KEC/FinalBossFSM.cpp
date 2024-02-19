@@ -91,6 +91,7 @@ void UFinalBossFSM::TickMove()
 
 void UFinalBossFSM::TickNormalAttack()
 {
+
 	if(me->isDead == true)
 		SetState(EFinalBossState::DEAD);
 
