@@ -18,7 +18,7 @@ AFinalBossCharacter::AFinalBossCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	//개틀링 발사 위치
 	leftArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("leftArrowComp"));
 	rightArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("rightArrowComp"));
@@ -28,14 +28,14 @@ AFinalBossCharacter::AFinalBossCharacter()
 
 	//UI생성
 	healthUI = CreateDefaultSubobject<UWidgetComponent>(TEXT("healthUI"));
-	
+
 
 	leftArrowComp->SetupAttachment(RootComponent);
 	rightArrowComp->SetupAttachment(RootComponent);
 	missieLaunchArrowComp->SetupAttachment(RootComponent);
 	healthUI->SetupAttachment(RootComponent);
 
-	healthUI->SetRelativeLocation(FVector(100,0,30));
+	healthUI->SetRelativeLocation(FVector(100, 0, 30));
 
 	//FSM컴포넌트
 	bossFsm = CreateDefaultSubobject<UFinalBossFSM>(TEXT("bossFsm"));
@@ -49,10 +49,6 @@ AFinalBossCharacter::AFinalBossCharacter()
 		GetMesh()->SetSkeletalMesh(tempMesh.Object);
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	}
-
-	
-
-
 }
 
 // Called when the game starts or when spawned
@@ -61,12 +57,11 @@ void AFinalBossCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	currentHp = maxHP;
-	currentHp = FMath::Clamp(currentHp,0, maxHP);
+	currentHp = FMath::Clamp(currentHp, 0, maxHP);
 	bossHPWidget = Cast<UFBHPWidget>(healthUI->GetWidget());
-	
+
 	//Fire();
-	
-}	
+}
 
 // Called every frame
 void AFinalBossCharacter::Tick(float DeltaTime)
@@ -89,7 +84,7 @@ void AFinalBossCharacter::Fire()
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, leftGun);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), fireVFX, rightGun);
-	
+
 	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, leftGun);
 	GetWorld()->SpawnActor<ABossBullet>(bulletFactory, rightGun);
 }
@@ -100,7 +95,6 @@ void AFinalBossCharacter::LauchMissile()
 	GetWorld()->SpawnActor<AMissile>(missileFactory, launchPos);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("U Cant move now"));
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
-
 }
 
 void AFinalBossCharacter::RushAttack()
@@ -109,21 +103,20 @@ void AFinalBossCharacter::RushAttack()
 	FVector target = player - GetActorLocation();
 	target.Normalize();
 
-	if(bIsJumpAttack)
+	if (bIsJumpAttack)
 	{
-		SetActorLocation(GetActorLocation() + target * jumpSpeed * GetWorld()->DeltaTimeSeconds , false);
+		SetActorLocation(GetActorLocation() + target * jumpSpeed * GetWorld()->DeltaTimeSeconds, false);
 	}
-		bIsJumpAttack = false;
+	bIsJumpAttack = false;
 }
 
 void AFinalBossCharacter::AttackLength()
 {
 	playerLength = GetDistanceTo(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if(playerLength < 1000)
+	if (playerLength < 1000)
 	{
 		isDetected = true;
 	}
-	
 }
 
 void AFinalBossCharacter::MakeBilboard()
@@ -131,7 +124,7 @@ void AFinalBossCharacter::MakeBilboard()
 	//카메라의 location과 UI의 location을 가져오고
 	FVector cameraLoc = UGameplayStatics::GetPlayerCameraManager(this, 0)->GetCameraLocation();
 	FVector uiLoc = healthUI->GetComponentLocation();
-	
+
 	//두 location을 빼서 normalize
 	FVector tmp = cameraLoc - uiLoc;
 	tmp.Normalize();
@@ -149,22 +142,24 @@ void AFinalBossCharacter::TakeDamage(int damage)
 	{
 		isDead = true;
 		UGameplayStatics::PlaySound2D(GetWorld(), deadSound);
-		clearUI = CreateWidget<UClearWidget>(GetWorld(), clearUIFac);
-		clearUI->AddToViewport(1);
+		GetWorld()->GetTimerManager().SetTimer(clearTimer, FTimerDelegate::CreateLambda([&]()
+		{
+			// 실행할 내용
+			clearUI = CreateWidget<UClearWidget>(GetWorld(), clearUIFac);
+			clearUI->AddToViewport(1);
+			// TimerHandle 초기화
+			GetWorld()->GetTimerManager().ClearTimer(clearTimer);
+		}), clearTime, false);
 	}
 
-	if (currentHp <= maxHP/2 && isUsed == false)
+	if (currentHp <= maxHP / 2 && isUsed == false)
 	{
 		isUsed = true;
 		bossFsm->SetState(EFinalBossState::LAUNCHBOMB);
 		this->GetCharacterMovement()->MaxWalkSpeed = 800;
 	}
-
-	
 }
 
 void AFinalBossCharacter::CheckDistance()
 {
-	
 }
-

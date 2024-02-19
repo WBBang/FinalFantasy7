@@ -131,7 +131,7 @@ void UFinalBossFSM::TickRush()
 {
 	if(me->isDead == true)
 		SetState(EFinalBossState::DEAD);
-
+	
 	FVector dir = target->GetActorLocation() - me->GetActorLocation();
 	dir.Normalize();
 	float dist = (me->GetActorLocation() - rushStartVector).Size();
@@ -192,7 +192,7 @@ void UFinalBossFSM::TickGroggy()
 
 void UFinalBossFSM::TickDead()
 {
-	
+	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 }
 
 void UFinalBossFSM::SetState(EFinalBossState next)

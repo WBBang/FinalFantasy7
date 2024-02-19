@@ -67,6 +67,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class USoundBase* deadSound;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* rushSound;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
@@ -92,6 +95,9 @@ public:
 	bool isSecondPhase = false;
 
 	bool isUsed = false;
+
+	FTimerHandle clearTimer;
+	float clearTime = 3.0f;
 
 	void Fire();
 	void LauchMissile();
