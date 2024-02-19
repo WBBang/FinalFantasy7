@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ClearWidget.h"
 #include "GameFramework/Character.h"
 #include "FinalBossCharacter.generated.h"
 
@@ -51,8 +52,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UFBHPWidget* bossHPWidget;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UWidgetComponent* healthUI;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UUserWidget> clearUIFac;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UClearWidget* clearUI;
 
 	UPROPERTY(EditAnywhere)
 	class UFinalBossFSM* state;
