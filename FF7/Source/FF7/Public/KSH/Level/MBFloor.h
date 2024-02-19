@@ -24,6 +24,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// --------------- 게임 클리어 -----------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf <class ABrokenFloor> brokenFloor;
+
 	UFUNCTION(BlueprintCallable)
 	void MiddleBossGameClear();
+
 };
