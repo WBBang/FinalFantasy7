@@ -441,6 +441,8 @@ void AMiddleBossCharacter::Guard()
 	auto AnimInstance = Cast<UMBAnimInstance>(GetMesh()->GetAnimInstance());
 	if ( nullptr == AnimInstance ) return;
 
+	UGameplayStatics::PlaySound2D(GetWorld(), GuardSound);
+
 	AnimInstance->PlayGuardMontage();
 }
 
@@ -482,6 +484,9 @@ void AMiddleBossCharacter::GuardSuccess()
 
 			FRotator rot = FRotationMatrix::MakeFromX(player->GetActorLocation() - GetActorLocation()).Rotator();
 			FVector loc = FVector(player->GetActorLocation().X, player->GetActorLocation().Y, player->GetActorLocation().Z - 90.0f);
+			// 사운드
+			UGameplayStatics::PlaySound2D(GetWorld(), guardSuccessSound);
+
 			GetWorld()->SpawnActor<AGuardSuccessAOE>(aoeActor, loc, rot);
 
 			// TimerHandle 초기화
@@ -516,6 +521,10 @@ void AMiddleBossCharacter::ShockWave()
 
 			FVector loc = FVector(GetActorLocation().X, GetActorLocation().Y, 30.0f);
 			FRotator rot = FRotationMatrix::MakeFromX(player->GetActorLocation() - GetActorLocation()).Rotator();
+
+			// 사운드 추가
+			UGameplayStatics::PlaySound2D(GetWorld(), ShockWaveSound);
+
 			GetWorld()->SpawnActor<AShockWaveAOE>(shockWaveActor, loc, rot);
 
 			// TimerHandle 초기화

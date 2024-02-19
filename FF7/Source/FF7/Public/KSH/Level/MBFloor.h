@@ -30,4 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MiddleBossGameClear();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
+	TSubclassOf<UCameraShakeBase> CSShockWave;
+
 };

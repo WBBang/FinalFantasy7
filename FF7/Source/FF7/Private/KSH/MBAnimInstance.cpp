@@ -2,6 +2,8 @@
 
 
 #include "KSH/MBAnimInstance.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "KSH/MiddleBossCharacter.h"
 
 UMBAnimInstance::UMBAnimInstance()
@@ -110,6 +112,8 @@ void UMBAnimInstance::AnimNotify_MBAttackStartNotify()
 	me->SetRightHandCompColl(true);
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnRight"));
 	//UE_LOG(LogTemp, Log, TEXT("CollOnRight"));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), AttackSound);
 }
 
 void UMBAnimInstance::AnimNotify_MBAttackEndNotify()
@@ -125,6 +129,8 @@ void UMBAnimInstance::AnimNotify_MBLeftAttackStart()
 	me->SetLeftHandCompColl(true);
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("CollOnLeft"));
 	//UE_LOG(LogTemp, Log, TEXT("CollOnLeft"));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), AttackSound);
 }
 
 void UMBAnimInstance::AnimNotify_MBLeftAttackEnd()

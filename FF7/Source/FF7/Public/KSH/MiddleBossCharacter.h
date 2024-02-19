@@ -143,7 +143,7 @@ public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;		// 기본 공격 충돌 처리 (Overlap으로만 받아서 몸체랑은 처리안하게)
 	void SetRightHandCompColl(bool IsColl);
 	void SetLeftHandCompColl(bool IsColl);
-	
+
 
 
 	// ----------------------- 스킬 ----------------------- 
@@ -190,6 +190,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsGuarding(bool isGuarding);									// 가드 아예 끝나는거 BTTask에서 하게
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* GuardSound;
+
+
 
 	// ----------------------- 가드 성공 ----------------------- 
 private:
@@ -201,6 +205,10 @@ private:
 	bool IsGuardSuccessing;													// 기열파 실행중인지 판단 변수
 
 	void GuardSuccess();													// 기열파
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* guardSuccessSound;
+
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackSkill)
@@ -222,7 +230,8 @@ private:
 	void ShockWave(); 														// 지면 충격파
 
 public:
-
+	UPROPERTY(EditAnywhere)
+	class USoundBase* ShockWaveSound;
 
 
 	// ----------------------- 죽기 ----------------------- 

@@ -39,6 +39,8 @@ void AMBFloor::MiddleBossGameClear()
 		FVector loc = FVector(185, 285, 1);
 		FRotator rot = FRotator(0, 0, 0);
 		GetWorld()->SpawnActor<ABrokenFloor>(brokenFloor, loc, rot);
+		if ( nullptr == CSShockWave )return;
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(CSShockWave, 1.0f);
 		this->Destroy();
 		}), 3, false);
 }

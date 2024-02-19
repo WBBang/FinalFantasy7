@@ -36,6 +36,9 @@ public:
 	// 죽는 애니메이션 실행
 	void PlayDieMontage();
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* AttackSound; // 사운드
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pawn, Meta=(AllowPrivateAccess = true))
 	float CurrentPawnSpeed;
