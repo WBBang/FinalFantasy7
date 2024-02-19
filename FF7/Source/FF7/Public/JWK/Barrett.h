@@ -212,6 +212,20 @@ public:
 
 	/*void PlayMontage(UAnimMontage* NewMontage);*/
 
+	//////////////////////// Sound ////////////////////////
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* fireSound;
+	UPROPERTY(EditAnywhere)
+	class USoundBase* energyfireSound;
+	UPROPERTY(EditAnywhere)
+	class USoundBase* energyChargingfireSound;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* hitSound;
+	UPROPERTY(EditAnywhere)
+	class USoundBase* counteredSound;
+
 	//////////////////////// Barrett Widget////////////////////////
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget>HPUIFactory;
@@ -221,6 +235,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> GameOverWidgetFactory;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBarrettGameOverWidget* GameOverUI;

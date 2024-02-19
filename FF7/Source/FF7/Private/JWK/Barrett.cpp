@@ -6,14 +6,12 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/SkeletalMesh.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "JWK/BulletActor.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "JWK/Bullet_Energy.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "JWK/BarretHPWidget.h"
 #include "JWK/BarrettGameOverWidget.h"
@@ -110,7 +108,7 @@ void ABarrett::Tick(float DeltaTime)
 
 		// 소환 위치
 		FTransform s = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
-
+		
 		if ( CurFireTime >= MaxFireTime )
 		{
 			Fire();
@@ -234,7 +232,7 @@ void ABarrett::Fire()
 	{
 		// 총알 생성
 		FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
-
+		UGameplayStatics::PlaySound2D(GetWorld(), fireSound);
 		GetWorld()->SpawnActor<ABulletActor>(bulletFactory, t);
 	}
 }
@@ -282,7 +280,7 @@ void ABarrett::EnergyFire()
 			GetWorld()->GetTimerManager().SetTimer(SkillTimer, FTimerDelegate::CreateLambda([ & ] ()
 				{
 					// 실행할 내용
-
+					UGameplayStatics::PlaySound2D(GetWorld(), energyfireSound);
 					FTransform t = RifleMeshComp->GetSocketTransform(TEXT("FirePosition"));
 					GetWorld()->SpawnActor<ABullet_Energy>(energyFactory, t);
 					if ( nullptr == WangBBang )
@@ -304,9 +302,12 @@ void ABarrett::EnergyFire()
 void ABarrett::BarrettDamaged(int32 damage)
 {
 	FTimerHandle HitTimer;
+	FTimerHandle GameOverTimer;
 	float HitTime = 0.3f;
+	float GameOverTime = 2;
 	IsAttacked = true;
 	BarrettHP -= damage;
+	UGameplayStatics::PlaySound2D(GetWorld(), hitSound);
 	//GetCharacterMovement()->SetMovementMode(MOVE_None);
 	if ( BarrettHP > 0 && IsAttacked == true && IsCountered == false && IsDie == false )
 	{
@@ -340,6 +341,14 @@ void ABarrett::BarrettDamaged(int32 damage)
 			auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 			controller->SetShowMouseCursor(true);
 			controller->SetInputMode(FInputModeGameOnly());
+
+			GetWorld()->GetTimerManager().SetTimer(GameOverTimer, FTimerDelegate::CreateLambda([ & ] ()
+				{
+					// StandUp Montage 재생
+					UGameplayStatics::SetGamePaused(GetWorld(), true);
+					// TimerHandle 초기화
+					GetWorld()->GetTimerManager().ClearTimer(GameOverTimer);
+				}), GameOverTime, false);
 		}
 		BarrettHP = 0;
 	}
@@ -359,15 +368,17 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 	FTimerHandle StandUpTimer;
 	FTimerHandle CanMoveTimer;
 	FTimerHandle MyTimer;
+	FTimerHandle GameOverTimer;
 
 	// 딜레이 타임
 	float CounterHitTime = 3;
 	float StandUpTime = 3;
 	float CanMoveTime = 4.5;
 	float FlyTime = 0.5f;
+	float GameOverTime = 2;
 	
 	BarrettHP -= damage;
-
+	UGameplayStatics::PlaySound2D(GetWorld(), counteredSound);
 	// 만약 바레트의 체력이 0 이 되면
 	if ( BarrettHP <= 0 )
 	{
@@ -384,6 +395,14 @@ void ABarrett::BarrettDamagedKnockBack(int32 damage)
 			auto controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 			controller->SetShowMouseCursor(true);
 			controller->SetInputMode(FInputModeGameOnly());
+
+			GetWorld()->GetTimerManager().SetTimer(GameOverTimer, FTimerDelegate::CreateLambda([ & ] ()
+				{
+					// StandUp Montage 재생
+					UGameplayStatics::SetGamePaused(GetWorld(), true);
+					// TimerHandle 초기화
+					GetWorld()->GetTimerManager().ClearTimer(GameOverTimer);
+				}), GameOverTime, false);
 		}
 		BarrettHP = 0;
 	}
