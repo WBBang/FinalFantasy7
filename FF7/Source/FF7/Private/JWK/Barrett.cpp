@@ -490,11 +490,23 @@ void ABarrett::LockOn()
 
 	else
 	{
+		/*
 		UE_LOG(LogTemp, Log, TEXT("LockOff"));
 		// code
 		IsTargetLocked = false;
 		HitActor = nullptr;
+		*/
+
+		LockOff();
 	}
+}
+
+void ABarrett::LockOff()
+{
+	UE_LOG(LogTemp, Log, TEXT("LockOff"));
+	// code
+	IsTargetLocked = false;
+	HitActor = nullptr;
 }
 
 

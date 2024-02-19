@@ -236,11 +236,15 @@ void AMiddleBossCharacter::MBGameClear()
 
 	AnimInstance->PlayDieMontage();
 
-	// 막 보스로 넘어가는 문 소환
+	// 락온 해제
+	ABarrett* barrett = Cast<ABarrett>(player);
+	barrett->LockOff();
+
+	// 마지막 보스로 넘어가는 문 소환
 	FVector t = FVector(-480.0f, 800.0f, -690.0f);
 	GetWorld()->SpawnActor<ALevelTransitionPortal>(MoveToFinalBossMapFactory, t, FRotator(0.0f));
 
-	// 보스 바닥 사라지게
+	// 보스 바닥 사라지고 깨지는 바닥 나오게
 	auto middleBossFloor = Cast<AMBFloor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMBFloor::StaticClass()));
 	if ( nullptr != middleBossFloor )
 	{

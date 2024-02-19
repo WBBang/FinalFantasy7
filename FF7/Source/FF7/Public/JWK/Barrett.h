@@ -188,6 +188,8 @@ public:
 	ECharacterState CharacterState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	bool bIsLockOn = false;
+	UFUNCTION()
+	void LockOff();
 
 
 	//////////////////////// 몽타주 ////////////////////////
