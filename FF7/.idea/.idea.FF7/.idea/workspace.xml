@@ -12,10 +12,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Blueprints/BP_FinalBossCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KSH/Blueprints/WBP_FadeOut.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KSH/Blueprints/WBP_FadeOut.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Private/KEC/FinalBossCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/FF7/Public/KEC/FinalBossCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/KEC/Sequence/FBSequence.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Sequence/FBSequence.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,6 +251,7 @@
       <workItem from="1708284939740" duration="1459000" />
       <workItem from="1708302809124" duration="1868000" />
       <workItem from="1708304744907" duration="4577000" />
+      <workItem from="1708310847458" duration="901000" />
     </task>
     <servers />
   </component>
