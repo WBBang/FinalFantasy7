@@ -61,6 +61,12 @@ public:
 	FVector targetDir;
 
 	UPROPERTY(EditAnywhere)
+	class USoundBase* expSound;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* launchSound;
+	
+	UPROPERTY(EditAnywhere)
 	bool dirSet;
 
 	float currentTime = 0;

@@ -148,6 +148,7 @@ void AFinalBossCharacter::TakeDamage(int damage)
 	if (currentHp <= 0)
 	{
 		isDead = true;
+		UGameplayStatics::PlaySound2D(GetWorld(), deadSound);
 		clearUI = CreateWidget<UClearWidget>(GetWorld(), clearUIFac);
 		clearUI->AddToViewport(1);
 	}

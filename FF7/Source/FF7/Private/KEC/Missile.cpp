@@ -36,6 +36,8 @@ void AMissile::BeginPlay()
 	Super::BeginPlay();
 	player = Cast<ABarrett>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	LaunchMissile();
+	UGameplayStatics::PlaySound2D(GetWorld(), launchSound);
+
 }
 
 // Called every frame
@@ -75,6 +77,7 @@ void AMissile::NotifyActorBeginOverlap(AActor* OtherActor)
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionParticle, GetActorLocation(),GetActorRotation(), FVector(10));
 	if(OtherActor == player && player != nullptr)
 	{
+		UGameplayStatics::PlaySound2D(GetWorld(), expSound);
 		player->BarrettDamaged(20);
 	}
 	

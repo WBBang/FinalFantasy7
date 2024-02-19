@@ -64,6 +64,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UFinalBossFSM* state;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* deadSound;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fireCount = 5;
