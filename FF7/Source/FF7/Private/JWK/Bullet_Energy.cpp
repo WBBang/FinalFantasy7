@@ -50,7 +50,7 @@ void ABullet_Energy::BeginPlay()
 	FTimerHandle timerHandle;
 	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([ this ] ()->void {this->Destroy(); }), 2, false);
 	mbcharacter = Cast< AMiddleBossCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AMiddleBossCharacter::StaticClass()));
-
+	finalCharacter = Cast< AFinalBossCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AFinalBossCharacter::StaticClass()));
 }
 
 // Called every frame
@@ -58,11 +58,17 @@ void ABullet_Energy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector P0 = GetActorLocation();
-	FVector dirToMiddle = mbcharacter->GetActorLocation() - GetActorLocation();
 
 	if ( mbcharacter != nullptr )
 	{
+		FVector dirToMiddle = mbcharacter->GetActorLocation() - GetActorLocation();
 		SetActorLocation(P0 + ( dirToMiddle.GetSafeNormal() * movementComp->MaxSpeed ) * DeltaTime);
+	}
+
+	if ( finalCharacter != nullptr )
+	{
+		FVector dirToFinal = finalCharacter->GetActorLocation() - GetActorLocation();
+		SetActorLocation(P0 + ( dirToFinal.GetSafeNormal() * movementComp->MaxSpeed ) * DeltaTime);
 	}
 }
 

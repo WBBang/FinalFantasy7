@@ -255,20 +255,6 @@ void ABarrett::EndAttack()
 	}
 }
 
-//void ABarrett::BasicAttackMontage()
-//{
-//	autofire = isAttacking;
-//	IsFire = isAttacking;
-//	/*if ( IsFire )
-//	{
-//		this->PlayAnimMontage(BasicAttackMontage);
-//	}
-//	else
-//	{
-//		StopAnimMontage();
-//	}*/
-//}
-
 
 ///////////////////////// 스킬공격 /////////////////////////
 void ABarrett::EnergyFire()
