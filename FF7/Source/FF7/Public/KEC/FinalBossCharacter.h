@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ClearWidget.h"
 #include "GameFramework/Character.h"
 #include "FinalBossCharacter.generated.h"
 
@@ -51,8 +52,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UFBHPWidget* bossHPWidget;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UWidgetComponent* healthUI;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UUserWidget> clearUIFac;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UClearWidget* clearUI;
 
 	UPROPERTY(EditAnywhere)
 	class UFinalBossFSM* state;
@@ -71,11 +79,16 @@ public:
 	int32 fireNum = 0;
 	float maxHP = 10000;
 	float currentHp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool isDead = false;
+	
 	bool jumpAttack = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool isSecondPhase = false;
+
+	bool isUsed = false;
 
 	void Fire();
 	void LauchMissile();

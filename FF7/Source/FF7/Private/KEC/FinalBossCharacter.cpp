@@ -50,6 +50,8 @@ AFinalBossCharacter::AFinalBossCharacter()
 		GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
 	}
 
+	
+
 
 }
 
@@ -61,6 +63,7 @@ void AFinalBossCharacter::BeginPlay()
 	currentHp = maxHP;
 	currentHp = FMath::Clamp(currentHp,0, maxHP);
 	bossHPWidget = Cast<UFBHPWidget>(healthUI->GetWidget());
+	
 	//Fire();
 	
 }	
@@ -145,10 +148,13 @@ void AFinalBossCharacter::TakeDamage(int damage)
 	if (currentHp <= 0)
 	{
 		isDead = true;
+		clearUI = CreateWidget<UClearWidget>(GetWorld(), clearUIFac);
+		clearUI->AddToViewport(1);
 	}
 
-	if (currentHp <= maxHP/2)
+	if (currentHp <= maxHP/2 && isUsed == false)
 	{
+		isUsed = true;
 		bossFsm->SetState(EFinalBossState::LAUNCHBOMB);
 		this->GetCharacterMovement()->MaxWalkSpeed = 800;
 	}
