@@ -136,7 +136,7 @@ public:
 
 	////////////////////////// 공격 당함 //////////////////////////
 	UPROPERTY(EditAnywhere)
-	int32 BarrettMaxHP = 100;
+	int32 BarrettMaxHP = 300;
 	UPROPERTY(EditAnywhere)
 	int32 BarrettHP = BarrettMaxHP;
 	UPROPERTY(EditAnywhere)

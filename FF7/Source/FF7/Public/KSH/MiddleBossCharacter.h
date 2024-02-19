@@ -161,7 +161,7 @@ private:
 	int32 GuardStartTempDamage = 0;											// 가드 시작하는지 판단 누적 데미지
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
-	int32 GuardStartDamage = 15;											// 가드 시작하는 데미지
+	int32 GuardStartDamage = 25;											// 가드 시작하는 데미지
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = AttackSkill, Meta = ( AllowPrivateAccess = true ))
 	int32 GuardingDamage;													// 가드 중일 때 누적되는 데미지
