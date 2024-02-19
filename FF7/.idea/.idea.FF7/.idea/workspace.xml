@@ -12,8 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3ff316dc-af67-49a3-96ee-ab735b6a865f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FF7/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KEC/Sequence/FBSequence.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KEC/Sequence/FBSequence.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/KSH/Maps/MiddleBossMap.umap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
